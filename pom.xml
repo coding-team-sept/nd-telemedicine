@@ -3,8 +3,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.github.coding-team-sept</groupId>
-  <artifactId>nd-backend</artifactId>
+  <groupId>com.github.coding-team-sept.nd-backend</groupId>
+  <artifactId>microservices</artifactId>
   <version>0.0.0-alpha.0</version>
 
   <name>nd-backend</name>
@@ -34,10 +34,12 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
+      <version>1.18.24</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <version>2.7.3</version>
     </dependency>
   </dependencies>
 
