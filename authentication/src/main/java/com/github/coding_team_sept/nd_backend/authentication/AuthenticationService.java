@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public record AuthenticationService(AuthenticationRepository repository) {
     public void register(AppUserRegistrationRequest request) {
+        // TODO: Set response to 201 ("Created") for successfully registered user
         // TODO: Create findBy for email. Source: https://stackoverflow.com/a/27583544
 
         final var appUser = AppUser.builder()
