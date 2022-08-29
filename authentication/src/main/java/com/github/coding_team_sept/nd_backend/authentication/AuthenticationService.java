@@ -2,6 +2,7 @@ package com.github.coding_team_sept.nd_backend.authentication;
 
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUserRegistrationRequest;
+import com.github.coding_team_sept.nd_backend.authentication.repositories.AuthenticationRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
