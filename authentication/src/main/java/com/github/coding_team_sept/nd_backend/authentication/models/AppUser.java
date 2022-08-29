@@ -23,6 +23,8 @@ public class AppUser {
             generator = "user_sequence_id"
     )
     private Long id;
+
+    @Column(unique = true)
     private String email;
     private String name;
     private String password;
