@@ -33,7 +33,9 @@ public class AppUser {
     @Column(nullable = false)
     private String password;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "role_id", referencedColumnName = "id")
-//    private Role role;
+    @OneToOne(
+            targetEntity = Role.class,
+            cascade = CascadeType.ALL
+    )
+    private Role role;
 }
