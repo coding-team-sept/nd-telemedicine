@@ -24,22 +24,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AppUserDetailsService userDetailsService;
-
+    @Autowired
+    private AuthenticationEntryPointJwt unauthorizedHandler;
     @Autowired
     private JwtRequestFilter requestFilter;
 
-    @Autowired
-    private AuthenticationEntryPointJwt unauthorizedHandler;
+    @Override
+    protected void configure(AuthenticationManagerBuilder managerBuilder) throws Exception {
+        managerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+
+    @Override
+    @Bean
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder managerBuilder) throws Exception {
-        super.configure(managerBuilder);
-        managerBuilder.userDetailsService(userDetailsService);
     }
 
     @Override
@@ -49,15 +52,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/register").permitAll()
-                .antMatchers("/api/v1/admin/**").hasAuthority(RoleType.ADMIN.name())
+                .antMatchers("/api/v1/admin/**").hasAuthority(RoleType.ROLE_ADMIN.name())
                 .antMatchers("/api/v1/validate").authenticated()
                 .anyRequest().authenticated();
         security.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Override
-    @Bean
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
-    }
 }

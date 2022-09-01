@@ -21,17 +21,17 @@ public record AuthenticationController(AuthenticationService service) {
 
     @PostMapping("/admin/admin")
     public ResponseEntity<AppUserResponse> addAdmin(@RequestBody AppUserRegistrationRequest request) {
-        return register(request, RoleType.ADMIN);
+        return register(request, RoleType.ROLE_ADMIN);
     }
 
     @PostMapping("/admin/doctor")
     public ResponseEntity<AppUserResponse> addDoctor(@RequestBody AppUserRegistrationRequest request) {
-        return register(request, RoleType.DOCTOR);
+        return register(request, RoleType.ROLE_DOCTOR);
     }
 
     @PostMapping("/register")
     public ResponseEntity<AppUserResponse> register(@RequestBody AppUserRegistrationRequest request) {
-        return register(request, RoleType.PATIENT);
+        return register(request, RoleType.ROLE_PATIENT);
     }
 
     private ResponseEntity<AppUserResponse> register(AppUserRegistrationRequest request, RoleType roleType) {

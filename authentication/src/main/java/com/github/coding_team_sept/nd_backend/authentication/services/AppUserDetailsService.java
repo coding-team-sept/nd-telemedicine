@@ -1,6 +1,6 @@
 package com.github.coding_team_sept.nd_backend.authentication.services;
 
-import com.github.coding_team_sept.nd_backend.authentication.repositories.AuthenticationRepository;
+import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class AppUserDetailsService implements UserDetailsService {
     @Autowired
-    AuthenticationRepository repository;
+    AppUserRepository repository;
 
     @Override
     @Transactional
@@ -26,7 +26,7 @@ public class AppUserDetailsService implements UserDetailsService {
         return new User(
                 appUser.getEmail(),
                 appUser.getPassword(),
-                List.of(new SimpleGrantedAuthority(appUser.getRole().getRole().name()))
+                List.of(new SimpleGrantedAuthority(appUser.getRole().getName().name()))
         );
     }
 

@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Entity
 @Data
 @Builder
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 public class Role {
@@ -24,8 +24,6 @@ public class Role {
             generator = "role_sequence_id"
     )
     private Long id;
-
     @Enumerated(EnumType.STRING)
-    private RoleType role;
-
+    private RoleType name;
 }

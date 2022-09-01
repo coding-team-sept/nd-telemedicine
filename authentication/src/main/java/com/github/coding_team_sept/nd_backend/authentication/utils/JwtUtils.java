@@ -3,7 +3,7 @@ package com.github.coding_team_sept.nd_backend.authentication.utils;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 
 @Slf4j
-@Service
+@Component
 public class JwtUtils {
     private final String secretKey = "secret";
 

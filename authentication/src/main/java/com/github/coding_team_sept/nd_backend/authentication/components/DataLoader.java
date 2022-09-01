@@ -3,7 +3,7 @@ package com.github.coding_team_sept.nd_backend.authentication.components;
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
 import com.github.coding_team_sept.nd_backend.authentication.models.Role;
-import com.github.coding_team_sept.nd_backend.authentication.repositories.AuthenticationRepository;
+import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUserRepository;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -20,7 +20,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private RoleRepository roleRepo;
 
     @Autowired
-    private AuthenticationRepository authenticationRepo;
+    private AppUserRepository authenticationRepo;
 
     @Override
     @Transactional
@@ -36,9 +36,9 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     @Transactional
     void createRole(RoleType roleType) {
-        final var role = roleRepo.findRoleByRole(roleType);
+        final var role = roleRepo.findRoleByName(roleType);
         if (role.isEmpty()) {
-            final var newRole = Role.builder().role(roleType).build();
+            final var newRole = Role.builder().name(roleType).build();
             roleRepo.save(newRole);
         }
     }
@@ -53,7 +53,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                     .name("Admin")
                     .email(email)
                     .password("admin")
-                    .role(roleRepo.findRoleByRole(RoleType.ADMIN).orElse(null))
+                    .role(roleRepo.findRoleByName(RoleType.ROLE_ADMIN).orElse(null))
                     .build();
             authenticationRepo.save(newAppUser);
         }

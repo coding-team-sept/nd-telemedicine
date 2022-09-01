@@ -1,11 +1,11 @@
 package com.github.coding_team_sept.nd_backend.authentication.services;
 
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
-import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
-import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.AppUserRegistrationRequest;
-import com.github.coding_team_sept.nd_backend.authentication.repositories.AuthenticationRepository;
+import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUserRepository;
+import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
+import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 @Service
 public record AuthenticationService(
-        AuthenticationRepository authenticationRepo,
+        AppUserRepository authenticationRepo,
         RoleRepository roleRepo,
         PasswordEncoder encoder,
         JwtUtils jwtUtils
@@ -32,7 +32,7 @@ public record AuthenticationService(
                 .email(request.email())
                 .name(request.name())
                 .password(encoder.encode(request.password()))
-                .role(roleRepo.findRoleByRole(roleType).orElse(null))
+                .role(roleRepo.findRoleByName(roleType).orElse(null))
                 .build();
 
         // Save data to DB
@@ -42,5 +42,4 @@ public record AuthenticationService(
         final var userDetails = new User(appUser.getEmail(), appUser.getPassword(), new ArrayList<>());
         return jwtUtils.generateToken(userDetails);
     }
-
 }

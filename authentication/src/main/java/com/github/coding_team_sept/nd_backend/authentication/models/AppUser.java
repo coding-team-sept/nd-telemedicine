@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Entity
 @Data
 @Builder
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 public class AppUser {
@@ -23,16 +23,12 @@ public class AppUser {
             generator = "user_sequence_id"
     )
     private Long id;
-
     @Column(nullable = false, unique = true)
     private String email;
-
     @Column(nullable = false)
     private String name;
-
     @Column(nullable = false)
     private String password;
-
     @OneToOne(
             targetEntity = Role.class,
             cascade = CascadeType.ALL
