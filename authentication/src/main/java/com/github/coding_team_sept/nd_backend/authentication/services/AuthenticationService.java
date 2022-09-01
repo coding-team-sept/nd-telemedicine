@@ -2,11 +2,15 @@ package com.github.coding_team_sept.nd_backend.authentication.services;
 
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
-import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.AppUserRegistrationRequest;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUserRepository;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
 import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,9 +22,20 @@ public record AuthenticationService(
         AppUserRepository authenticationRepo,
         RoleRepository roleRepo,
         PasswordEncoder encoder,
-        JwtUtils jwtUtils
+        JwtUtils jwtUtils,
+        AuthenticationManager authenticationManager,
+        AppUserDetailsService userDetailsService
 ) {
-    public String register(AppUserRegistrationRequest request, RoleType roleType) throws DataIntegrityViolationException {
+    public String login(LoginRequest request) {
+        final var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                request.email(), request.password()
+        ));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        final var userDetails = userDetailsService.loadUserByEmail(request.email());
+        return jwtUtils.generateToken(userDetails);
+    }
+
+    public String register(RegisterRequest request, RoleType roleType) throws DataIntegrityViolationException {
         // TODO: Create findBy for email. Source: https://stackoverflow.com/a/27583544
 
         // TODO: Validate email
