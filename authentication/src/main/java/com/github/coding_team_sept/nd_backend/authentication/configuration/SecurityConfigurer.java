@@ -1,6 +1,7 @@
 package com.github.coding_team_sept.nd_backend.authentication.configuration;
 
 import com.github.coding_team_sept.nd_backend.authentication.components.AuthenticationEntryPointJwt;
+import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserDetailsService;
 import com.github.coding_team_sept.nd_backend.authentication.utils.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/register").permitAll()
+                .antMatchers("/api/v1/admin/**").hasAuthority(RoleType.ADMIN.name())
                 .antMatchers("/api/v1/validate").authenticated()
                 .anyRequest().authenticated();
         security.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);

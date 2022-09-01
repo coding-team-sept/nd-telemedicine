@@ -20,7 +20,7 @@ public record AuthenticationService(
         PasswordEncoder encoder,
         JwtUtils jwtUtils
 ) {
-    public String register(AppUserRegistrationRequest request) throws DataIntegrityViolationException {
+    public String register(AppUserRegistrationRequest request, RoleType roleType) throws DataIntegrityViolationException {
         // TODO: Create findBy for email. Source: https://stackoverflow.com/a/27583544
 
         // TODO: Validate email
@@ -32,7 +32,7 @@ public record AuthenticationService(
                 .email(request.email())
                 .name(request.name())
                 .password(encoder.encode(request.password()))
-                .role(roleRepo.findRoleByRole(RoleType.PATIENT).orElse(null))
+                .role(roleRepo.findRoleByRole(roleType).orElse(null))
                 .build();
 
         // Save data to DB
