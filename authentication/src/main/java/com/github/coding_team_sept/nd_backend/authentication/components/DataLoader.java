@@ -8,6 +8,7 @@ import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRe
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +19,10 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private boolean alreadySetup = false;
     @Autowired
     private RoleRepository roleRepo;
-
     @Autowired
     private AppUserRepository authenticationRepo;
+    @Autowired
+    private PasswordEncoder encoder;
 
     @Override
     @Transactional
@@ -52,7 +54,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                     .builder()
                     .name("Admin")
                     .email(email)
-                    .password("admin")
+                    .password(encoder.encode("admin"))
                     .role(roleRepo.findRoleByName(RoleType.ROLE_ADMIN).orElse(null))
                     .build();
             authenticationRepo.save(newAppUser);
