@@ -5,3 +5,17 @@ spring:
   application:
     name: authentication
 
+  datasource:
+    username: 'admin'
+    url: jdbc:postgresql://localhost:5432/telemedic
+    password: 'admin'
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+
