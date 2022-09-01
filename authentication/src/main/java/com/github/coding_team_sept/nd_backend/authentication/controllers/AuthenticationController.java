@@ -10,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("api/v1")
 public record AuthenticationController(AuthenticationService service) {
 
     @PostMapping("/register")

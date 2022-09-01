@@ -1,6 +1,6 @@
 package com.github.coding_team_sept.nd_backend.authentication.configuration;
 
-import com.github.coding_team_sept.nd_backend.authentication.AuthenticationEntryPointJwt;
+import com.github.coding_team_sept.nd_backend.authentication.components.AuthenticationEntryPointJwt;
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserDetailsService;
 import com.github.coding_team_sept.nd_backend.authentication.utils.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +41,11 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity security) throws Exception {
         security.cors().and().csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/**").permitAll()
-                .antMatchers("/api/v1/admin/**").authenticated()
+                .antMatchers("/api/v1/register").permitAll()
+                .antMatchers("/api/v1/validate").authenticated()
                 .anyRequest().authenticated();
         security.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
     }

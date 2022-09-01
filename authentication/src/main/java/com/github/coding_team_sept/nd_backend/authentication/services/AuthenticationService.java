@@ -1,5 +1,7 @@
 package com.github.coding_team_sept.nd_backend.authentication.services;
 
+import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
+import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
 import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.AppUserRegistrationRequest;
@@ -13,7 +15,8 @@ import java.util.ArrayList;
 
 @Service
 public record AuthenticationService(
-        AuthenticationRepository repository,
+        AuthenticationRepository authenticationRepo,
+        RoleRepository roleRepo,
         PasswordEncoder encoder,
         JwtUtils jwtUtils
 ) {
@@ -29,10 +32,11 @@ public record AuthenticationService(
                 .email(request.email())
                 .name(request.name())
                 .password(encoder.encode(request.password()))
+                .role(roleRepo.findRoleByRole(RoleType.PATIENT).orElse(null))
                 .build();
 
         // Save data to DB
-        repository.save(appUser);
+        authenticationRepo.save(appUser);
 
         // Generate jwt
         final var userDetails = new User(appUser.getEmail(), appUser.getPassword(), new ArrayList<>());
