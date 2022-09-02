@@ -29,7 +29,6 @@ public record AuthenticationController(AuthenticationService service) {
             final var loginResponse = service.login(request);
             return ResponseEntity.ok(loginResponse);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.internalServerError().body(new LoginResponse(null, Map.of(
                     "type", e.getClass(),
                     "title", "Unknown error",

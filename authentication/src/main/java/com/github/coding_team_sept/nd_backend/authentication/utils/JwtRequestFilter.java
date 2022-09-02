@@ -31,8 +31,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         try {
             final var token = parseTokenFromHeader(request);
             if (token != null && jwtUtils.validateToken(token)) {
+                final var email = jwtUtils.extractEmailFromToken(token);
                 final var userDetails = userDetailsService.loadUserByEmail(
-                        jwtUtils.extractEmailFromToken(token)
+                        email
                 );
                 final var authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails,

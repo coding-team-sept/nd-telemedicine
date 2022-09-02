@@ -20,8 +20,8 @@ public class JwtUtils {
         claims.put("id", userDetails.getId());
         claims.put("role", userDetails.getRole().getName().name());
         return Jwts.builder()
+                .setClaims(claims) // Should be put first. Otherwise, it will override other claims.
                 .setSubject(userDetails.getUsername())
-                .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(getExpirationDate())
                 .signWith(SignatureAlgorithm.HS256, secretKey)
