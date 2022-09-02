@@ -22,7 +22,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"name\": \"Admin3\",\n    \"email\": \"admin3@admin.com\",\n    \"password\": \"1234567890\"\n}",
+											"raw": "{\n    \"name\": \"Admin2\",\n    \"email\": \"admin2@admin.com\",\n    \"password\": \"admin\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -54,7 +54,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"name\": \"Doctor\",\n    \"email\": \"doctor@doctor.com\",\n    \"password\": \"1234567890\"\n}",
+											"raw": "{\n    \"name\": \"Doctor\",\n    \"email\": \"doctor@doctor.com\",\n    \"password\": \"doctor\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -108,7 +108,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Patient\",\n    \"email\": \"patient2@patient.com\",\n    \"password\": \"1234567890\"\n}",
+							"raw": "{\n    \"name\": \"Patient\",\n    \"email\": \"patient@patient.com\",\n    \"password\": \"patient\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -122,6 +122,38 @@
 							],
 							"path": [
 								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@admin.com\",\n    \"password\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
 							]
 						}
 					},
@@ -150,7 +182,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjJAYWRtaW4uY29tIiwiZXhwIjoxNjYyMDg3OTY2LCJpYXQiOjE2NjIwMDE1NjZ9.5GQMkeZhBPUv4lmp9nHcqKeLYhHVkHtt4a5Th9Z4WAQ",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoxLCJleHAiOjE2NjIyMDA2MzQsImlhdCI6MTY2MjExNDIzNH0.18L4UPiS8L0eKhvh23jnMqGDyLDzOjBQJ4wIL0oxTRY",
 						"type": "string"
 					}
 				]
