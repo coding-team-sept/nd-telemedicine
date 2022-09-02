@@ -18,6 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * JwtRequestFilter is executed once at each request sent to the API, parsing
+ * and validating the JWT, loading user details, and checking the authentication.
+ *
+ * @author nivratig
+ */
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
@@ -31,9 +37,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         try {
             final var token = parseTokenFromHeader(request);
             if (token != null && jwtUtils.validateToken(token)) {
-                final var email = jwtUtils.extractEmailFromToken(token);
+                // Retrieve user data
                 final var userDetails = userDetailsService.loadUserByEmail(
-                        email
+                        jwtUtils.extractEmailFromToken(token)
                 );
                 final var authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
@@ -56,6 +62,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * This method is used to extract the JWT token from the "Authorization" header
+     *
+     * @param request The HTTP request which contain a header with "Authorization" key
+     * @return the extracted JWT token.
+     * @since 0.0.0-alpha.0
+     */
     private String parseTokenFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {

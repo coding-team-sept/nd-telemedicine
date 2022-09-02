@@ -13,6 +13,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * AppUserDetails contain the user detail used for authentication.
+ *
+ * @author nivratig
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -35,6 +40,12 @@ public class AppUserDetails implements UserDetails {
                 .build();
     }
 
+    /**
+     * Getter for Authorities. The authorities here only consist of a role.
+     *
+     * @return returns authorities
+     * @since 0.0.0-alpha.0
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.getName().name()));
@@ -45,6 +56,14 @@ public class AppUserDetails implements UserDetails {
         return password;
     }
 
+    /**
+     * Getter for username (email). The username in this scenario is an email.
+     * Thus, there is no username field here. Instead, this method returns the
+     * value of email field.
+     *
+     * @return returns an email.
+     * @since 0.0.0-alpha.0
+     */
     @Override
     public String getUsername() {
         return email;

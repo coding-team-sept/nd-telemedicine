@@ -10,18 +10,37 @@ import java.util.Date;
 import java.util.HashMap;
 
 
+/**
+ * JwtUtils contain any methods which deal with JWT token, including:
+ * - Token generation
+ * - Token validation
+ * - Token extraction from claim
+ *
+ * @author nivratig
+ */
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
     private final String secretKey = "secret";
 
+    /**
+     * Generates a JWT token, containing:
+     * - id
+     * - username (email)
+     * - role
+     * - issue date
+     * - expiration date
+     * - signature
+     *
+     * @author nivratig
+     */
     public String generateToken(AppUserDetails userDetails) {
         final var claims = new HashMap<String, Object>();
         claims.put("id", userDetails.getId());
         claims.put("role", userDetails.getRole().getName().name());
         return Jwts.builder()
                 .setClaims(claims) // Should be put first. Otherwise, it will override other claims.
-                .setSubject(userDetails.getUsername())
+                .setSubject(userDetails.getUsername()) // "Username" is a placeholder of "Email"
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(getExpirationDate())
                 .signWith(SignatureAlgorithm.HS256, secretKey)
