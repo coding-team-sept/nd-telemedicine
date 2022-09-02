@@ -48,10 +48,13 @@ public record AuthenticationController(AuthenticationService service) {
     private ResponseEntity<AppResponse> register(RegisterRequest request, RoleType roleType) {
         try {
             final var response = service.register(request, roleType);
-            return new ResponseEntity<>(
-                    response,
-                    HttpStatus.CREATED
-            );
+            if (roleType.equals(RoleType.ROLE_PATIENT)) {
+                return new ResponseEntity<>(
+                        response,
+                        HttpStatus.CREATED
+                );
+            }
+            return new ResponseEntity<>(null, HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.internalServerError().body(AppResponse.error("Email has been taken!", e));
         } catch (Exception e) {
