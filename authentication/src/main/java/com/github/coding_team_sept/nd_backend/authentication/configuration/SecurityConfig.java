@@ -26,6 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private AppUserDetailsService userDetailsService;
     @Autowired
     private AuthenticationEntryPointJwt unauthorizedHandler;
+
     @Autowired
     private JwtRequestFilter requestFilter;
 
@@ -34,10 +35,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         managerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    @Override
     @Bean
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean
@@ -47,15 +48,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity security) throws Exception {
-        security.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests()
+        security.cors().and().csrf().disable();
+
+        security.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and();
+
+        security.exceptionHandling()
+                .authenticationEntryPoint(unauthorizedHandler)
+                .and();
+
+        security.authorizeRequests()
                 .antMatchers("/api/v1/login").permitAll()
                 .antMatchers("/api/v1/register").permitAll()
                 .antMatchers("/api/v1/admin/**").hasAuthority(RoleType.ROLE_ADMIN.name())
                 .antMatchers("/api/v1/validate").authenticated()
                 .anyRequest().authenticated();
+
         security.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 

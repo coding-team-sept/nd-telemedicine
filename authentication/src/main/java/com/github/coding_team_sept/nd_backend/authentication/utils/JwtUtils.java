@@ -1,62 +1,66 @@
 package com.github.coding_team_sept.nd_backend.authentication.utils;
 
+import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetails;
 import io.jsonwebtoken.*;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
 
 
-@Slf4j
 @Component
 public class JwtUtils {
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
     private final String secretKey = "secret";
 
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
+    public String generateToken(AppUserDetails userDetails) {
+        final var claims = new HashMap<String, Object>();
+        claims.put("id", userDetails.getId());
+        claims.put("role", userDetails.getRole().getName().name());
         return Jwts.builder()
-                .setClaims(claims)
                 .setSubject(userDetails.getUsername())
+                .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(getExpirationDate())
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
-    Date getExpirationDate() {
+    public Date getExpirationDate() {
         int duration = 1000 * 60 * 60 * 24; // 1 day
         return new Date(System.currentTimeMillis() + duration);
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            final String email = extractEmail(token);
-            return (email.equals(userDetails.getUsername()));
+            return true;
         } catch (SignatureException e) {
-            log.error("Invalid JWT signature: {}", e.getMessage());
+            logger.error("Invalid JWT signature: {}", e.getMessage());
         } catch (MalformedJwtException e) {
-            log.error("Invalid JWT token: {}", e.getMessage());
+            logger.error("Invalid JWT token: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
-            log.error("JWT token is expired: {}", e.getMessage());
+            logger.error("JWT token is expired: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.error("JWT token is unsupported: {}", e.getMessage());
+            logger.error("JWT token is unsupported: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
-            log.error("JWT claims string is empty: {}", e.getMessage());
+            logger.error("JWT claims string is empty: {}", e.getMessage());
         }
         return false;
     }
 
-    public String extractEmail(String token) {
-        return extractClaim(token, Claims::getSubject);
+    public String extractEmailFromToken(String token) {
+        return extractAllClaims(token).getSubject();
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        return claimsResolver.apply(extractAllClaims(token));
+    public Long extractIdFromToken(String token) {
+        return extractAllClaims(token).get("id", Long.class);
+    }
+
+    public String extractRoleFromToken(String token) {
+        return extractAllClaims(token).get("role", String.class);
     }
 
     private Claims extractAllClaims(String token) {

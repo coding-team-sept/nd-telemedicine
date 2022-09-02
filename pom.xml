@@ -18,8 +18,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
-    <spring.boot.maven.plugin.version>2.5.7</spring.boot.maven.plugin.version>
-    <spring.boot.dependencies.version>2.5.7</spring.boot.dependencies.version>
+    <spring.boot.maven.plugin.version>2.6.11</spring.boot.maven.plugin.version>
+    <spring.boot.dependencies.version>2.6.11</spring.boot.dependencies.version>
   </properties>
 
   <dependencyManagement>
@@ -49,7 +49,7 @@
 
   <build>
     <pluginManagement>
-      <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+      <!-- lock down plugins versions to avoid using Maven defaults (possibly moved to parent pom) -->
       <plugins>
         <plugin>
           <groupId>org.springframework.boot</groupId>

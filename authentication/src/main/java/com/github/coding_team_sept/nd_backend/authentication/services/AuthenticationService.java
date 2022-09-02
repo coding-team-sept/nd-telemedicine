@@ -2,8 +2,10 @@ package com.github.coding_team_sept.nd_backend.authentication.services;
 
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
-import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
+import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetails;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.LoginResponse;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUserRepository;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
 import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
@@ -11,11 +13,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Map;
 
 @Service
 public record AuthenticationService(
@@ -26,13 +27,27 @@ public record AuthenticationService(
         AuthenticationManager authenticationManager,
         AppUserDetailsService userDetailsService
 ) {
-    public String login(LoginRequest request) {
-        final var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.email(), request.password()
-        ));
+    public LoginResponse login(LoginRequest request) {
+        final var authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.email(),
+                        request.password()
+                )
+        );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        final var userDetails = userDetailsService.loadUserByEmail(request.email());
-        return jwtUtils.generateToken(userDetails);
+        final var userDetails = (AppUserDetails) authentication.getPrincipal();
+        final var jwt = jwtUtils.generateToken(userDetails);
+        return new LoginResponse(Map.of(
+                "token", Map.of(
+                        "token", jwt
+                ),
+                "user", Map.of(
+                        "id", userDetails.getId(),
+                        "email", userDetails.getEmail(),
+                        "name", userDetails.getName(),
+                        "role", userDetails.getRole().getName().name()
+                )
+        ), null);
     }
 
     public String register(RegisterRequest request, RoleType roleType) throws DataIntegrityViolationException {
@@ -54,7 +69,7 @@ public record AuthenticationService(
         authenticationRepo.save(appUser);
 
         // Generate jwt
-        final var userDetails = new User(appUser.getEmail(), appUser.getPassword(), new ArrayList<>());
+        final var userDetails = AppUserDetails.fromAppUser(appUser);
         return jwtUtils.generateToken(userDetails);
     }
 }

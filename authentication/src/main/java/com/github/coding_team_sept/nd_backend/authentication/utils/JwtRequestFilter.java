@@ -1,7 +1,8 @@
 package com.github.coding_team_sept.nd_backend.authentication.utils;
 
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserDetailsService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,10 +16,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
-@Slf4j
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
+    private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
     @Autowired
     JwtUtils jwtUtils;
     @Autowired
@@ -28,23 +30,27 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             final var token = parseTokenFromHeader(request);
-            if (token != null) {
-                final var email = jwtUtils.extractEmail(token);
-                if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    final var userDetails = userDetailsService.loadUserByEmail(email);
-                    if (jwtUtils.validateToken(token, userDetails)) {
-                        final var authenticationToken = new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
-                        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                    }
-                }
+            if (token != null && jwtUtils.validateToken(token)) {
+                final var userDetails = userDetailsService.loadUserByEmail(
+                        jwtUtils.extractEmailFromToken(token)
+                );
+                final var authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        (userDetails == null)
+                                ? List.of()
+                                : userDetails.getAuthorities()
+                );
+                authenticationToken.setDetails(
+                        new WebAuthenticationDetailsSource()
+                                .buildDetails(request)
+                );
+                SecurityContextHolder.
+                        getContext().
+                        setAuthentication(authenticationToken);
             }
         } catch (Exception e) {
-            log.error("Cannot set user authentication: {}", e.getMessage());
+            logger.error("Cannot set user authentication: {}", e.getMessage());
         }
         filterChain.doFilter(request, response);
     }
