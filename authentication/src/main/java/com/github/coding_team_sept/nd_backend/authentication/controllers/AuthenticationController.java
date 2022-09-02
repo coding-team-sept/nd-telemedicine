@@ -1,8 +1,9 @@
 package com.github.coding_team_sept.nd_backend.authentication.controllers;
 
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
-import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.AppUserRegistrationRequest;
-import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AppUserResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AppResponse;
 import com.github.coding_team_sept.nd_backend.authentication.services.AuthenticationService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -19,32 +20,45 @@ public record AuthenticationController(AuthenticationService service) {
         return authentication.getName();
     }
 
+    @GetMapping("/login")
+    public ResponseEntity<AppResponse> login(@RequestBody LoginRequest request) {
+        try {
+            final var loginResponse = service.login(request);
+            return ResponseEntity.ok(loginResponse);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage(), e));
+        }
+    }
+
     @PostMapping("/admin/admin")
-    public ResponseEntity<AppUserResponse> addAdmin(@RequestBody AppUserRegistrationRequest request) {
+    public ResponseEntity<AppResponse> addAdmin(@RequestBody RegisterRequest request) {
         return register(request, RoleType.ROLE_ADMIN);
     }
 
     @PostMapping("/admin/doctor")
-    public ResponseEntity<AppUserResponse> addDoctor(@RequestBody AppUserRegistrationRequest request) {
+    public ResponseEntity<AppResponse> addDoctor(@RequestBody RegisterRequest request) {
         return register(request, RoleType.ROLE_DOCTOR);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AppUserResponse> register(@RequestBody AppUserRegistrationRequest request) {
+    public ResponseEntity<AppResponse> register(@RequestBody RegisterRequest request) {
         return register(request, RoleType.ROLE_PATIENT);
     }
 
-    private ResponseEntity<AppUserResponse> register(AppUserRegistrationRequest request, RoleType roleType) {
+    private ResponseEntity<AppResponse> register(RegisterRequest request, RoleType roleType) {
         try {
-            final var token = service.register(request, roleType);
-            return new ResponseEntity<>(
-                    new AppUserResponse(token, null),
-                    HttpStatus.CREATED
-            );
+            final var response = service.register(request, roleType);
+            if (roleType.equals(RoleType.ROLE_PATIENT)) {
+                return new ResponseEntity<>(
+                        response,
+                        HttpStatus.CREATED
+                );
+            }
+            return new ResponseEntity<>(null, HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.internalServerError().body(new AppUserResponse(null, "Email has been taken!"));
+            return ResponseEntity.internalServerError().body(AppResponse.error("Email has been taken!", e));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(new AppUserResponse(null, "Unknown error: " + e.getMessage()));
+            return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage(), e));
         }
     }
 }

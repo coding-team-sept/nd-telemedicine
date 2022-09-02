@@ -10,6 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * AuthenticationEntryPointJwt is used to handle the authentication error.
+ * It will only be used in SecurityConfig
+ *
+ * @author nivratig
+ * */
 @Slf4j
 @Component
 public class AuthenticationEntryPointJwt implements AuthenticationEntryPoint {

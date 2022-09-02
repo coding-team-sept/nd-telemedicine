@@ -14,6 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 
+/**
+ * DataLoader class populates the table inside the database when the service is started.
+ *
+ * @author nivratig
+ * */
 @Component
 public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private boolean alreadySetup = false;
@@ -31,7 +36,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
             return;
         }
 
-        Arrays.stream(RoleType.values()).forEach(this::createRole);
+        Arrays.stream(RoleType.values()).forEach(this::createRole); // Role must be created before admin/user
         createAdmin();
         alreadySetup = true;
     }
