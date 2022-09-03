@@ -5,9 +5,13 @@
 
   <groupId>com.github.coding-team-sept.nd-backend</groupId>
   <artifactId>microservices</artifactId>
-  <version>0.0.0-alpha.0</version>
+    <packaging>pom</packaging>
+    <version>0.0.0-alpha.0</version>
+    <modules>
+        <module>appointment</module>
+    </modules>
 
-  <name>nd-backend</name>
+    <name>nd-backend</name>
   <url>https://github.com/coding-team-sept/nd-backend</url>
 
   <properties>
