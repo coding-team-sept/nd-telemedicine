@@ -8,10 +8,10 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: telemedic
       PG_DATA: /data/postgres
     volumes:
       - postgres:/data/postgres
+      - ./db_init:/docker-entrypoint-initdb.d
     networks:
       - postgres
   pgadmin:
