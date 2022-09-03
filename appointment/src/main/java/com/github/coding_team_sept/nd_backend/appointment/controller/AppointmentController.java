@@ -1,15 +1,31 @@
 package com.github.coding_team_sept.nd_backend.appointment.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.github.coding_team_sept.nd_backend.appointment.service.AppointmentService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1")
-public record AppointmentController() {
-    // TODO: Create controller for handling appointment requests
-    @GetMapping("/hello")
-    String getHello() {
-        return "Hello World";
+public record AppointmentController(
+        AppointmentService appointmentService
+) {
+    @GetMapping("/available/{timestamp}")
+    ResponseEntity<String> getAvailableDoctor(@PathVariable String timestamp) {
+        try {
+            return new ResponseEntity<>(appointmentService.getAvailableDoctor(timestamp), HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/appointment")
+    String getAppointment() {
+        return appointmentService.getAppointment();
+    }
+
+    @PostMapping("/appointment")
+    String addAppointment() {
+        return appointmentService.addAppointment();
     }
 }

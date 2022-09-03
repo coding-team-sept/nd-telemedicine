@@ -29,8 +29,13 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.4.2</version>
+            <version>42.5.0</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.11.1</version>
         </dependency>
     </dependencies>
 </project>
