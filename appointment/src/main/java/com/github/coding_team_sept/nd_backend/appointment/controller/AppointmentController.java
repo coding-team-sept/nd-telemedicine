@@ -3,6 +3,7 @@ package com.github.coding_team_sept.nd_backend.appointment.controller;
 import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppUserResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.DoctorAppointmentsResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.PatientAppointmentsResponse;
 import com.github.coding_team_sept.nd_backend.appointment.service.AppointmentService;
 import org.springframework.http.HttpHeaders;
@@ -34,5 +35,10 @@ public record AppointmentController(
     @GetMapping("/patient/appointment")
     ResponseEntity<PatientAppointmentsResponse> getPatientAppointment(@RequestHeader HttpHeaders headers) {
         return ResponseEntity.ok(appointmentService.getPatientAppointment(headers));
+    }
+
+    @GetMapping("/doctor/appointment")
+    ResponseEntity<DoctorAppointmentsResponse> getDoctorAppointment(@RequestHeader HttpHeaders headers) {
+        return ResponseEntity.ok(appointmentService.getDoctorAppointment(headers));
     }
 }

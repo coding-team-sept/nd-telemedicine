@@ -2,10 +2,7 @@ package com.github.coding_team_sept.nd_backend.appointment.service;
 
 import com.github.coding_team_sept.nd_backend.appointment.model.Appointment;
 import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppUserResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppointmentResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.PatientAppointmentsResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.ValidateResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.*;
 import com.github.coding_team_sept.nd_backend.appointment.repository.AppointmentRepository;
 import com.github.coding_team_sept.nd_backend.appointment.utils.DateTimeUtils;
 import org.springframework.http.HttpEntity;
@@ -79,6 +76,40 @@ public record AppointmentService(
                                 ))
                                 .toList(),
                         doctors
+                );
+            }
+        }
+        return null;
+    }
+
+    public DoctorAppointmentsResponse getDoctorAppointment(HttpHeaders headers) {
+        final var httpValidateResponse = restTemplate.exchange(
+                "http://www.localhost:9000/api/v1/validate",
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                ValidateResponse.class
+        );
+        if (httpValidateResponse.getBody() != null) {
+            final var validateResponse = httpValidateResponse.getBody();
+            final var role = validateResponse.role().toLowerCase();
+            if (role.contains("doctor")) {
+                final var appointments = appointmentRepo.getAppointmentByDoctorId(validateResponse.id());
+                final var patientsId = appointments.stream()
+                        .map(Appointment::getPatientId)
+                        .distinct()
+                        .toList();
+
+                // Retrieve doctors data
+                final var patients = getUsers(headers, patientsId, "patient");
+                return new DoctorAppointmentsResponse(
+                        appointments.stream()
+                                .map(appointment -> new DoctorAppointmentsResponse.AppointmentResponse(
+                                        appointment.getId(),
+                                        appointment.getPatientId(),
+                                        appointment.getAppointmentTime().toString()
+                                ))
+                                .toList(),
+                        patients
                 );
             }
         }

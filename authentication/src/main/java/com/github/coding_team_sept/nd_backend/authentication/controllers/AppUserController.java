@@ -36,9 +36,16 @@ public record AppUserController(
     }
 
     @GetMapping("/patient")
-    public ResponseEntity<AppUserResponse> getPatient(@RequestParam Long id) {
+    public ResponseEntity<List<AppUserResponse>> getPatient(
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) List<Long> ids) {
         try {
-            return ResponseEntity.ok(appUserService.getUserById(id, RoleType.ROLE_PATIENT));
+            if (id != null) {
+                return ResponseEntity.ok(List.of(appUserService.getUserById(id, RoleType.ROLE_PATIENT)));
+            } else if (ids != null) {
+                return ResponseEntity.ok(appUserService.getUsersByIds(ids, RoleType.ROLE_PATIENT));
+            }
+            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
