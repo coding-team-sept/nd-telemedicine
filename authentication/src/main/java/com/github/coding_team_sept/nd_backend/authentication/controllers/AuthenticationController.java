@@ -20,7 +20,7 @@ public record AuthenticationController(AuthenticationService service) {
         return authentication.getName();
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<AppResponse> login(@RequestBody LoginRequest request) {
         try {
             final var loginResponse = service.login(request);
