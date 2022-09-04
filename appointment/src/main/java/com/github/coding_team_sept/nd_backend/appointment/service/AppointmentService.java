@@ -5,8 +5,7 @@ import com.github.coding_team_sept.nd_backend.appointment.payload.requests.Appoi
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppUserResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppointmentResponse;
 import com.github.coding_team_sept.nd_backend.appointment.repository.AppointmentRepository;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
+import com.github.coding_team_sept.nd_backend.appointment.utils.DateTimeUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -21,14 +20,15 @@ import java.util.stream.Stream;
 @Service
 public record AppointmentService(
         AppointmentRepository appointmentRepo,
-        RestTemplate restTemplate
+        RestTemplate restTemplate,
+        DateTimeUtils dateTimeUtils
 ) {
     public List<AppUserResponse> getAvailableDoctor(String datetime) {
-        final var parsedDatetime = DateTime.parse(datetime, DateTimeFormat.forPattern("yyyy-MM-dd_HH:mm"));
+        final var parsedDatetime = dateTimeUtils.parseString(datetime);
 
         final var occupiedDoctor = appointmentRepo.getAppointmentByAppointmentTimeBetween(
-                parsedDatetime.minus(15).toDate(),
-                parsedDatetime.plus(15).toDate()
+                dateTimeUtils.getMin(parsedDatetime).toDate(),
+                dateTimeUtils.getMax(parsedDatetime).toDate()
         ).stream().map(Appointment::getDoctorId).toList();
 
         final var result = restTemplate.getForObject(
@@ -124,17 +124,14 @@ public record AppointmentService(
     }
 
     private Date validateAppointmentDatetime(String datetime, Long doctorId) {
-        final var appointmentDatetime = DateTime.parse(
-                datetime,
-                DateTimeFormat.forPattern("yyyy-MM-dd_HH:mm")
-        );
+        final var appointmentDatetime = dateTimeUtils.parseString(datetime);
 
         // TODO: Validate datetime
 
         if (!appointmentRepo.existsAppointmentByDoctorIdAndAppointmentTimeBetween(
                 doctorId,
-                appointmentDatetime.minus(15).toDate(),
-                appointmentDatetime.plus(15).toDate()
+                dateTimeUtils.getMin(appointmentDatetime).toDate(),
+                dateTimeUtils.getMax(appointmentDatetime).toDate()
         )) {
             return appointmentDatetime.toDate();
         }
