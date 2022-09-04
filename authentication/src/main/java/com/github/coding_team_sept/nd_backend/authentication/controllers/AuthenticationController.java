@@ -5,6 +5,7 @@ import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetai
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AppResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ValidateResponse;
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserService;
 import com.github.coding_team_sept.nd_backend.authentication.services.AuthenticationService;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,9 +21,12 @@ public record AuthenticationController(
         AppUserService appUserService
 ) {
     @GetMapping("/validate")
-    public Long validate() {
-        final var authentication = SecurityContextHolder.getContext().getAuthentication();
-        return ((AppUserDetails) authentication.getPrincipal()).getId();
+    public ValidateResponse validate() {
+        final var authentication = (AppUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return new ValidateResponse(
+                authentication.getId(),
+                authentication.getRole().getName().name()
+        );
     }
 
     @GetMapping("/login")

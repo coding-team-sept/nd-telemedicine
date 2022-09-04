@@ -13,7 +13,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     boolean existsAppointmentByDoctorIdAndAppointmentTimeBetween(Long doctorId, Date start, Date end);
 
-    Appointment getAppointmentByPatientId(Long patientId);
+    List<Appointment> getAppointmentByPatientId(Long patientId);
 
-    Appointment getAppointmentByDoctorId(Long doctorId);
+    List<Appointment> getAppointmentByDoctorId(Long doctorId);
 }

@@ -20,11 +20,14 @@ public record AppUserController(
 ) {
     @GetMapping("/doctor")
     public ResponseEntity<List<AppUserResponse>> getDoctor(
-            @RequestParam(required = false) Long id
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) List<Long> ids
     ) {
         try {
             if (id != null) {
                 return ResponseEntity.ok(List.of(appUserService.getUserById(id, RoleType.ROLE_DOCTOR)));
+            } else if (ids != null) {
+                return ResponseEntity.ok(appUserService.getUsersByIds(ids, RoleType.ROLE_DOCTOR));
             }
             return ResponseEntity.ok(appUserService.getUserByRole(RoleType.ROLE_DOCTOR));
         } catch (Exception e) {

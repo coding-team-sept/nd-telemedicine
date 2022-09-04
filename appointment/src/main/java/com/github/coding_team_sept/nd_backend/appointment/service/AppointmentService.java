@@ -4,6 +4,8 @@ import com.github.coding_team_sept.nd_backend.appointment.model.Appointment;
 import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppUserResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.PatientAppointmentsResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.ValidateResponse;
 import com.github.coding_team_sept.nd_backend.appointment.repository.AppointmentRepository;
 import com.github.coding_team_sept.nd_backend.appointment.utils.DateTimeUtils;
 import org.springframework.http.HttpEntity;
@@ -49,9 +51,57 @@ public record AppointmentService(
         return List.of();
     }
 
-    public String getAppointment() {
-        // TODO: Implement get appointment
-        return "Get appointment";
+    public PatientAppointmentsResponse getPatientAppointment(HttpHeaders headers) {
+        final var httpValidateResponse = restTemplate.exchange(
+                "http://www.localhost:9000/api/v1/validate",
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                ValidateResponse.class
+        );
+        if (httpValidateResponse.getBody() != null) {
+            final var validateResponse = httpValidateResponse.getBody();
+            final var role = validateResponse.role().toLowerCase();
+            if (role.contains("patient")) {
+                final var appointments = appointmentRepo.getAppointmentByPatientId(validateResponse.id());
+                final var doctorsId = appointments.stream()
+                        .map(Appointment::getDoctorId)
+                        .distinct()
+                        .toList();
+
+                // Retrieve doctors data
+                final var doctors = getUsers(headers, doctorsId, "doctor");
+                return new PatientAppointmentsResponse(
+                        appointments.stream()
+                                .map(appointment -> new PatientAppointmentsResponse.AppointmentResponse(
+                                        appointment.getId(),
+                                        appointment.getDoctorId(),
+                                        appointment.getAppointmentTime().toString()
+                                ))
+                                .toList(),
+                        doctors
+                );
+            }
+        }
+        return null;
+    }
+
+    private List<AppUserResponse> getUsers(HttpHeaders headers, List<Long> ids, String subject) {
+        String uri = UriComponentsBuilder.fromHttpUrl("http://www.localhost:9000/api/v1/" + subject)
+                .queryParam("ids", ids)
+                .encode()
+                .toUriString();
+
+        final var httpUserResponse = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                AppUserResponse[].class
+        );
+
+        if (httpUserResponse.getBody() != null) {
+            return List.of(httpUserResponse.getBody());
+        }
+        return List.of();
     }
 
     public AppointmentResponse addAppointment(HttpHeaders headers, AppointmentRequest body) {
@@ -97,11 +147,11 @@ public record AppointmentService(
                 "http://localhost:9000/api/v1/validate",
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                Long.class
+                ValidateResponse.class
         );
 
-        if (httpValidateResponse.hasBody()) {
-            return httpValidateResponse.getBody();
+        if (httpValidateResponse.getBody() != null) {
+            return httpValidateResponse.getBody().id();
         }
         return null;
     }

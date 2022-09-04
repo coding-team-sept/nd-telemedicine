@@ -8,6 +8,7 @@ import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRe
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -36,5 +37,26 @@ public record AppUserService(
                 user.getEmail(),
                 user.getName()
         )).orElseThrow();
+    }
+
+    public List<AppUserResponse> getUsersByIds(List<Long> ids, RoleType role) {
+        final List<AppUser> appUsers;
+        if (role == null) {
+            appUsers = ids.stream()
+                    .map(id -> appUserRepo.findById(id).orElse(null))
+                    .filter(Objects::isNull)
+                    .toList();
+        } else {
+            appUsers = ids.stream()
+                    .map(id -> appUserRepo.findAppUserByIdAndRole(id, roleRepo.findRoleByName(role).orElseThrow()).orElse(null))
+                    .filter(Objects::nonNull)
+                    .toList();
+        }
+        return appUsers.stream()
+                .map(appUser -> new AppUserResponse(
+                        appUser.getId(),
+                        appUser.getEmail(),
+                        appUser.getName()
+                )).toList();
     }
 }

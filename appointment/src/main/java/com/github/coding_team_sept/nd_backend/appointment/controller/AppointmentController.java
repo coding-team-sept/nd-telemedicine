@@ -1,8 +1,9 @@
 package com.github.coding_team_sept.nd_backend.appointment.controller;
 
 import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppointmentResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppUserResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.PatientAppointmentsResponse;
 import com.github.coding_team_sept.nd_backend.appointment.service.AppointmentService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,8 +31,8 @@ public record AppointmentController(
         return ResponseEntity.ok(appointmentService.addAppointment(headers, body));
     }
 
-    @GetMapping("/appointment")
-    String getAppointment() {
-        return appointmentService.getAppointment();
+    @GetMapping("/patient/appointment")
+    ResponseEntity<PatientAppointmentsResponse> getPatientAppointment(@RequestHeader HttpHeaders headers) {
+        return ResponseEntity.ok(appointmentService.getPatientAppointment(headers));
     }
 }
