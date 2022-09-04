@@ -33,5 +33,6 @@ public class AppUser {
             targetEntity = Role.class,
             cascade = CascadeType.ALL
     )
+    @Column(nullable=false)
     private Role role;
 }
