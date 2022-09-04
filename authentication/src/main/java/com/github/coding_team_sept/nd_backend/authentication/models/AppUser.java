@@ -31,8 +31,8 @@ public class AppUser {
     private String password;
     @OneToOne(
             targetEntity = Role.class,
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            optional = false
     )
-    @Column(nullable=false)
     private Role role;
 }
