@@ -1,9 +1,12 @@
 package com.github.coding_team_sept.nd_backend.appointment.controller;
 
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.DoctorResponse;
 import com.github.coding_team_sept.nd_backend.appointment.service.AppointmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1")
@@ -11,7 +14,7 @@ public record AppointmentController(
         AppointmentService appointmentService
 ) {
     @GetMapping("/available/{timestamp}")
-    ResponseEntity<String> getAvailableDoctor(@PathVariable String timestamp) {
+    ResponseEntity<List<DoctorResponse>> getAvailableDoctor(@PathVariable String timestamp) {
         try {
             return new ResponseEntity<>(appointmentService.getAvailableDoctor(timestamp), HttpStatus.OK);
         } catch (Exception e) {
