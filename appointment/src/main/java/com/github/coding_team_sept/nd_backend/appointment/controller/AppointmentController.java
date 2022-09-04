@@ -17,9 +17,9 @@ public record AppointmentController(
         AppointmentService appointmentService
 ) {
     @GetMapping("/available/{datetime}")
-    ResponseEntity<List<AppUserResponse>> getAvailableDoctor(@PathVariable String datetime) {
+    ResponseEntity<List<AppUserResponse>> getAvailableDoctor(@RequestHeader HttpHeaders headers, @PathVariable String datetime) {
         try {
-            return new ResponseEntity<>(appointmentService.getAvailableDoctor(datetime), HttpStatus.OK);
+            return new ResponseEntity<>(appointmentService.getAvailableDoctor(headers, datetime), HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }

@@ -17,13 +17,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
+// TODO: Handle failed HTTP requests (e.g. 400, 401)
 @Service
 public record AppointmentService(
         AppointmentRepository appointmentRepo,
         RestTemplate restTemplate,
         DateTimeUtils dateTimeUtils
 ) {
-    public List<AppUserResponse> getAvailableDoctor(String datetime) {
+    public List<AppUserResponse> getAvailableDoctor(HttpHeaders headers, String datetime) {
         final var parsedDatetime = dateTimeUtils.parseString(datetime);
 
         final var occupiedDoctor = appointmentRepo.getAppointmentByAppointmentTimeBetween(
@@ -31,13 +32,17 @@ public record AppointmentService(
                 dateTimeUtils.getMax(parsedDatetime).toDate()
         ).stream().map(Appointment::getDoctorId).toList();
 
-        final var result = restTemplate.getForObject(
+
+        final var result = restTemplate.exchange(
                 "http://www.localhost:9000/api/v1/doctor",
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
                 AppUserResponse[].class
         );
 
-        if (result != null) {
-            return Stream.of(result).filter(
+        if (result.getBody() != null) {
+            final var doctorResponses = result.getBody();
+            return Stream.of(doctorResponses).filter(
                     doctorResponse -> !occupiedDoctor.contains(doctorResponse.id())
             ).toList();
         }
