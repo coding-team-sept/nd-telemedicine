@@ -13,10 +13,10 @@ import java.util.List;
 public record AppointmentController(
         AppointmentService appointmentService
 ) {
-    @GetMapping("/available/{timestamp}")
-    ResponseEntity<List<DoctorResponse>> getAvailableDoctor(@PathVariable String timestamp) {
+    @GetMapping("/available/{datetime}")
+    ResponseEntity<List<DoctorResponse>> getAvailableDoctor(@PathVariable String datetime) {
         try {
-            return new ResponseEntity<>(appointmentService.getAvailableDoctor(timestamp), HttpStatus.OK);
+            return new ResponseEntity<>(appointmentService.getAvailableDoctor(datetime), HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }

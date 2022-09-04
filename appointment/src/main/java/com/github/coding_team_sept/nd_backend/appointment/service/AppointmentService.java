@@ -16,13 +16,12 @@ public record AppointmentService(
         AppointmentRepository appointmentRepo,
         RestTemplate restTemplate
 ) {
-    public List<DoctorResponse> getAvailableDoctor(String timestamp) {
-        final var datetime = DateTime.parse(timestamp, DateTimeFormat.forPattern("yyyy-MM-dd_HH:mm"));
-        System.out.println(datetime.toString());
+    public List<DoctorResponse> getAvailableDoctor(String datetime) {
+        final var parsedDatetime = DateTime.parse(datetime, DateTimeFormat.forPattern("yyyy-MM-dd_HH:mm"));
 
         final var occupiedDoctor = appointmentRepo.getAppointmentByAppointmentTimeBetween(
-                datetime.minus(15).toDate(),
-                datetime.plus(15).toDate()
+                parsedDatetime.minus(15).toDate(),
+                parsedDatetime.plus(15).toDate()
         ).stream().map(Appointment::getDoctorId).toList();
 
         final var result = restTemplate.getForObject(
