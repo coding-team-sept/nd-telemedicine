@@ -18,7 +18,7 @@ import java.util.List;
 public record AppointmentController(
         AppointmentService appointmentService
 ) {
-    @GetMapping("/available/{datetime}")
+    @GetMapping("/patient/doctor/{datetime}")
     ResponseEntity<List<AppUserResponse>> getAvailableDoctor(@RequestHeader HttpHeaders headers, @PathVariable String datetime) {
         try {
             return new ResponseEntity<>(appointmentService.getAvailableDoctor(headers, datetime), HttpStatus.OK);
@@ -27,7 +27,7 @@ public record AppointmentController(
         }
     }
 
-    @PostMapping("/appointment")
+    @PostMapping("/patient/appointment")
     ResponseEntity<AppointmentResponse> addAppointment(@RequestHeader HttpHeaders headers, @RequestBody AppointmentRequest body) {
         return ResponseEntity.ok(appointmentService.addAppointment(headers, body));
     }
