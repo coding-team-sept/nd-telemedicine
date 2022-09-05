@@ -2,7 +2,6 @@ package com.github.coding_team_sept.nd_backend.appointment.controller;
 
 import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppUserResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppointmentResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.DoctorAppointmentResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.PatientAppointmentResponse;
 import com.github.coding_team_sept.nd_backend.appointment.service.AppointmentService;
@@ -28,7 +27,7 @@ public record AppointmentController(
     }
 
     @PostMapping("/patient/appointment")
-    ResponseEntity<AppointmentResponse> addAppointment(@RequestHeader HttpHeaders headers, @RequestBody AppointmentRequest body) {
+    ResponseEntity<PatientAppointmentResponse> addAppointment(@RequestHeader HttpHeaders headers, @RequestBody AppointmentRequest body) {
         return ResponseEntity.ok(appointmentService.addAppointment(headers, body));
     }
 

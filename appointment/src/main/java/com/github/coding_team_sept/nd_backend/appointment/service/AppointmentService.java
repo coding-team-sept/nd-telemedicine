@@ -2,7 +2,10 @@ package com.github.coding_team_sept.nd_backend.appointment.service;
 
 import com.github.coding_team_sept.nd_backend.appointment.model.Appointment;
 import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.*;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppUserResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.DoctorAppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.PatientAppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.ValidateResponse;
 import com.github.coding_team_sept.nd_backend.appointment.repository.AppointmentRepository;
 import com.github.coding_team_sept.nd_backend.appointment.utils.DateTimeUtils;
 import org.springframework.http.HttpEntity;
@@ -139,7 +142,7 @@ public record AppointmentService(
         return List.of();
     }
 
-    public AppointmentResponse addAppointment(HttpHeaders headers, AppointmentRequest body) {
+    public PatientAppointmentResponse addAppointment(HttpHeaders headers, AppointmentRequest body) {
         // Authorize requester and get its ID
         final var patientId = authorizeAndGetId(headers);
         if (patientId == null) {
@@ -169,7 +172,7 @@ public record AppointmentService(
                         .appointmentTime(appointmentDatetime).build()
         );
 
-        return new AppointmentResponse(
+        return new PatientAppointmentResponse(
                 appointment.getId(),
                 doctorResponse,
                 body.datetime()
