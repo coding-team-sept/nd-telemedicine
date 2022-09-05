@@ -29,7 +29,7 @@ public class AppUser {
     private String name;
     @Column(nullable = false)
     private String password;
-    @OneToOne(
+    @ManyToOne(
             targetEntity = Role.class,
             cascade = CascadeType.ALL,
             optional = false
