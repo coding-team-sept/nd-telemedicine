@@ -129,18 +129,15 @@
 				},
 				{
 					"name": "Login",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"auth": {
 							"type": "noauth"
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"patient@patient.com\",\n    \"password\": \"patient\"\n}",
+							"raw": "{\n    \"email\": \"admin@admin.com\",\n    \"password\": \"admin\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -182,7 +179,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoxLCJleHAiOjE2NjIzNDIxNDYsImlhdCI6MTY2MjI1NTc0Nn0.zNgqEfSU1tyMio9uemSYUMrXC3c12xe6ffXCToJRWec",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoyMDIsImV4cCI6MTY2MjQ0OTc5NywiaWF0IjoxNjYyMzYzMzk3fQ.dShc44uQG7h4glCSjPGusvvfJOHWhNlXgFf_xYPe61U",
 						"type": "string"
 					}
 				]
@@ -242,7 +239,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"doctorId\": 2,\n    \"datetime\": \"2022-09-04_12:00\"\n}",
+											"raw": "{\n    \"doctorId\": 3,\n    \"datetime\": \"2022-09-04_12:00\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -325,7 +322,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjozLCJleHAiOjE2NjI0MTkzOTIsImlhdCI6MTY2MjMzMjk5Mn0.bAYcgvLMW5KTSaZBJrxW4MKtAJhrxX4Qp7oXcMRftt0",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjoyMDMsImV4cCI6MTY2MjQ0OTgzMSwiaWF0IjoxNjYyMzYzNDMxfQ.nJJkFCXA8w5kE3mplZ0r8vxQq3RpX6G-g-PEHOFZK84",
 						"type": "string"
 					}
 				]
