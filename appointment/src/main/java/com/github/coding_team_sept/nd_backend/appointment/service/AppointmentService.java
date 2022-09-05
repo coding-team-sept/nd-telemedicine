@@ -33,7 +33,7 @@ public record AppointmentService(
 
 
         final var result = restTemplate.exchange(
-                "http://www.localhost:9000/api/v1/doctor",
+                "http://localhost:9000/api/v1/doctor",
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
                 AppUserResponse[].class
@@ -50,7 +50,7 @@ public record AppointmentService(
 
     public PatientAppointmentsResponse getPatientAppointment(HttpHeaders headers) {
         final var httpValidateResponse = restTemplate.exchange(
-                "http://www.localhost:9000/api/v1/validate",
+                "http://localhost:9000/api/v1/validate",
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
                 ValidateResponse.class
@@ -84,7 +84,7 @@ public record AppointmentService(
 
     public DoctorAppointmentsResponse getDoctorAppointment(HttpHeaders headers) {
         final var httpValidateResponse = restTemplate.exchange(
-                "http://www.localhost:9000/api/v1/validate",
+                "http://localhost:9000/api/v1/validate",
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
                 ValidateResponse.class
@@ -117,7 +117,7 @@ public record AppointmentService(
     }
 
     private List<AppUserResponse> getUsers(HttpHeaders headers, List<Long> ids, String subject) {
-        String uri = UriComponentsBuilder.fromHttpUrl("http://www.localhost:9000/api/v1/" + subject)
+        String uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9000/api/v1/" + subject)
                 .queryParam("ids", ids)
                 .encode()
                 .toUriString();
@@ -188,7 +188,7 @@ public record AppointmentService(
     }
 
     private AppUserResponse validateAndGetDoctor(HttpHeaders headers, Long doctorId) {
-        String uri = UriComponentsBuilder.fromHttpUrl("http://www.localhost:9000/api/v1/doctor")
+        String uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9000/api/v1/doctor")
                 .queryParam("id", doctorId)
                 .encode()
                 .toUriString();
