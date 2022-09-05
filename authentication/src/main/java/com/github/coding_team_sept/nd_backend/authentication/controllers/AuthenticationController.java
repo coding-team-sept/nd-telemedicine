@@ -1,9 +1,12 @@
 package com.github.coding_team_sept.nd_backend.authentication.controllers;
 
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
+import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetails;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AppResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ValidateResponse;
+import com.github.coding_team_sept.nd_backend.authentication.services.AppUserService;
 import com.github.coding_team_sept.nd_backend.authentication.services.AuthenticationService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -13,11 +16,17 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1")
-public record AuthenticationController(AuthenticationService service) {
+public record AuthenticationController(
+        AuthenticationService service,
+        AppUserService appUserService
+) {
     @GetMapping("/validate")
-    public String validate() {
-        final var authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getName();
+    public ValidateResponse validate() {
+        final var authentication = (AppUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return new ValidateResponse(
+                authentication.getId(),
+                authentication.getRole().getName().name()
+        );
     }
 
     @PostMapping("/login")

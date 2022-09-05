@@ -30,9 +30,9 @@
 											}
 										},
 										"url": {
-											"raw": "{{url}}/admin/admin",
+											"raw": "{{url_authentication}}/admin/admin",
 											"host": [
-												"{{url}}"
+												"{{url_authentication}}"
 											],
 											"path": [
 												"admin",
@@ -62,9 +62,9 @@
 											}
 										},
 										"url": {
-											"raw": "{{url}}/admin/doctor",
+											"raw": "{{url_authentication}}/admin/doctor",
 											"host": [
-												"{{url}}"
+												"{{url_authentication}}"
 											],
 											"path": [
 												"admin",
@@ -116,9 +116,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/register",
+							"raw": "{{url_authentication}}/register",
 							"host": [
-								"{{url}}"
+								"{{url_authentication}}"
 							],
 							"path": [
 								"register"
@@ -140,7 +140,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"admin@admin.com\",\n    \"password\": \"admin\"\n}",
+							"raw": "{\n    \"email\": \"patient@patient.com\",\n    \"password\": \"patient\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -148,9 +148,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/login",
+							"raw": "{{url_authentication}}/login",
 							"host": [
-								"{{url}}"
+								"{{url_authentication}}"
 							],
 							"path": [
 								"login"
@@ -165,9 +165,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/validate",
+							"raw": "{{url_authentication}}/validate",
 							"host": [
-								"{{url}}"
+								"{{url_authentication}}"
 							],
 							"path": [
 								"validate"
@@ -182,7 +182,150 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoxLCJleHAiOjE2NjIyMDA2MzQsImlhdCI6MTY2MjExNDIzNH0.18L4UPiS8L0eKhvh23jnMqGDyLDzOjBQJ4wIL0oxTRY",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoxLCJleHAiOjE2NjIzNDIxNDYsImlhdCI6MTY2MjI1NTc0Nn0.zNgqEfSU1tyMio9uemSYUMrXC3c12xe6ffXCToJRWec",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "AppointmentService",
+			"item": [
+				{
+					"name": "Patient",
+					"item": [
+						{
+							"name": "Appointment",
+							"item": [
+								{
+									"name": "Appointment",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url_appointment}}/patient/appointment",
+											"host": [
+												"{{url_appointment}}"
+											],
+											"path": [
+												"patient",
+												"appointment"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Appointment",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"doctorId\": 2,\n    \"datetime\": \"2022-09-04_12:00\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url_appointment}}/patient/appointment",
+											"host": [
+												"{{url_appointment}}"
+											],
+											"path": [
+												"patient",
+												"appointment"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Doctor",
+							"item": [
+								{
+									"name": "Doctor",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url_appointment}}/patient/doctor/:timestamp",
+											"host": [
+												"{{url_appointment}}"
+											],
+											"path": [
+												"patient",
+												"doctor",
+												":timestamp"
+											],
+											"variable": [
+												{
+													"key": "timestamp",
+													"value": "2022-09-04_12:00"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Doctor",
+					"item": [
+						{
+							"name": "Appointment",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url_appointment}}/doctor/appointment",
+									"host": [
+										"{{url_appointment}}"
+									],
+									"path": [
+										"doctor",
+										"appointment"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjozLCJleHAiOjE2NjI0MTkzOTIsImlhdCI6MTY2MjMzMjk5Mn0.bAYcgvLMW5KTSaZBJrxW4MKtAJhrxX4Qp7oXcMRftt0",
 						"type": "string"
 					}
 				]
@@ -231,8 +374,13 @@
 	],
 	"variable": [
 		{
-			"key": "url",
+			"key": "url_authentication",
 			"value": "http://localhost:9000/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "url_appointment",
+			"value": "http://localhost:9001/api/v1",
 			"type": "string"
 		}
 	]

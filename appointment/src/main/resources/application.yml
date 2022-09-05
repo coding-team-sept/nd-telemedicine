@@ -1,13 +1,13 @@
 server:
-  port: 9000
+  port: 9001
 
 spring:
   application:
-    name: authentication
+    name: appointment
 
   datasource:
     username: 'admin'
-    url: jdbc:postgresql://localhost:5432/telemedic_authentication
+    url: jdbc:postgresql://localhost:5432/telemedic_appointment
     password: 'admin'
 
   jpa:
