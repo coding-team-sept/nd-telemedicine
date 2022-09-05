@@ -2,9 +2,8 @@ package com.github.coding_team_sept.nd_backend.appointment.controller;
 
 import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppUserResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppointmentResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.DoctorAppointmentsResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.PatientAppointmentsResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.DoctorAppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.PatientAppointmentResponse;
 import com.github.coding_team_sept.nd_backend.appointment.service.AppointmentService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,17 +27,17 @@ public record AppointmentController(
     }
 
     @PostMapping("/patient/appointment")
-    ResponseEntity<AppointmentResponse> addAppointment(@RequestHeader HttpHeaders headers, @RequestBody AppointmentRequest body) {
+    ResponseEntity<PatientAppointmentResponse> addAppointment(@RequestHeader HttpHeaders headers, @RequestBody AppointmentRequest body) {
         return ResponseEntity.ok(appointmentService.addAppointment(headers, body));
     }
 
     @GetMapping("/patient/appointment")
-    ResponseEntity<PatientAppointmentsResponse> getPatientAppointment(@RequestHeader HttpHeaders headers) {
+    ResponseEntity<List<PatientAppointmentResponse>> getPatientAppointment(@RequestHeader HttpHeaders headers) {
         return ResponseEntity.ok(appointmentService.getPatientAppointment(headers));
     }
 
     @GetMapping("/doctor/appointment")
-    ResponseEntity<DoctorAppointmentsResponse> getDoctorAppointment(@RequestHeader HttpHeaders headers) {
+    ResponseEntity<List<DoctorAppointmentResponse>> getDoctorAppointment(@RequestHeader HttpHeaders headers) {
         return ResponseEntity.ok(appointmentService.getDoctorAppointment(headers));
     }
 }

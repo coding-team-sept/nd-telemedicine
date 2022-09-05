@@ -2,7 +2,10 @@ package com.github.coding_team_sept.nd_backend.appointment.service;
 
 import com.github.coding_team_sept.nd_backend.appointment.model.Appointment;
 import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.*;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppUserResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.DoctorAppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.PatientAppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.ValidateResponse;
 import com.github.coding_team_sept.nd_backend.appointment.repository.AppointmentRepository;
 import com.github.coding_team_sept.nd_backend.appointment.utils.DateTimeUtils;
 import org.springframework.http.HttpEntity;
@@ -48,7 +51,7 @@ public record AppointmentService(
         return List.of();
     }
 
-    public PatientAppointmentsResponse getPatientAppointment(HttpHeaders headers) {
+    public List<PatientAppointmentResponse> getPatientAppointment(HttpHeaders headers) {
         final var httpValidateResponse = restTemplate.exchange(
                 "http://localhost:9000/api/v1/validate",
                 HttpMethod.GET,
@@ -67,22 +70,24 @@ public record AppointmentService(
 
                 // Retrieve doctors data
                 final var doctors = getUsers(headers, doctorsId, "doctor");
-                return new PatientAppointmentsResponse(
-                        appointments.stream()
-                                .map(appointment -> new PatientAppointmentsResponse.AppointmentResponse(
-                                        appointment.getId(),
-                                        appointment.getDoctorId(),
-                                        appointment.getAppointmentTime().toString()
-                                ))
-                                .toList(),
-                        doctors
-                );
+                return appointments.stream()
+                        .map(appointment -> new PatientAppointmentResponse(
+                                appointment.getId(),
+                                doctors.stream()
+                                        .filter(
+                                                doctor -> doctor.id().equals(appointment.getDoctorId())
+                                        ).findAny()
+                                        .orElse(null),
+                                appointment.getAppointmentTime().toString()
+                        )).filter(
+                                appointment -> appointment.doctor() != null
+                        ).toList();
             }
         }
         return null;
     }
 
-    public DoctorAppointmentsResponse getDoctorAppointment(HttpHeaders headers) {
+    public List<DoctorAppointmentResponse> getDoctorAppointment(HttpHeaders headers) {
         final var httpValidateResponse = restTemplate.exchange(
                 "http://localhost:9000/api/v1/validate",
                 HttpMethod.GET,
@@ -101,16 +106,18 @@ public record AppointmentService(
 
                 // Retrieve doctors data
                 final var patients = getUsers(headers, patientsId, "patient");
-                return new DoctorAppointmentsResponse(
-                        appointments.stream()
-                                .map(appointment -> new DoctorAppointmentsResponse.AppointmentResponse(
-                                        appointment.getId(),
-                                        appointment.getPatientId(),
-                                        appointment.getAppointmentTime().toString()
-                                ))
-                                .toList(),
-                        patients
-                );
+                return appointments.stream()
+                        .map(appointment -> new DoctorAppointmentResponse(
+                                appointment.getId(),
+                                patients.stream()
+                                        .filter(
+                                                patient -> patient.id().equals(appointment.getPatientId())
+                                        ).findAny()
+                                        .orElse(null),
+                                appointment.getAppointmentTime().toString()
+                        )).filter(
+                                appointment -> appointment.patient() != null
+                        ).toList();
             }
         }
         return null;
@@ -135,7 +142,7 @@ public record AppointmentService(
         return List.of();
     }
 
-    public AppointmentResponse addAppointment(HttpHeaders headers, AppointmentRequest body) {
+    public PatientAppointmentResponse addAppointment(HttpHeaders headers, AppointmentRequest body) {
         // Authorize requester and get its ID
         final var patientId = authorizeAndGetId(headers);
         if (patientId == null) {
@@ -165,7 +172,7 @@ public record AppointmentService(
                         .appointmentTime(appointmentDatetime).build()
         );
 
-        return new AppointmentResponse(
+        return new PatientAppointmentResponse(
                 appointment.getId(),
                 doctorResponse,
                 body.datetime()
