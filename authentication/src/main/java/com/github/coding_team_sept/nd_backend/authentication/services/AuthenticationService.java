@@ -45,23 +45,15 @@ public record AuthenticationService(
     public AppResponse register(RegisterRequest request, RoleType roleType) throws DataIntegrityViolationException {
         // TODO: Create findBy for email. Source: https://stackoverflow.com/a/27583544
 
-        if (request.email().isEmpty() && Pattern.compile("^(.+)@(\\S+)$").matcher(request.email()).matches()) {
+        if (Pattern.compile("^(.+)@(\\S+)$").matcher(request.email()).matches()) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid email");
         }
-
-        if (request.name().isEmpty() && Pattern.compile("^[A-Za-z_][A-Za-z0-9_]{7,29}$").matcher(request.name()).matches()) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Empty Name");
-        }
-        if (request.password().isEmpty()) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Empty password");
+        if (Pattern.compile("^[A-Za-z_][A-Za-z0-9_]{7,29}$").matcher(request.name()).matches()) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid name");
         }
         if (request.password().length() < 8){
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid Password");
         }
-
-        // TODO: Validate email
-        // TODO: Validate name
-        // TODO: Validate password
 
         // Create model from request
         final var appUser = AppUser.builder()
