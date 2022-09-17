@@ -48,7 +48,7 @@ public record AuthenticationService(
         if (Pattern.compile("^(.+)@(\\S+)$").matcher(request.email()).matches()) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid email");
         }
-        if (Pattern.compile("^[A-Za-z_][A-Za-z0-9_]{7,29}$").matcher(request.name()).matches()) {
+        if (Pattern.compile("^[A-Za-z ,.'-]{2,}$").matcher(request.name()).matches()) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid name");
         }
         if (request.password().length() < 8){
