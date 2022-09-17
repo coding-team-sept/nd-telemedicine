@@ -43,7 +43,10 @@ public record AuthenticationService(
     }
 
     public AppResponse register(RegisterRequest request, RoleType roleType) throws DataIntegrityViolationException {
-        // TODO: Create findBy for email. Source: https://stackoverflow.com/a/27583544
+        // Source: https://stackoverflow.com/a/27583544
+        if (authenticationRepo.existsAppUserByEmail(request.email())) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "User exists");
+        }
 
         if (Pattern.compile("^(.+)@(\\S+)$").matcher(request.email()).matches()) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid email");
