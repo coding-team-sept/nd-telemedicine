@@ -1,13 +1,23 @@
 all:
 
-run:
+run: start
+
+start: start-docker
+
+start-docker:
 	docker compose up -d --force-recreate
 
-stop:
+stop: stop-docker
+
+stop-docker:
 	docker compose down
 
-clean:
+clean: clean-volumes clean-images
+
+clean-volumes:
 	docker compose down --volumes
+
+clean-images:
 	docker compose down --rmi all --volumes
 
 prune:
