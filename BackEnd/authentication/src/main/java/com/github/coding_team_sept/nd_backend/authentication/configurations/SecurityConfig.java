@@ -1,4 +1,4 @@
-package com.github.coding_team_sept.nd_backend.authentication.configuration;
+package com.github.coding_team_sept.nd_backend.authentication.configurations;
 
 import com.github.coding_team_sept.nd_backend.authentication.components.AuthenticationEntryPointJwt;
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
