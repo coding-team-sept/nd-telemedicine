@@ -15,7 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/auth")
 public record AuthenticationController(
         AuthenticationService service,
         AppUserService appUserService
@@ -39,31 +39,14 @@ public record AuthenticationController(
         }
     }
 
-    @PostMapping("/admin/admin")
-    public ResponseEntity<AppResponse> addAdmin(@RequestBody RegisterRequest request) {
-        return register(request, RoleType.ROLE_ADMIN);
-    }
-
-    @PostMapping("/admin/doctor")
-    public ResponseEntity<AppResponse> addDoctor(@RequestBody RegisterRequest request) {
-        return register(request, RoleType.ROLE_DOCTOR);
-    }
-
     @PostMapping("/register")
     public ResponseEntity<AppResponse> register(@RequestBody RegisterRequest request) {
-        return register(request, RoleType.ROLE_PATIENT);
-    }
-
-    private ResponseEntity<AppResponse> register(RegisterRequest request, RoleType roleType) {
         try {
-            final var response = service.register(request, roleType);
-            if (roleType.equals(RoleType.ROLE_PATIENT)) {
-                return new ResponseEntity<>(
-                        response,
-                        HttpStatus.CREATED
-                );
-            }
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
+            final var response = service.register(request, RoleType.ROLE_PATIENT);
+            return new ResponseEntity<>(
+                    response,
+                    HttpStatus.CREATED
+            );
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.internalServerError().body(AppResponse.error("Email has been taken!", e));
         } catch (Exception e) {
