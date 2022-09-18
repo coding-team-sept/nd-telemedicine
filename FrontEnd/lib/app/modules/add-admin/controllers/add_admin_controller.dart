@@ -36,7 +36,7 @@ class AddAdminController extends GetxController {
     bool valid = true;
 
     if (name.value.length < 4) {
-      nameError.value = "Name should be least 4";
+      nameError.value = "Name should be at least 4";
       valid = false;
     } else {
       nameError.value = null;
