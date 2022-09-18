@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 
 class AddAdminController extends GetxController {
   final name = ''.obs;
@@ -64,5 +67,34 @@ class AddAdminController extends GetxController {
     isLoading.value = true;
     await Future.delayed(const Duration(seconds: 1));
     isLoading.value = false;
+
+    var url = 'http://10.0.2.2:9000/api/v1';
+
+    try {
+      var response = await Dio().post('$url/admin/admin', data: {
+        'name': name.value,
+        'email': email.value,
+        'password': password.value,
+      });
+      isLoading.value = false;
+      if (response.statusCode == 201) {
+        Get.back();
+
+
+
+      } else {
+        Get.dialog(AlertDialog(
+          title: Text('Error'),
+          content: Text(response.data['error']['message']),
+        ));
+      }
+      //this is from website DIO Flutter, Copy that, but not found dio so we Make a new Dio() and import.
+    } on DioError catch (e, _) {
+      isLoading.value = false;
+      Get.dialog(AlertDialog(
+        title: Text('Error'),
+        content: Text(e.response?.data['error']['message'] ?? 'Unknown data'),
+      ));
+    }
   }
 }
