@@ -10,11 +10,15 @@ import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUse
 import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
 import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.regex.Pattern;
 
 @Service
 public record AuthenticationService(
@@ -39,11 +43,20 @@ public record AuthenticationService(
     }
 
     public AppResponse register(RegisterRequest request, RoleType roleType) throws DataIntegrityViolationException {
-        // TODO: Create findBy for email. Source: https://stackoverflow.com/a/27583544
+        // Source: https://stackoverflow.com/a/27583544
+        if (authenticationRepo.existsAppUserByEmail(request.email())) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "User exists");
+        }
 
-        // TODO: Validate email
-        // TODO: Validate name
-        // TODO: Validate password
+        if (!Pattern.compile("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$").matcher(request.email()).matches()) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid email");
+        }
+        if (!Pattern.compile("^[A-Za-z ,.'-]{2,}$").matcher(request.name()).matches()) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid name");
+        }
+        if (request.password().length() < 8){
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid Password");
+        }
 
         // Create model from request
         final var appUser = AppUser.builder()
