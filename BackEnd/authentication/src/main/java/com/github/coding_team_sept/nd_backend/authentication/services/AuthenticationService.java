@@ -1,6 +1,11 @@
 package com.github.coding_team_sept.nd_backend.authentication.services;
 
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.AppException;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.EmailTakenException;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.EmailFormatException;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.PasswordFormatException;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.UserNameFormatException;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetails;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
@@ -9,14 +14,11 @@ import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.
 import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUserRepository;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
 import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.regex.Pattern;
 
@@ -42,20 +44,19 @@ public record AuthenticationService(
         return AppResponse.login(jwt, userDetails);
     }
 
-    public AppResponse register(RegisterRequest request, RoleType roleType) throws DataIntegrityViolationException {
+    public AppResponse register(RegisterRequest request, RoleType roleType) throws AppException {
         // Source: https://stackoverflow.com/a/27583544
         if (authenticationRepo.existsAppUserByEmail(request.email())) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "User exists");
+            throw new EmailTakenException();
         }
-
         if (!Pattern.compile("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$").matcher(request.email()).matches()) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid email");
+            throw new EmailFormatException("pattern not match");
         }
         if (!Pattern.compile("^[A-Za-z ,.'-]{2,}$").matcher(request.name()).matches()) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid name");
+            throw new UserNameFormatException("pattern not match");
         }
-        if (request.password().length() < 8){
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid Password");
+        if (request.password().length() < 8) {
+            throw new PasswordFormatException("minimum 8 characters");
         }
 
         // Create model from request

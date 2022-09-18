@@ -11,9 +11,9 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record AppResponse(Map<String, Object> data, Map<String, Object> error) {
-    public static AppResponse error(String message, Exception e) {
+    public static AppResponse error(String message) {
         return AppResponse.builder().error(Map.of(
-                "message", (message == null) ? e.getMessage() : message
+                "message", message
         )).build();
     }
 

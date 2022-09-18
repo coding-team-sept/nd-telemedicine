@@ -24,9 +24,9 @@ public record AppUserController(
             service.register(request, roleType);
             return new ResponseEntity<>(null, HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.internalServerError().body(AppResponse.error("Email has been taken!", e));
+            return ResponseEntity.internalServerError().body(AppResponse.error("Email has been taken!"));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage(), e));
+            return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
         }
     }
 
