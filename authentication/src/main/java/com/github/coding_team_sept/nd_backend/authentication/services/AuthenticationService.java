@@ -48,10 +48,10 @@ public record AuthenticationService(
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "User exists");
         }
 
-        if (Pattern.compile("^(.+)@(\\S+)$").matcher(request.email()).matches()) {
+        if (!Pattern.compile("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$").matcher(request.email()).matches()) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid email");
         }
-        if (Pattern.compile("^[A-Za-z ,.'-]{2,}$").matcher(request.name()).matches()) {
+        if (!Pattern.compile("^[A-Za-z ,.'-]{2,}$").matcher(request.name()).matches()) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Invalid name");
         }
         if (request.password().length() < 8){
