@@ -1,6 +1,7 @@
 package com.github.coding_team_sept.nd_backend.authentication.services;
 
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.AppException;
 import com.github.coding_team_sept.nd_backend.authentication.exceptions.RoleNotFoundException;
 import com.github.coding_team_sept.nd_backend.authentication.exceptions.UserNotFoundException;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
@@ -18,7 +19,7 @@ public record AppUserService(
         AppUserRepository appUserRepo,
         RoleRepository roleRepo
 ) {
-    public List<AppUserResponse> getUserByRole(RoleType role) throws RoleNotFoundException {
+    public List<AppUserResponse> getUserByRole(RoleType role) throws AppException {
         final var appUsers = appUserRepo.findAppUserByRole(
                 roleRepo.findRoleByName(role)
                         .orElseThrow(RoleNotFoundException::new)
@@ -30,7 +31,7 @@ public record AppUserService(
         ).orElseGet(List::of);
     }
 
-    public AppUserResponse getUserById(Long id, RoleType role) throws RoleNotFoundException, UserNotFoundException{
+    public AppUserResponse getUserById(Long id, RoleType role) throws AppException {
         final Optional<AppUser> appUser;
         if (role == null) {
             appUser = appUserRepo.findById(id);
@@ -48,7 +49,7 @@ public record AppUserService(
         )).orElseThrow(UserNotFoundException::new);
     }
 
-    public List<AppUserResponse> getUsersByIds(List<Long> ids, RoleType role) throws RoleNotFoundException {
+    public List<AppUserResponse> getUsersByIds(List<Long> ids, RoleType role) throws AppException {
         final List<AppUser> appUsers;
         if (role == null) {
             appUsers = ids.stream()
