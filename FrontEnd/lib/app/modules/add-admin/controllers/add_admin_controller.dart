@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-
 
 class AddAdminController extends GetxController {
   final name = ''.obs;
@@ -14,8 +14,11 @@ class AddAdminController extends GetxController {
 
   final isLoading = false.obs;
 
+  late final token;
+
   @override
-  void onInit() {
+  void onInit() async {
+    token = await const FlutterSecureStorage().read(key: "token");
     super.onInit();
   }
 
@@ -71,29 +74,34 @@ class AddAdminController extends GetxController {
     var url = 'http://10.0.2.2:9000/api/v1';
 
     try {
-      var response = await Dio().post('$url/admin/admin', data: {
-        'name': name.value,
-        'email': email.value,
-        'password': password.value,
-      });
+      var response = await Dio().post('$url/admin/admin',
+          data: {
+            'name': name.value,
+            'email': email.value,
+            'password': password.value,
+          },
+          options: Options(headers: {"Authorization": "Bearer $token"}));
       isLoading.value = false;
       if (response.statusCode == 201) {
         Get.back();
-
-
-
       } else {
         Get.dialog(AlertDialog(
-          title: Text('Error'),
+          title: const Text('Error'),
           content: Text(response.data['error']['message']),
         ));
       }
       //this is from website DIO Flutter, Copy that, but not found dio so we Make a new Dio() and import.
     } on DioError catch (e, _) {
       isLoading.value = false;
+      if (e.response?.statusCode == 401) {
+        Get.dialog(const AlertDialog(
+          title: Text('Error'),
+          content: Text('Unauthorized'),
+        ));
+      }
       Get.dialog(AlertDialog(
-        title: Text('Error'),
-        content: Text(e.response?.data['error']['message'] ?? 'Unknown data'),
+        title: const Text('Error'),
+        content: Text(e.response?.data['error']['message'] ?? 'Unknown error'),
       ));
     }
   }

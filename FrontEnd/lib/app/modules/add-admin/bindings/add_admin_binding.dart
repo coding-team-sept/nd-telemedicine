@@ -5,8 +5,8 @@ import '../controllers/add_admin_controller.dart';
 class AddAdminBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AddAdminController>(
-      () => AddAdminController(),
+    Get.put<AddAdminController>(
+      AddAdminController(),
     );
   }
 }
