@@ -1,9 +1,9 @@
 package com.github.coding_team_sept.nd_backend.authentication.controllers;
 
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.AppException;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AppResponse;
-import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AppUserResponse;
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserService;
 import com.github.coding_team_sept.nd_backend.authentication.services.AuthenticationService;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,12 +19,14 @@ public record AppUserController(
         AuthenticationService service,
         AppUserService appUserService
 ) {
-    private ResponseEntity<AppResponse> register(RegisterRequest request, RoleType roleType) {
+    private ResponseEntity<AppResponse> addUser(RegisterRequest request, RoleType roleType) {
         try {
             service.register(request, roleType);
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
+            return ResponseEntity.ok().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.internalServerError().body(AppResponse.error("Email has been taken!"));
+        } catch (AppException e) {
+            return new ResponseEntity<>(AppResponse.error(e.message), HttpStatus.valueOf(e.status));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
         }
@@ -32,53 +34,59 @@ public record AppUserController(
 
     @PostMapping("/admin/admin")
     public ResponseEntity<AppResponse> addAdmin(@RequestBody RegisterRequest request) {
-        return register(request, RoleType.ROLE_ADMIN);
+        return addUser(request, RoleType.ROLE_ADMIN);
     }
 
     @PostMapping("/admin/doctor")
     public ResponseEntity<AppResponse> addDoctor(@RequestBody RegisterRequest request) {
-        return register(request, RoleType.ROLE_DOCTOR);
+        return addUser(request, RoleType.ROLE_DOCTOR);
     }
 
     @GetMapping("/admin/admin")
-    public ResponseEntity<List<AppUserResponse>> getAdmin() {
+    public ResponseEntity<AppResponse> getAdmin() {
         try {
-            return ResponseEntity.ok(appUserService.getUserByRole(RoleType.ROLE_ADMIN));
+            return ResponseEntity.ok(AppResponse.user(appUserService.getUserByRole(RoleType.ROLE_ADMIN)));
+        } catch (AppException e) {
+            return new ResponseEntity<>(AppResponse.error(e.message), HttpStatus.valueOf(e.status));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
         }
     }
 
     @GetMapping("/admin/doctor")
-    public ResponseEntity<List<AppUserResponse>> getDoctor(
+    public ResponseEntity<AppResponse> getDoctor(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) List<Long> ids
     ) {
         try {
             if (id != null) {
-                return ResponseEntity.ok(List.of(appUserService.getUserById(id, RoleType.ROLE_DOCTOR)));
+                return ResponseEntity.ok(AppResponse.user(List.of(appUserService.getUserById(id, RoleType.ROLE_DOCTOR))));
             } else if (ids != null) {
-                return ResponseEntity.ok(appUserService.getUsersByIds(ids, RoleType.ROLE_DOCTOR));
+                return ResponseEntity.ok(AppResponse.user(appUserService.getUsersByIds(ids, RoleType.ROLE_DOCTOR)));
             }
-            return ResponseEntity.ok(appUserService.getUserByRole(RoleType.ROLE_DOCTOR));
+            return ResponseEntity.ok(AppResponse.user(appUserService.getUserByRole(RoleType.ROLE_DOCTOR)));
+        } catch (AppException e) {
+            return new ResponseEntity<>(AppResponse.error(e.message), HttpStatus.valueOf(e.status));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
         }
     }
 
     @GetMapping("/admin/patient")
-    public ResponseEntity<List<AppUserResponse>> getPatient(
+    public ResponseEntity<AppResponse> getPatient(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) List<Long> ids) {
         try {
             if (id != null) {
-                return ResponseEntity.ok(List.of(appUserService.getUserById(id, RoleType.ROLE_PATIENT)));
+                return ResponseEntity.ok(AppResponse.user(List.of(appUserService.getUserById(id, RoleType.ROLE_PATIENT))));
             } else if (ids != null) {
-                return ResponseEntity.ok(appUserService.getUsersByIds(ids, RoleType.ROLE_PATIENT));
+                return ResponseEntity.ok(AppResponse.user(appUserService.getUsersByIds(ids, RoleType.ROLE_PATIENT)));
             }
             return ResponseEntity.badRequest().build();
+        } catch (AppException e) {
+            return new ResponseEntity<>(AppResponse.error(e.message), HttpStatus.valueOf(e.status));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
         }
     }
 }
