@@ -59,7 +59,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                     .builder()
                     .name("Admin")
                     .email(email)
-                    .password(encoder.encode("admin"))
+                    .password(encoder.encode("admin123"))
                     .role(roleRepo.findRoleByName(RoleType.ROLE_ADMIN).orElse(null))
                     .build();
             authenticationRepo.save(newAppUser);
