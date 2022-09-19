@@ -9,9 +9,9 @@ import java.util.regex.Pattern;
 public class ValidationUtils {
     static public boolean validateEmail(String email) {
         if (!Pattern.compile("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$").matcher(email).matches()) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     static public void validateEmailElseThrow(String email) throws EmailFormatException {
@@ -22,9 +22,9 @@ public class ValidationUtils {
 
     static public boolean validateUserName(String name) {
         if (!Pattern.compile("^[A-Za-z ,.'-]{2,}$").matcher(name).matches()) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
    static public void validateUserNameElseThrow(String name) throws UserNameFormatException {
@@ -35,9 +35,9 @@ public class ValidationUtils {
 
     static public boolean validatePassword(String password) {
         if (password.length() < 8) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     static public void validatePasswordElseThrow(String password) throws PasswordFormatException {
