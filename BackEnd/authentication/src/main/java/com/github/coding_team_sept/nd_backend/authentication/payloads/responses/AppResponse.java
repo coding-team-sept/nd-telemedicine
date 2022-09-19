@@ -34,7 +34,6 @@ public record AppResponse(Object data, Object error) {
         return AppResponse.data(Map.of(
                 "token", new TokenResponse(token),
                 "user", Map.of(
-                        "id", userDetails.getId(),
                         "email", userDetails.getEmail(),
                         "name", userDetails.getName(),
                         "role", userDetails.getRole().getName().name()
