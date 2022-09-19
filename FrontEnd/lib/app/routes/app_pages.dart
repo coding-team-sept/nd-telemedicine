@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
 
 
+import '../modules/add-doctor/bindings/add_doctor_binding.dart';
+import '../modules/add-doctor/views/add_doctor_view.dart';
+
 import '../modules/add-admin/bindings/add_admin_binding.dart';
 import '../modules/add-admin/views/add_admin_view.dart';
 
@@ -45,6 +48,12 @@ class AppPages {
       binding: RegisterBinding(),
     ),
     GetPage(
+
+      name: _Paths.ADD_DOCTOR,
+      page: () => const AddDoctorView(),
+      binding: AddDoctorBinding(),
+  ),
+    GetPage(
       name: _Paths.ADD_ADMIN,
       page: () => const AddAdminView(),
       binding: AddAdminBinding(),
@@ -53,6 +62,7 @@ class AppPages {
       name: _Paths.CHAT,
       page: () => const ChatView(),
       binding: ChatBinding(),
+
     ),
   ];
 }
