@@ -33,7 +33,12 @@ public record AuthenticationService(
         AuthenticationManager authenticationManager,
         AppUserDetailsService userDetailsService
 ) {
-    public AppResponse login(LoginRequest request) {
+    public AppResponse login(LoginRequest request) throws AppException {
+        // Validations
+        ValidationUtils.validateEmailElseThrow(request.email());
+        ValidationUtils.validatePasswordElseThrow(request.password());
+
+        // Authenticate
         final var authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
@@ -47,11 +52,13 @@ public record AuthenticationService(
     }
 
     public AppResponse register(RegisterRequest request, RoleType roleType) throws AppException {
+        // Check if email is used
         // Source: https://stackoverflow.com/a/27583544
         if (authenticationRepo.existsAppUserByEmail(request.email())) {
             throw new EmailTakenException();
         }
 
+        // Validations
         ValidationUtils.validateEmailElseThrow(request.email());
         ValidationUtils.validateUserNameElseThrow(request.name());
         ValidationUtils.validatePasswordElseThrow(request.password());
