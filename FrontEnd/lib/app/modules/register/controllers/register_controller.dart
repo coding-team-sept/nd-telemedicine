@@ -127,6 +127,13 @@ class RegisterController extends GetxController {
       success = false;
     }
 
+
+
+    if (password.value.length < 8 || password.value.length > 24) {
+      passwordError.value = "Password length must 8-24 characters";
+      success = false;
+    }
+
     if (password.isEmpty) {
       passwordError.value = "Please input a non-empty value";
       success = false;
@@ -134,11 +141,6 @@ class RegisterController extends GetxController {
 
     if (confirmPassword.isEmpty) {
       confirmPasswordError.value = "Please input a non-empty value";
-      success = false;
-    }
-
-    if (password.value.length < 8 || password.value.length > 24) {
-      passwordError.value = "Password length must 8-24 characters";
       success = false;
     }
 
