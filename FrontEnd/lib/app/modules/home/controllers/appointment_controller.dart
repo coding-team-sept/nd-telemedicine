@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:nd/app/routes/app_pages.dart';
 
@@ -8,6 +9,13 @@ import '../model/appointment_model.dart';
 class AppointmentController extends GetxController {
   final isLoading = false.obs;
   RxList<AppointmentModel> appointmentData = <AppointmentModel>[].obs;
+  late String token;
+  @override
+  void onInit() async {
+    token = await const FlutterSecureStorage().read(key: "token") ?? '';
+    super.onInit();
+  }
+
   @override
   void onReady() async {
     getAppointment();
@@ -17,8 +25,6 @@ class AppointmentController extends GetxController {
     isLoading.value = true;
     // Get doctors list from server
     const url = 'http://10.0.2.2:9001/api/v1';
-    const token =
-        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjoyLCJleHAiOjE2NjI0NDgwNDIsImlhdCI6MTY2MjM2MTY0Mn0.qG_a0Y-sYd1HkmvhHC-sT0nW5EWFA3gWnXIEsheE09E";
     try {
       final response = await Dio().get('$url/patient/appointment',
           options: Options(headers: {"Authorization": "Bearer $token"}));

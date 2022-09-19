@@ -35,7 +35,6 @@ class DashboardView extends GetView<DashboardController> {
               onPressed: () => Get.toNamed(Routes.REGISTER),
               child: const Text("Register")),
 
-
         const SizedBox(
           height: 12,
         ),
@@ -43,6 +42,15 @@ class DashboardView extends GetView<DashboardController> {
         ElevatedButton(
             onPressed: () => Get.toNamed(Routes.ADD_ADMIN),
             child: const Text("Add Admin")),
+
+          const SizedBox(
+            height: 12,
+          ),
+          // TODO: add code to go to login view
+          ElevatedButton(
+              onPressed: () => Get.toNamed(Routes.CHAT),
+              child: const Text("Chat")),
+
         ],
       ),
     );

@@ -1,7 +1,12 @@
 import 'package:get/get.dart';
 
+
 import '../modules/add-admin/bindings/add_admin_binding.dart';
 import '../modules/add-admin/views/add_admin_view.dart';
+
+import '../modules/chat/bindings/chat_binding.dart';
+import '../modules/chat/views/chat_view.dart';
+
 import '../modules/create_appointment/bindings/create_appointment_binding.dart';
 import '../modules/create_appointment/views/create_appointment_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -43,6 +48,11 @@ class AppPages {
       name: _Paths.ADD_ADMIN,
       page: () => const AddAdminView(),
       binding: AddAdminBinding(),
+  ),
+  GetPage(
+      name: _Paths.CHAT,
+      page: () => const ChatView(),
+      binding: ChatBinding(),
     ),
   ];
 }

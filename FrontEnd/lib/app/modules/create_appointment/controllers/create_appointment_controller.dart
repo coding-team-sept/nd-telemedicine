@@ -1,11 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nd/app/modules/create_appointment/model/doctor_model.dart';
 
 class CreateAppointmentController extends GetxController {
   RxList<DoctorModel> doctorData = <DoctorModel>[].obs;
+  late String token;
+  @override
+  void onInit() async {
+    token = await const FlutterSecureStorage().read(key: "token") ?? '';
+    super.onInit();
+  }
 
   final date = DateTime.now().obs;
   final time = TimeOfDay.now().obs;
@@ -34,8 +41,6 @@ class CreateAppointmentController extends GetxController {
     isLoading.value = true;
     // Get doctors list from server
     const url = 'http://10.0.2.2:9001/api/v1';
-    const token =
-        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjoyLCJleHAiOjE2NjI0NDgwNDIsImlhdCI6MTY2MjM2MTY0Mn0.qG_a0Y-sYd1HkmvhHC-sT0nW5EWFA3gWnXIEsheE09E";
     final timestamp =
         '${date.value.year}-${date.value.month}-${date.value.day}_${time.value.hour}:${time.value.minute}';
     try {
@@ -81,8 +86,6 @@ class CreateAppointmentController extends GetxController {
     print("booking");
     // Get doctors list from server
     const url = 'http://10.0.2.2:9001/api/v1';
-    const token =
-        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjoyLCJleHAiOjE2NjI0NDgwNDIsImlhdCI6MTY2MjM2MTY0Mn0.qG_a0Y-sYd1HkmvhHC-sT0nW5EWFA3gWnXIEsheE09E";
     final timestamp =
         '${date.value.year}-${date.value.month}-${date.value.day}_${time.value.hour}:${time.value.minute}';
     try {
