@@ -60,7 +60,7 @@ public record AppUserController(
     ) {
         try {
             if (id != null) {
-                return ResponseEntity.ok(AppResponse.user(List.of(appUserService.getUserById(id, RoleType.ROLE_DOCTOR))));
+                return ResponseEntity.ok(AppResponse.user(appUserService.getUserById(id, RoleType.ROLE_DOCTOR)));
             } else if (ids != null) {
                 return ResponseEntity.ok(AppResponse.user(appUserService.getUsersByIds(ids, RoleType.ROLE_DOCTOR)));
             }
@@ -78,7 +78,7 @@ public record AppUserController(
             @RequestParam(required = false) List<Long> ids) {
         try {
             if (id != null) {
-                return ResponseEntity.ok(AppResponse.user(List.of(appUserService.getUserById(id, RoleType.ROLE_PATIENT))));
+                return ResponseEntity.ok(AppResponse.user(appUserService.getUserById(id, RoleType.ROLE_PATIENT)));
             } else if (ids != null) {
                 return ResponseEntity.ok(AppResponse.user(appUserService.getUsersByIds(ids, RoleType.ROLE_PATIENT)));
             }
