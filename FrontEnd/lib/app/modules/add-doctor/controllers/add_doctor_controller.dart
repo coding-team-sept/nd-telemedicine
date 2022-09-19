@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 
@@ -14,8 +15,11 @@ class AddDoctorController extends GetxController {
 
   final isLoading = false.obs;
 
+  late final token;
+
   @override
-  void onInit() {
+  void onInit() async{
+    token = await FlutterSecureStorage().read(key: "token");
     super.onInit();
   }
 
@@ -75,7 +79,7 @@ class AddDoctorController extends GetxController {
         'name': name.value,
         'email': email.value,
         'password': password.value,
-      });
+      },options: Options(headers: {"Authorization": "Bearer $token"}));
       isLoading.value = false;
       if (response.statusCode == 201){
         Get.back();
@@ -90,7 +94,7 @@ class AddDoctorController extends GetxController {
       isLoading.value = false;
       Get.dialog(AlertDialog(
         title: const Text('Error'),
-        content: Text(e.response?.data['error']['message'] ?? 'Unknown data'),
+        content: Text('Unknown error'),
       ));
     }
   }
