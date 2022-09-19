@@ -14,6 +14,8 @@ import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.
 import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUserRepository;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
 import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
+import com.github.coding_team_sept.nd_backend.authentication.utils.ValidationUtils;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Validate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,15 +51,10 @@ public record AuthenticationService(
         if (authenticationRepo.existsAppUserByEmail(request.email())) {
             throw new EmailTakenException();
         }
-        if (!Pattern.compile("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$").matcher(request.email()).matches()) {
-            throw new EmailFormatException("pattern not match");
-        }
-        if (!Pattern.compile("^[A-Za-z ,.'-]{2,}$").matcher(request.name()).matches()) {
-            throw new UserNameFormatException("pattern not match");
-        }
-        if (request.password().length() < 8) {
-            throw new PasswordFormatException("minimum 8 characters");
-        }
+
+        ValidationUtils.validateEmailElseThrow(request.email());
+        ValidationUtils.validateUserNameElseThrow(request.name());
+        ValidationUtils.validatePasswordElseThrow(request.password());
 
         // Create model from request
         final var appUser = AppUser.builder()
