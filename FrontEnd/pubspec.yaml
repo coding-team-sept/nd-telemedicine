@@ -15,6 +15,7 @@ dependencies:
   flutter_chat_ui: 1.6.4
   flutter: 
     sdk: flutter
+  nock: ^1.2.1
 
 dev_dependencies: 
   build_runner: ^2.2.1
