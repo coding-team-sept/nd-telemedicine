@@ -27,13 +27,9 @@ public record AppResponse(Object data, Object error) {
     }
 
     public static AppResponse login(String token, AppUserDetails userDetails) {
-        return AppResponse.data(Map.of(
-                "token", new TokenResponse(token),
-                "user", Map.of(
-                        "email", userDetails.getEmail(),
-                        "name", userDetails.getName(),
-                        "role", userDetails.getRole().getName().name()
-                )
+        return AppResponse.data(LoginResponse.build(
+                TokenResponse.build(token),
+                UserDataResponse.fromUserDetails(userDetails)
         ));
     }
 

@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record TokenResponse(
-        String access
+        String token
 ) {
+    public static TokenResponse build(String token) {
+        return new TokenResponse(token);
+    }
 }

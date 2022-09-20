@@ -8,6 +8,7 @@ import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserService;
 import com.github.coding_team_sept.nd_backend.authentication.services.AuthenticationService;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public record AppUserController(
     private ResponseEntity<AppResponse> addUser(RegisterRequest request, RoleType roleType) {
         try {
             service.register(request, roleType);
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.internalServerError().body(AppResponse.error(ErrorResponse.build("Email has been taken!")));
         } catch (AppException e) {
