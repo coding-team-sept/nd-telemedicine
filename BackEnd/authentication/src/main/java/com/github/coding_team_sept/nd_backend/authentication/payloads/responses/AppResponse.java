@@ -6,7 +6,6 @@ import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetai
 import lombok.Builder;
 
 import java.util.List;
-import java.util.Map;
 
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,14 +19,12 @@ public record AppResponse(Object data, Object error) {
         return AppResponse.builder().data(data).build();
     }
 
-    public static AppResponse register(String token) {
-        return AppResponse.data(Map.of(
-                "token", new TokenResponse(token)
-        ));
+    public static AppResponse auth(AuthResponse response) {
+        return AppResponse.data(response);
     }
 
     public static AppResponse login(String token, AppUserDetails userDetails) {
-        return AppResponse.data(LoginResponse.build(
+        return AppResponse.data(AuthResponse.build(
                 TokenResponse.build(token),
                 UserDataResponse.fromUserDetails(userDetails)
         ));

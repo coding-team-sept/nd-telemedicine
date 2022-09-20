@@ -8,6 +8,9 @@ import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetai
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AppResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AuthResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.TokenResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.UserDataResponse;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUserRepository;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
 import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
@@ -42,7 +45,7 @@ public record AuthenticationService(
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final var userDetails = (AppUserDetails) authentication.getPrincipal();
         final var jwt = jwtUtils.generateToken(userDetails);
-        return AppResponse.login(jwt, userDetails);
+        return AppResponse.auth(AuthResponse.build(TokenResponse.build(jwt), UserDataResponse.fromUserDetails(userDetails)));
     }
 
     public AppResponse register(RegisterRequest request, RoleType roleType) throws AppException {
@@ -71,6 +74,6 @@ public record AuthenticationService(
         // Generate jwt
         final var userDetails = AppUserDetails.fromAppUser(appUser);
         final var jwt = jwtUtils.generateToken(userDetails);
-        return AppResponse.register(jwt);
+        return AppResponse.auth(AuthResponse.token(TokenResponse.build(jwt)));
     }
 }
