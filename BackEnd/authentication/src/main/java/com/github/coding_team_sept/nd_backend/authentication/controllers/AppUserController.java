@@ -7,7 +7,6 @@ import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserService;
 import com.github.coding_team_sept.nd_backend.authentication.services.AuthenticationService;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +25,7 @@ public record AppUserController(
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.internalServerError().body(AppResponse.error("Email has been taken!"));
         } catch (AppException e) {
-            return new ResponseEntity<>(AppResponse.error(e.message), HttpStatus.valueOf(e.status));
+            return new ResponseEntity<>(AppResponse.error(e.message), e.status);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
         }
@@ -47,7 +46,7 @@ public record AppUserController(
         try {
             return ResponseEntity.ok(AppResponse.user(appUserService.getUserByRole(RoleType.ROLE_ADMIN)));
         } catch (AppException e) {
-            return new ResponseEntity<>(AppResponse.error(e.message), HttpStatus.valueOf(e.status));
+            return new ResponseEntity<>(AppResponse.error(e.message), e.status);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
         }
@@ -66,7 +65,7 @@ public record AppUserController(
             }
             return ResponseEntity.ok(AppResponse.user(appUserService.getUserByRole(RoleType.ROLE_DOCTOR)));
         } catch (AppException e) {
-            return new ResponseEntity<>(AppResponse.error(e.message), HttpStatus.valueOf(e.status));
+            return new ResponseEntity<>(AppResponse.error(e.message), e.status);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
         }
@@ -84,7 +83,7 @@ public record AppUserController(
             }
             return ResponseEntity.badRequest().build();
         } catch (AppException e) {
-            return new ResponseEntity<>(AppResponse.error(e.message), HttpStatus.valueOf(e.status));
+            return new ResponseEntity<>(AppResponse.error(e.message), e.status);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
         }

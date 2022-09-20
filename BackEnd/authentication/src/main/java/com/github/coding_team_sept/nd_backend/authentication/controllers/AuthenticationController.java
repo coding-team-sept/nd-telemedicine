@@ -34,6 +34,8 @@ public record AuthenticationController(
         try {
             final var loginResponse = service.login(request);
             return ResponseEntity.ok(loginResponse);
+        } catch (AppException e) {
+            return new ResponseEntity<>(AppResponse.error(e.message), e.status);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
         }
@@ -45,7 +47,7 @@ public record AuthenticationController(
             final var response = service.register(request, RoleType.ROLE_PATIENT);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (AppException e) {
-            return new ResponseEntity<>(AppResponse.error(e.message), HttpStatus.valueOf(e.status));
+            return new ResponseEntity<>(AppResponse.error(e.message), e.status);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
         }
