@@ -338,6 +338,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+<<<<<<< HEAD
+=======
   graphs:
     dependency: transitive
     description:
@@ -345,6 +347,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+>>>>>>> main
   html:
     dependency: transitive
     description:
@@ -471,6 +474,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+<<<<<<< HEAD
+=======
   mockito:
     dependency: "direct dev"
     description:
@@ -478,6 +483,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.3.1"
+>>>>>>> main
   nock:
     dependency: "direct main"
     description:
@@ -534,6 +540,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+<<<<<<< HEAD
+=======
   pubspec_parse:
     dependency: transitive
     description:
@@ -541,6 +549,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.1"
+>>>>>>> main
   quiver:
     dependency: transitive
     description:
@@ -588,6 +597,8 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+<<<<<<< HEAD
+=======
   source_gen:
     dependency: transitive
     description:
@@ -595,6 +606,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.3"
+>>>>>>> main
   source_map_stack_trace:
     dependency: transitive
     description:
@@ -672,6 +684,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.13"
+<<<<<<< HEAD
+=======
   timing:
     dependency: transitive
     description:
@@ -679,6 +693,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+>>>>>>> main
   typed_data:
     dependency: transitive
     description:
