@@ -58,14 +58,14 @@ public class SpringBootControllerTests {
     void getUserByRoleTest(){
         List<UserDataResponse> list = new ArrayList<UserDataResponse>();
         service.getUserByRole(RoleType.ROLE_ADMIN);
-        User user1 = new UserDataResponse("1", "admin@admin.com", "admin");
+       // User user1 = new UserDataResponse("1", "admin@admin.com", "admin");
 
        // when(repository.findAppUserByRole(new Role())).thenReturn();
         //assertEquals(2, service.getUserByRole(RoleType.RO  LE_ADMIN).size());
     }
     @Test
     void getUserByIdTest(){
-        service.getUserById(RoleType.ROLE_ADMIN);
+       // service.getUserById(RoleType.ROLE_ADMIN);
 
 
 
