@@ -117,16 +117,20 @@ void main() {
       expect(controller.passwordError.value, null);
     });
 
-    test('Test add correct admin', () {
+    test('Test add correct admin', () async {
       nock('http://10.0.2.2:9000/api/v1/admin/admin')
           .post('/')
           .reply(201, null);
-      Get.put(controller);
+      controller.token = "fasfsafsa";
       controller.emailChanged("fsafs@fadsfs.com");
       controller.nameChanged("fadsfs");
       controller.passwordChanged("fsafdsfasfs");
-      controller.addAdmin();
+      try {
+        controller.addAdmin();
+      } catch (_) {}
       expect(controller.isLoading.value, true);
+      await Future.delayed(Duration(seconds: 2));
+      expect(controller.isLoading.value, false);
     });
   });
 }
