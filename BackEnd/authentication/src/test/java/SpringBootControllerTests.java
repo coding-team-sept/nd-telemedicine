@@ -1,3 +1,4 @@
+import com.github.coding_team_sept.nd_backend.authentication.controllers.AppUserController;
 import com.github.coding_team_sept.nd_backend.authentication.controllers.AuthenticationController;
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
 import com.github.coding_team_sept.nd_backend.authentication.exceptions.AppException;
@@ -58,14 +59,14 @@ public class SpringBootControllerTests {
     void getUserByRoleTest(){
         List<UserDataResponse> list = new ArrayList<UserDataResponse>();
         service.getUserByRole(RoleType.ROLE_ADMIN);
-       // User user1 = new UserDataResponse("1", "admin@admin.com", "admin");
+       //User user1 = new UserDataResponse("1", "admin@admin.com", "admin");
 
        // when(repository.findAppUserByRole(new Role())).thenReturn();
         //assertEquals(2, service.getUserByRole(RoleType.RO  LE_ADMIN).size());
     }
     @Test
     void getUserByIdTest(){
-       // service.getUserById(RoleType.ROLE_ADMIN);
+     //  service.getUserById(RoleType.ROLE_ADMIN);
 
 
 
@@ -75,16 +76,23 @@ public class SpringBootControllerTests {
         List<UserDataResponse> list = new ArrayList<UserDataResponse>();
 
     }
+    @MockBean
+    private AppUserController appUserController;
     @Test
     void addAdminTest(){
+        appUserController.addAdmin(new RegisterRequest("admin@admin.com", "admin", "password"));
 
     }
     @Test
     void addDoctorTest(){
+        appUserController.addDoctor(new RegisterRequest("admin@admin.com", "admin", "password"));
+
 
     }
     @Test
     void registerPatientTest(){
+       // authService.register(new RegisterRequest("admin@admin.com", "admin", "password"));
+       // AuthResponse responseEntity = authService.register(new RegisterRequest("admin@admin.com","admin", "password"));
 
     }
 
