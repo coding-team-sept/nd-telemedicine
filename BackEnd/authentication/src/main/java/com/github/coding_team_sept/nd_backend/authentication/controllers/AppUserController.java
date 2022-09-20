@@ -4,6 +4,7 @@ import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
 import com.github.coding_team_sept.nd_backend.authentication.exceptions.AppException;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AppResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ErrorResponse;
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserService;
 import com.github.coding_team_sept.nd_backend.authentication.services.AuthenticationService;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,11 +24,11 @@ public record AppUserController(
             service.register(request, roleType);
             return ResponseEntity.ok().build();
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.internalServerError().body(AppResponse.error("Email has been taken!"));
+            return ResponseEntity.internalServerError().body(AppResponse.error(ErrorResponse.build("Email has been taken!")));
         } catch (AppException e) {
-            return new ResponseEntity<>(AppResponse.error(e.message), e.status);
+            return new ResponseEntity<>(AppResponse.error(ErrorResponse.fromException(e)), e.status);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
+            return ResponseEntity.internalServerError().body(AppResponse.error(ErrorResponse.fromUnknownException(e)));
         }
     }
 
@@ -46,9 +47,9 @@ public record AppUserController(
         try {
             return ResponseEntity.ok(AppResponse.user(appUserService.getUserByRole(RoleType.ROLE_ADMIN)));
         } catch (AppException e) {
-            return new ResponseEntity<>(AppResponse.error(e.message), e.status);
+            return new ResponseEntity<>(AppResponse.error(ErrorResponse.fromException(e)), e.status);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
+            return ResponseEntity.internalServerError().body(AppResponse.error(ErrorResponse.fromUnknownException(e)));
         }
     }
 
@@ -65,9 +66,9 @@ public record AppUserController(
             }
             return ResponseEntity.ok(AppResponse.user(appUserService.getUserByRole(RoleType.ROLE_DOCTOR)));
         } catch (AppException e) {
-            return new ResponseEntity<>(AppResponse.error(e.message), e.status);
+            return new ResponseEntity<>(AppResponse.error(ErrorResponse.fromException(e)), e.status);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
+            return ResponseEntity.internalServerError().body(AppResponse.error(ErrorResponse.fromUnknownException(e)));
         }
     }
 
@@ -83,9 +84,9 @@ public record AppUserController(
             }
             return ResponseEntity.badRequest().build();
         } catch (AppException e) {
-            return new ResponseEntity<>(AppResponse.error(e.message), e.status);
+            return new ResponseEntity<>(AppResponse.error(ErrorResponse.fromException(e)), e.status);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
+            return ResponseEntity.internalServerError().body(AppResponse.error(ErrorResponse.fromUnknownException(e)));
         }
     }
 }

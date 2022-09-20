@@ -6,6 +6,7 @@ import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetai
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AppResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ErrorResponse;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ValidateResponse;
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserService;
 import com.github.coding_team_sept.nd_backend.authentication.services.AuthenticationService;
@@ -35,9 +36,9 @@ public record AuthenticationController(
             final var loginResponse = service.login(request);
             return ResponseEntity.ok(loginResponse);
         } catch (AppException e) {
-            return new ResponseEntity<>(AppResponse.error(e.message), e.status);
+            return new ResponseEntity<>(AppResponse.error(ErrorResponse.fromException(e)), e.status);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
+            return ResponseEntity.internalServerError().body(AppResponse.error(ErrorResponse.fromUnknownException(e)));
         }
     }
 
@@ -47,9 +48,9 @@ public record AuthenticationController(
             final var response = service.register(request, RoleType.ROLE_PATIENT);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (AppException e) {
-            return new ResponseEntity<>(AppResponse.error(e.message), e.status);
+            return new ResponseEntity<>(AppResponse.error(ErrorResponse.fromException(e)), e.status);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(AppResponse.error("Unknown error: " + e.getMessage()));
+            return ResponseEntity.internalServerError().body(AppResponse.error(ErrorResponse.fromUnknownException(e)));
         }
     }
 }

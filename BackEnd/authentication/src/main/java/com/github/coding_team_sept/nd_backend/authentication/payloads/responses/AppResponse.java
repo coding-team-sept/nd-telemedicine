@@ -12,12 +12,8 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record AppResponse(Object data, Object error) {
-    public static AppResponse error(Object error) {
-        return AppResponse.builder().error(error).build();
-    }
-
-    public static AppResponse error(String message) {
-        return AppResponse.error(new ErrorResponse(message));
+    public static AppResponse error(ErrorResponse response) {
+        return AppResponse.builder().error(response).build();
     }
 
     public static AppResponse data(Object data) {
