@@ -1,20 +1,17 @@
 package com.github.coding_team_sept.nd_backend.authentication.payloads.responses;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetails;
+public class UserDataResponse extends DataResponse {
+    public final Long id;
+    public final String email;
+    public final String name;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public record UserDataResponse(
-        String email,
-        String name,
-        String role
-) {
-    public static UserDataResponse build(String email, String name, String role) {
-        return new UserDataResponse(email, name, role);
+    public UserDataResponse(Long id, String email, String name) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
     }
-    public static UserDataResponse fromUserDetails(AppUserDetails userDetails) {
-        return build(userDetails.getEmail(), userDetails.getName(), userDetails.getRole().getName().name());
+
+    public static UserDataResponse build(Long id, String email, String name) {
+        return new UserDataResponse(id, email, name);
     }
 }

@@ -1,19 +1,18 @@
 package com.github.coding_team_sept.nd_backend.authentication.payloads.responses;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record AuthResponse(
-        TokenResponse token,
-        UserDataResponse user
-) {
-    public static AuthResponse build(TokenResponse token, UserDataResponse user) {
-        return new AuthResponse(token, user);
+public class AuthResponse extends DataResponse{
+    public final TokenResponse token;
+    public final AuthDataResponse user;
+
+    public AuthResponse(TokenResponse token, AuthDataResponse user) {
+        this.token = token;
+        this.user = user;
     }
 
-    public static AuthResponse token(TokenResponse token) {
+    public static AuthResponse fromToken(TokenResponse token) {
         return new AuthResponse(token, null);
     }
 }

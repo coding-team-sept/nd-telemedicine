@@ -48,7 +48,7 @@ public class JwtUtils {
     }
 
     public Date getExpirationDate() {
-        long duration = 1000L * 60 * 60 * 24 * 52; // 1 year
+        long duration = 1000L * 60 * 60 * 24 * 7 * 52; // 1 year
         return new Date(System.currentTimeMillis() + duration);
     }
 

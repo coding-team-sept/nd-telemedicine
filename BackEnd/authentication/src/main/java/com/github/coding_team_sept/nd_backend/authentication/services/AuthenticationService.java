@@ -7,10 +7,9 @@ import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetails;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
-import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AppResponse;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AuthResponse;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.TokenResponse;
-import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.UserDataResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AuthDataResponse;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUserRepository;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
 import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
@@ -30,7 +29,7 @@ public record AuthenticationService(
         AuthenticationManager authenticationManager,
         AppUserDetailsService userDetailsService
 ) {
-    public AppResponse login(LoginRequest request) throws AppException {
+    public AuthResponse login(LoginRequest request) throws AppException {
         // Validations
         ValidationUtils.validateEmailElseThrow(request.email());
         ValidationUtils.validatePasswordElseThrow(request.password());
@@ -45,10 +44,10 @@ public record AuthenticationService(
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final var userDetails = (AppUserDetails) authentication.getPrincipal();
         final var jwt = jwtUtils.generateToken(userDetails);
-        return AppResponse.auth(AuthResponse.build(TokenResponse.build(jwt), UserDataResponse.fromUserDetails(userDetails)));
+        return new AuthResponse(TokenResponse.build(jwt), AuthDataResponse.fromUserDetails(userDetails));
     }
 
-    public AppResponse register(RegisterRequest request, RoleType roleType) throws AppException {
+    public AuthResponse register(RegisterRequest request, RoleType roleType) throws AppException {
         // Check if email is used
         // Source: https://stackoverflow.com/a/27583544
         if (authenticationRepo.existsAppUserByEmail(request.email())) {
@@ -74,6 +73,6 @@ public record AuthenticationService(
         // Generate jwt
         final var userDetails = AppUserDetails.fromAppUser(appUser);
         final var jwt = jwtUtils.generateToken(userDetails);
-        return AppResponse.auth(AuthResponse.token(TokenResponse.build(jwt)));
+        return AuthResponse.fromToken(TokenResponse.build(jwt));
     }
 }
