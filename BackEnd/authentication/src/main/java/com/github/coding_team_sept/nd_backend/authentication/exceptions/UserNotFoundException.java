@@ -1,7 +1,9 @@
 package com.github.coding_team_sept.nd_backend.authentication.exceptions;
 
+import org.springframework.http.HttpStatus;
+
 public class UserNotFoundException extends AppException{
     public UserNotFoundException() {
-        super(404, "User not found");
+        super(HttpStatus.NOT_FOUND, "User not found");
     }
 }

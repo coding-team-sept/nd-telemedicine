@@ -5,7 +5,10 @@ import com.github.coding_team_sept.nd_backend.authentication.exceptions.AppExcep
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetails;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
-import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.*;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AuthResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ErrorResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ResponseWrapper;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ValidateResponse;
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserService;
 import com.github.coding_team_sept.nd_backend.authentication.services.AuthenticationService;
 import org.springframework.http.HttpStatus;
@@ -31,7 +34,7 @@ public record AuthenticationController(
             final var loginResponse = service.login(request);
             return ResponseEntity.ok(ResponseWrapper.fromData(loginResponse));
         } catch (AppException e) {
-            return new ResponseEntity<>(ResponseWrapper.fromError(ErrorResponse.fromException(e)), HttpStatus.valueOf(e.status));
+            return new ResponseEntity<>(ResponseWrapper.fromError(ErrorResponse.fromException(e)), e.status);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseWrapper.fromError(ErrorResponse.fromUnknownException(e)));
         }
@@ -43,7 +46,7 @@ public record AuthenticationController(
             final var response = service.register(request, RoleType.ROLE_PATIENT);
             return new ResponseEntity<>(ResponseWrapper.fromData(response), HttpStatus.CREATED);
         } catch (AppException e) {
-            return new ResponseEntity<>(ResponseWrapper.fromError(ErrorResponse.fromException(e)), HttpStatus.valueOf(e.status));
+            return new ResponseEntity<>(ResponseWrapper.fromError(ErrorResponse.fromException(e)), e.status);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseWrapper.fromError(ErrorResponse.fromUnknownException(e)));
         }

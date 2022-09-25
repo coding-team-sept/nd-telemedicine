@@ -3,7 +3,10 @@ package com.github.coding_team_sept.nd_backend.authentication.controllers;
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
 import com.github.coding_team_sept.nd_backend.authentication.exceptions.AppException;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
-import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.*;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.DataResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ErrorResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ResponseWrapper;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.UsersDataResponse;
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserService;
 import com.github.coding_team_sept.nd_backend.authentication.services.AuthenticationService;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,7 +29,7 @@ public record AppUserController(
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.internalServerError().body(ResponseWrapper.fromError(ErrorResponse.build("Email has been taken!")));
         } catch (AppException e) {
-            return new ResponseEntity<>(ResponseWrapper.fromError(ErrorResponse.fromException(e)), HttpStatus.valueOf(e.status));
+            return new ResponseEntity<>(ResponseWrapper.fromError(ErrorResponse.fromException(e)), e.status);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseWrapper.fromError(ErrorResponse.fromUnknownException(e)));
         }
@@ -47,7 +50,7 @@ public record AppUserController(
         try {
             return ResponseEntity.ok(ResponseWrapper.fromData(UsersDataResponse.build(appUserService.getUserByRole(RoleType.ROLE_ADMIN))));
         } catch (AppException e) {
-            return new ResponseEntity<>(ResponseWrapper.fromError(ErrorResponse.fromException(e)), HttpStatus.valueOf(e.status));
+            return new ResponseEntity<>(ResponseWrapper.fromError(ErrorResponse.fromException(e)), e.status);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseWrapper.fromError(ErrorResponse.fromUnknownException(e)));
         }
@@ -66,7 +69,7 @@ public record AppUserController(
             }
             return ResponseEntity.ok(ResponseWrapper.fromData(UsersDataResponse.build(appUserService.getUserByRole(RoleType.ROLE_DOCTOR))));
         } catch (AppException e) {
-            return new ResponseEntity<>(ResponseWrapper.fromError(ErrorResponse.fromException(e)), HttpStatus.valueOf(e.status));
+            return new ResponseEntity<>(ResponseWrapper.fromError(ErrorResponse.fromException(e)), e.status);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseWrapper.fromError(ErrorResponse.fromUnknownException(e)));
         }
@@ -84,7 +87,7 @@ public record AppUserController(
             }
             return ResponseEntity.badRequest().build();
         } catch (AppException e) {
-            return new ResponseEntity<>(ResponseWrapper.fromError(ErrorResponse.fromException(e)), HttpStatus.valueOf(e.status));
+            return new ResponseEntity<>(ResponseWrapper.fromError(ErrorResponse.fromException(e)), e.status);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseWrapper.fromError(ErrorResponse.fromUnknownException(e)));
         }
