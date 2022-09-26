@@ -58,13 +58,10 @@ public record AppUserController(
 
     @GetMapping("/admin/doctor")
     public ResponseEntity<ResponseWrapper<DataResponse, ErrorResponse>> getDoctor(
-            @RequestParam(required = false) Long id,
             @RequestParam(required = false) List<Long> ids
     ) {
         try {
-            if (id != null) {
-                return ResponseEntity.ok(ResponseWrapper.fromData(appUserService.getUserById(id, RoleType.ROLE_DOCTOR)));
-            } else if (ids != null) {
+            if (ids != null) {
                 return ResponseEntity.ok(ResponseWrapper.fromData(UsersDataResponse.build(appUserService.getUsersByIds(ids, RoleType.ROLE_DOCTOR))));
             }
             return ResponseEntity.ok(ResponseWrapper.fromData(UsersDataResponse.build(appUserService.getUserByRole(RoleType.ROLE_DOCTOR))));
@@ -77,12 +74,10 @@ public record AppUserController(
 
     @GetMapping("/admin/patient")
     public ResponseEntity<ResponseWrapper<DataResponse, ErrorResponse>> getPatient(
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) List<Long> ids) {
+            @RequestParam(required = false) List<Long> ids
+    ) {
         try {
-            if (id != null) {
-                return ResponseEntity.ok(ResponseWrapper.fromData(appUserService.getUserById(id, RoleType.ROLE_PATIENT)));
-            } else if (ids != null) {
+            if (ids != null) {
                 return ResponseEntity.ok(ResponseWrapper.fromData(UsersDataResponse.build(appUserService.getUsersByIds(ids, RoleType.ROLE_PATIENT))));
             }
             return ResponseEntity.badRequest().build();
