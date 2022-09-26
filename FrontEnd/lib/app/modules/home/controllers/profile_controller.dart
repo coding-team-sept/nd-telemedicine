@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:nd/app/modules/home/controllers/home_controller.dart';
 import 'package:nd/app/routes/app_pages.dart';
 
 class ProfileController extends GetxController {
@@ -18,9 +19,5 @@ class ProfileController extends GetxController {
     super.onClose();
   }
 
-  void logout() async{
-    final storage = FlutterSecureStorage();
-    await storage.delete(key: "token");
-    Get.offNamedUntil(Routes.LOGIN, (r) => false);
-  }
+  void logout() async => Get.find<HomeController>().logout();
 }

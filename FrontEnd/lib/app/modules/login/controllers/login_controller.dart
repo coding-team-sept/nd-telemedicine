@@ -20,6 +20,11 @@ class LoginController extends GetxController {
     showPassword.value = !showPassword.value;
   }
 
+  @override
+  void onClose() {
+    super.onClose();
+  }
+
   void onEmailChange(String newEmail) => email.value = newEmail;
 
   void onPasswordChange(String newPassword) => password.value = newPassword;
@@ -53,7 +58,7 @@ class LoginController extends GetxController {
     } on DioError catch (e, _) {
       isLoading.value = false;
       Get.dialog(AlertDialog(
-        title: const Text("Error"),
+        title: Text("Error"),
         content: Text(e.response?.data['error']['message'] ?? "Unknown error!"),
       ));
     }

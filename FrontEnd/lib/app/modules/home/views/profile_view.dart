@@ -12,13 +12,6 @@ class ProfileView extends GetView<ProfileController> {
         body: Flex(
       direction: Axis.vertical,
       children: [
-        Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 32),
-            child: Text(
-              "Ravel Tanjaya",
-              style: Get.theme.textTheme.headlineLarge,
-            )),
         Expanded(child: Container()),
         Container(
           padding: const EdgeInsets.all(32),
