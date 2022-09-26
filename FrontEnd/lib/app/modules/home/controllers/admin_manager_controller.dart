@@ -2,10 +2,8 @@ import 'package:get/get.dart';
 
 import '../../../routes/app_pages.dart';
 
-class DoctorManagerController extends GetxController {
-  //TODO: Implement DoctorManagerController
+class AdminManagerController extends GetxController {
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -20,6 +18,6 @@ class DoctorManagerController extends GetxController {
   void onClose() {
     super.onClose();
   }
+  void newAddAdmin() => Get.toNamed(Routes.ADD_ADMIN);
 
-  void newAddDoctor() => Get.toNamed(Routes.ADD_DOCTOR);
 }
