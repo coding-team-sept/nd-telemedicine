@@ -12,6 +12,7 @@ abstract class Routes {
 
   static const ADD_ADMIN = _Paths.ADD_ADMIN;
   static const CHAT = _Paths.CHAT;
+  static const ADMIN_LIST_VIEW = _Paths.ADMIN_LIST_VIEW;
 }
 
 abstract class _Paths {
@@ -23,8 +24,8 @@ abstract class _Paths {
 
   static const ADD_DOCTOR = '/add-doctor';
 
-
   static const ADD_ADMIN = '/add-admin';
 
   static const CHAT = '/chat';
+  static const ADMIN_LIST_VIEW = '/admin-list-view';
 }

@@ -4,10 +4,10 @@ import 'package:get/get.dart';
 import 'package:nd/app/modules/home/controllers/dashboard_controller.dart';
 import 'package:nd/app/modules/home/views/dashboard_view.dart';
 import 'package:nd/app/modules/home/views/appointment_view.dart';
-import 'package:nd/app/modules/home/views/doctor_manager_view.dart';
 import 'package:nd/app/modules/home/views/profile_view.dart';
 
 import '../controllers/home_controller.dart';
+import 'admin_manager_view.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
@@ -38,8 +38,8 @@ class HomeView extends GetView<HomeController> {
       AppointmentView(),
     ];
     var adminContent = [
+      AdminManagerView(),
       Scaffold(),
-      DoctorManagerView()
     ];
     Get.put(DashboardController());
 

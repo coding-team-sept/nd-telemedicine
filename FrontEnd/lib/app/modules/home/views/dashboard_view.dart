@@ -23,14 +23,14 @@ class DashboardView extends GetView<DashboardController> {
           const SizedBox(
             height: 12,
           ),
-          // TODO: add code to go to login view
+
           ElevatedButton(
               onPressed: () => Get.toNamed(Routes.LOGIN),
               child: const Text("Login")),
           const SizedBox(
             height: 12,
           ),
-          // TODO: add code to go to login view
+
           ElevatedButton(
               onPressed: () => Get.toNamed(Routes.REGISTER),
               child: const Text("Register")),
@@ -45,7 +45,6 @@ class DashboardView extends GetView<DashboardController> {
         const SizedBox(
           height: 12,
         ),
-        // TODO: add code to go to login view
         ElevatedButton(
             onPressed: () => Get.toNamed(Routes.ADD_ADMIN),
             child: const Text("Add Admin")),
@@ -53,10 +52,16 @@ class DashboardView extends GetView<DashboardController> {
           const SizedBox(
             height: 12,
           ),
-          // TODO: add code to go to login view
           ElevatedButton(
               onPressed: () => Get.toNamed(Routes.CHAT),
               child: const Text("Chat")),
+
+          const SizedBox(
+            height: 12,
+          ),
+          ElevatedButton(
+              onPressed: () => Get.toNamed(Routes.ADMIN_LIST_VIEW),
+              child: const Text("Admin Listview")),
 
         ],
       ),
