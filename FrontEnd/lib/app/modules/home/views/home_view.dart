@@ -10,28 +10,36 @@ import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
-  static const adminTabBar = [
-    Tab(
-      icon: Icon(Icons.admin_panel_settings),
-      text: "Admin",
-    ),
-    Tab(
-      icon: Icon(Icons.emergency),
-      text: "Doctor",
-    ),
-  ];
-  static const patientTabBar = [
-    Tab(
-      icon: Icon(Icons.home),
-      text: "Dashboard",
-    ),
-    Tab(
-      icon: Icon(Icons.timer),
-      text: "Appointment",
-    ),
-  ];
   @override
   Widget build(BuildContext context) {
+    const adminTabBar = [
+      Tab(
+        icon: Icon(Icons.admin_panel_settings),
+        text: "Admin",
+      ),
+      Tab(
+        icon: Icon(Icons.emergency),
+        text: "Doctor",
+      ),
+    ];
+    const patientTabBar = [
+      Tab(
+        icon: Icon(Icons.home),
+        text: "Dashboard",
+      ),
+      Tab(
+        icon: Icon(Icons.timer),
+        text: "Appointment",
+      ),
+    ];
+    const patientContent = [
+      DashboardView(),
+      AppointmentView(),
+    ];
+    var adminContent = [
+      Scaffold(),
+      Scaffold(),
+    ];
     Get.put(DashboardController());
 
     return DefaultTabController(
@@ -49,10 +57,10 @@ class HomeView extends GetView<HomeController> {
               ),
             ]),
           ),
-          body: const TabBarView(children: [
-            DashboardView(),
-            AppointmentView(),
-            ProfileView(),
+          body: TabBarView(children: [
+            if (controller.role.value != "ROLE_ADMIN") ...patientContent,
+            if (controller.role.value == "ROLE_ADMIN") ...adminContent,
+            const ProfileView(),
           ]),
         ),
       ),
