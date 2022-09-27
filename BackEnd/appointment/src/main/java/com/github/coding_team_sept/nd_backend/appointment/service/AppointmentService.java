@@ -93,38 +93,38 @@ public record AppointmentService(
     }
 
     public List<PatientAppointmentResponse> getPatientAppointment(HttpHeaders headers) {
-//        final var httpValidateResponse = restTemplate.exchange(
-//                url + "/auth/validate",
-//                HttpMethod.GET,
-//                new HttpEntity<>(headers),
-//                ValidateResponse.class
-//        );
-//        if (httpValidateResponse.getBody() != null) {
-//            final var validateResponse = httpValidateResponse.getBody();
-//            final var role = validateResponse.role().toLowerCase();
-//            if (role.contains("patient")) {
-//                final var appointments = appointmentRepo.getAppointmentByPatientId(validateResponse.id());
-//                final var doctorsId = appointments.stream()
-//                        .map(Appointment::getDoctorId)
-//                        .distinct()
-//                        .toList();
-//
-//                // Retrieve doctors data
-//                final var doctors = getUsers(headers, doctorsId, "doctor");
-//                return appointments.stream()
-//                        .map(appointment -> new PatientAppointmentResponse(
-//                                appointment.getId(),
-//                                doctors.stream()
-//                                        .filter(
-//                                                doctor -> doctor.id().equals(appointment.getDoctorId())
-//                                        ).findAny()
-//                                        .orElse(null),
-//                                appointment.getAppointmentTime().toString()
-//                        )).filter(
-//                                appointment -> appointment.doctor != null
-//                        ).toList();
-//            }
-//        }
+        final var httpValidateResponse = restTemplate.exchange(
+                url + "/auth/validate",
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                ValidateResponse.class
+        );
+        if (httpValidateResponse.getBody() != null) {
+            final var validateResponse = httpValidateResponse.getBody();
+            final var role = validateResponse.role().toLowerCase();
+            if (role.contains("patient")) {
+                final var appointments = appointmentRepo.getAppointmentByPatientId(validateResponse.id());
+                final var doctorsId = appointments.stream()
+                        .map(Appointment::getDoctorId)
+                        .distinct()
+                        .toList();
+
+                // Retrieve doctors data
+                final var doctors = getUsers(headers, doctorsId, "doctor");
+                return appointments.stream()
+                        .map(appointment -> new PatientAppointmentResponse(
+                                appointment.getId(),
+                                doctors.users.stream()
+                                        .filter(
+                                                doctor -> doctor.id.equals(appointment.getDoctorId())
+                                        ).findAny()
+                                        .orElse(null),
+                                appointment.getAppointmentTime().toString()
+                        )).filter(
+                                appointment -> appointment.doctor != null
+                        ).toList();
+            }
+        }
         return null;
     }
 
@@ -150,9 +150,9 @@ public record AppointmentService(
                 return appointments.stream()
                         .map(appointment -> new DoctorAppointmentResponse(
                                 appointment.getId(),
-                                patients.stream()
+                                patients.users.stream()
                                         .filter(
-                                                patient -> patient.id().equals(appointment.getPatientId())
+                                                patient -> patient.id.equals(appointment.getPatientId())
                                         ).findAny()
                                         .orElse(null),
                                 appointment.getAppointmentTime().toString()
@@ -164,8 +164,8 @@ public record AppointmentService(
         return null;
     }
 
-    private List<AppUserResponse> getUsers(HttpHeaders headers, List<Long> ids, String subject) {
-        String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/" + subject)
+    private UsersDataResponse getUsers(HttpHeaders headers, List<Long> ids, String subject) {
+        String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/admin/" + subject)
                 .queryParam("ids", ids)
                 .encode()
                 .toUriString();
@@ -174,13 +174,14 @@ public record AppointmentService(
                 uri,
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                AppUserResponse[].class
+                new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
+                }
         );
 
-        if (httpUserResponse.getBody() != null) {
-            return List.of(httpUserResponse.getBody());
+        if (httpUserResponse.getBody() != null && httpUserResponse.getBody().data.users != null) {
+            return httpUserResponse.getBody().data;
         }
-        return List.of();
+        return UsersDataResponse.build(List.of());
     }
 
     private Long authorizeAndGetId(HttpHeaders headers) {
