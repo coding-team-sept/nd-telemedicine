@@ -5,6 +5,10 @@ public class UserDataResponse extends DataResponse {
     public final String email;
     public final String name;
 
+    public UserDataResponse() {
+        this(null, null, null);
+    }
+
     public UserDataResponse(Long id, String email, String name) {
         this.id = id;
         this.email = email;

@@ -7,16 +7,20 @@ public class ValidateResponse {
     public final Long id;
     public final String role;
 
+    public ValidateResponse() {
+        this(null, null);
+    }
+
     public ValidateResponse(Long id, String role) {
         this.id = id;
         this.role = role;
     }
 
-    public ValidateResponse(Long id, RoleType role) {
-        this(id, role.name());
+    public static ValidateResponse fromRoleType (Long id, RoleType role) {
+        return new ValidateResponse(id, role.name());
     }
 
-    public ValidateResponse(Long id, Role role) {
-        this(id, role.getName());
+    public static ValidateResponse fromRole(Long id, Role role) {
+        return fromRoleType(id, role.getName());
     }
 }

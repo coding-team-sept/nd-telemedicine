@@ -1,6 +1,8 @@
 package com.github.coding_team_sept.nd_backend.authentication.payloads.responses;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.List;
@@ -9,6 +11,11 @@ import java.util.List;
 public class UsersDataResponse extends DataResponse {
     public final List<UserDataResponse> users;
 
+    public UsersDataResponse() {
+        this(null);
+    }
+
+    @JsonCreator
     public UsersDataResponse(List<UserDataResponse> users) {
         this.users = users;
     }

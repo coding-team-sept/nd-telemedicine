@@ -3,7 +3,6 @@ package com.github.coding_team_sept.nd_backend.authentication.controllers;
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.DataResponse;
-import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ErrorResponse;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ResponseWrapper;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.UsersDataResponse;
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserService;
@@ -20,28 +19,28 @@ public record AppUserController(
         AuthenticationService service,
         AppUserService appUserService
 ) {
-    private ResponseEntity<ResponseWrapper<DataResponse, ErrorResponse>> addUser(RegisterRequest request, RoleType roleType) {
+    private ResponseEntity<ResponseWrapper<DataResponse>> addUser(RegisterRequest request, RoleType roleType) {
         service.register(request, roleType);
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
     @PostMapping("/admin/admin")
-    public ResponseEntity<ResponseWrapper<DataResponse, ErrorResponse>> addAdmin(@RequestBody RegisterRequest request) {
+    public ResponseEntity<ResponseWrapper<DataResponse>> addAdmin(@RequestBody RegisterRequest request) {
         return addUser(request, RoleType.ROLE_ADMIN);
     }
 
     @PostMapping("/admin/doctor")
-    public ResponseEntity<ResponseWrapper<DataResponse, ErrorResponse>> addDoctor(@RequestBody RegisterRequest request) {
+    public ResponseEntity<ResponseWrapper<DataResponse>> addDoctor(@RequestBody RegisterRequest request) {
         return addUser(request, RoleType.ROLE_DOCTOR);
     }
 
     @GetMapping("/admin/admin")
-    public ResponseEntity<ResponseWrapper<UsersDataResponse, ErrorResponse>> getAdmin() {
+    public ResponseEntity<ResponseWrapper<UsersDataResponse>> getAdmin() {
         return ResponseEntity.ok(ResponseWrapper.fromData(UsersDataResponse.build(appUserService.getUserByRole(RoleType.ROLE_ADMIN))));
     }
 
     @GetMapping("/admin/doctor")
-    public ResponseEntity<ResponseWrapper<DataResponse, ErrorResponse>> getDoctor(
+    public ResponseEntity<ResponseWrapper<DataResponse>> getDoctor(
             @RequestParam(required = false) List<Long> ids
     ) {
         if (ids != null) {
@@ -51,7 +50,7 @@ public record AppUserController(
     }
 
     @GetMapping("/admin/patient")
-    public ResponseEntity<ResponseWrapper<DataResponse, ErrorResponse>> getPatient(
+    public ResponseEntity<ResponseWrapper<DataResponse>> getPatient(
             @RequestParam(required = false) List<Long> ids
     ) {
         if (ids != null) {

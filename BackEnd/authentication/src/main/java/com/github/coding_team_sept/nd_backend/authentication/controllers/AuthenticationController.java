@@ -5,7 +5,6 @@ import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetai
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AuthResponse;
-import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ErrorResponse;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ResponseWrapper;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ValidateResponse;
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserService;
@@ -21,17 +20,17 @@ public record AuthenticationController(AuthenticationService service, AppUserSer
     @GetMapping("/validate")
     public ValidateResponse validate() {
         final var authentication = (AppUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return new ValidateResponse(authentication.getId(), authentication.getRole());
+        return ValidateResponse.fromRole(authentication.getId(), authentication.getRole());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseWrapper<AuthResponse, ErrorResponse>> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<ResponseWrapper<AuthResponse>> login(@RequestBody LoginRequest request) {
         final var loginResponse = service.login(request);
         return ResponseEntity.ok(ResponseWrapper.fromData(loginResponse));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseWrapper<AuthResponse, ErrorResponse>> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<ResponseWrapper<AuthResponse>> register(@RequestBody RegisterRequest request) {
         final var response = service.register(request, RoleType.ROLE_PATIENT);
         return new ResponseEntity<>(ResponseWrapper.fromData(response), HttpStatus.CREATED);
     }
