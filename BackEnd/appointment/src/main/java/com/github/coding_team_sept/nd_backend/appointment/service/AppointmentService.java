@@ -2,13 +2,13 @@ package com.github.coding_team_sept.nd_backend.appointment.service;
 
 import com.github.coding_team_sept.nd_backend.appointment.model.Appointment;
 import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.*;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.DoctorAppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.PatientAppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.UserDataResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.UsersDataResponse;
 import com.github.coding_team_sept.nd_backend.appointment.repository.AppointmentRepository;
 import com.github.coding_team_sept.nd_backend.appointment.utils.DateTimeUtils;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,7 +25,6 @@ public record AppointmentService(
 ) {
     public UsersDataResponse getAvailableDoctor(HttpHeaders headers, String datetime) {
         final var parsedDatetime = dateTimeUtils.parseString(datetime);
-
         final var occupiedDoctor = appointmentRepo.getAppointmentByAppointmentTimeBetween(
                         dateTimeUtils.getMin(parsedDatetime).toDate(),
                         dateTimeUtils.getMax(parsedDatetime).toDate()
@@ -33,21 +32,12 @@ public record AppointmentService(
                 .map(Appointment::getDoctorId)
                 .toList();
 
-        final var result = restTemplate.exchange(
-                AuthenticationService.url + "/app/admin/doctor",
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
-                }
-        );
-
-        if (result.getBody() != null) {
-            final var doctorResponses = result.getBody().data;
-            return UsersDataResponse.build(doctorResponses.users.stream().filter(
+        final var doctors = authService.getUsers(headers, "doctor");
+        if (!doctors.users.isEmpty()) {
+            return UsersDataResponse.build(doctors.users.stream().filter(
                     doctorResponse -> !occupiedDoctor.contains(doctorResponse.id)
             ).toList());
         }
-
         return new UsersDataResponse(List.of());
     }
 

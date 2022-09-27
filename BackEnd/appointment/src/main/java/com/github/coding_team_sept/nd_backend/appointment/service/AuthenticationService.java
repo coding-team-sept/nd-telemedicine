@@ -37,14 +37,14 @@ public record AuthenticationService(
     public UsersDataResponse getUsers(
             HttpHeaders headers,
             List<Long> ids,
-            String subject
+            String target
     ) {
-        String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/admin/" + subject)
+        String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/admin/" + target)
                 .queryParam("ids", ids)
                 .encode()
                 .toUriString();
 
-        final var httpUserResponse = restTemplate.exchange(
+        final var response = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
@@ -52,8 +52,26 @@ public record AuthenticationService(
                 }
         );
 
-        if (httpUserResponse.getBody() != null && httpUserResponse.getBody().data.users != null) {
-            return httpUserResponse.getBody().data;
+        if (response.getBody() != null && response.getBody().data.users != null) {
+            return response.getBody().data;
+        }
+        return UsersDataResponse.build(List.of());
+    }
+
+    public UsersDataResponse getUsers(
+            HttpHeaders headers,
+            String target
+    ) {
+        final var response = restTemplate.exchange(
+                AuthenticationService.url + "/app/admin/" + target,
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
+                }
+        );
+
+        if (response.getBody() != null && response.getBody().data.users != null) {
+            return response.getBody().data;
         }
         return UsersDataResponse.build(List.of());
     }
