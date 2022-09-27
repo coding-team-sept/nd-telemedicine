@@ -2,12 +2,10 @@ package com.github.coding_team_sept.nd_backend.appointment.service;
 
 import com.github.coding_team_sept.nd_backend.appointment.model.Appointment;
 import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppUserResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.DoctorAppointmentResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.PatientAppointmentResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.ValidateResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.*;
 import com.github.coding_team_sept.nd_backend.appointment.repository.AppointmentRepository;
 import com.github.coding_team_sept.nd_backend.appointment.utils.DateTimeUtils;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Stream;
 
 // TODO: Handle failed HTTP requests (e.g. 400, 401)
 @Service
@@ -26,7 +24,9 @@ public record AppointmentService(
         RestTemplate restTemplate,
         DateTimeUtils dateTimeUtils
 ) {
-    public List<AppUserResponse> getAvailableDoctor(HttpHeaders headers, String datetime) {
+    private static final String url = "http://localhost:9000/api/v1";
+
+    public UsersDataResponse getAvailableDoctor(HttpHeaders headers, String datetime) throws IOException {
         final var parsedDatetime = dateTimeUtils.parseString(datetime);
 
         final var occupiedDoctor = appointmentRepo.getAppointmentByAppointmentTimeBetween(
@@ -34,26 +34,27 @@ public record AppointmentService(
                 dateTimeUtils.getMax(parsedDatetime).toDate()
         ).stream().map(Appointment::getDoctorId).toList();
 
-
         final var result = restTemplate.exchange(
-                "http://localhost:9000/api/v1/doctor",
+                url + "/app/admin/doctor",
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                AppUserResponse[].class
+                new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
+                }
         );
 
         if (result.getBody() != null) {
-            final var doctorResponses = result.getBody();
-            return Stream.of(doctorResponses).filter(
-                    doctorResponse -> !occupiedDoctor.contains(doctorResponse.id())
-            ).toList();
+            final var doctorResponses = result.getBody().data;
+            return UsersDataResponse.build(doctorResponses.users.stream().filter(
+                    doctorResponse -> !occupiedDoctor.contains(doctorResponse.id)
+            ).toList());
         }
-        return List.of();
+
+        return new UsersDataResponse(List.of());
     }
 
     public List<PatientAppointmentResponse> getPatientAppointment(HttpHeaders headers) {
         final var httpValidateResponse = restTemplate.exchange(
-                "http://localhost:9000/api/v1/validate",
+                url + "/auth/validate",
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
                 ValidateResponse.class
@@ -89,7 +90,7 @@ public record AppointmentService(
 
     public List<DoctorAppointmentResponse> getDoctorAppointment(HttpHeaders headers) {
         final var httpValidateResponse = restTemplate.exchange(
-                "http://localhost:9000/api/v1/validate",
+                url + "/auth/validate",
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
                 ValidateResponse.class
@@ -124,7 +125,7 @@ public record AppointmentService(
     }
 
     private List<AppUserResponse> getUsers(HttpHeaders headers, List<Long> ids, String subject) {
-        String uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9000/api/v1/" + subject)
+        String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/" + subject)
                 .queryParam("ids", ids)
                 .encode()
                 .toUriString();
@@ -182,7 +183,7 @@ public record AppointmentService(
     private Long authorizeAndGetId(HttpHeaders headers) {
         // Check "Authorization"
         final var httpValidateResponse = restTemplate.exchange(
-                "http://localhost:9000/api/v1/validate",
+                url + "/auth/validate",
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
                 ValidateResponse.class
@@ -195,7 +196,7 @@ public record AppointmentService(
     }
 
     private AppUserResponse validateAndGetDoctor(HttpHeaders headers, Long doctorId) {
-        String uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9000/api/v1/doctor")
+        String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/doctor")
                 .queryParam("id", doctorId)
                 .encode()
                 .toUriString();

@@ -1,12 +1,12 @@
 package com.github.coding_team_sept.nd_backend.appointment.controller;
 
 import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.AppUserResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.DoctorAppointmentResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.PatientAppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.ResponseWrapper;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.UsersDataResponse;
 import com.github.coding_team_sept.nd_backend.appointment.service.AppointmentService;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +18,12 @@ public record AppointmentController(
         AppointmentService appointmentService
 ) {
     @GetMapping("/patient/doctor/{datetime}")
-    ResponseEntity<List<AppUserResponse>> getAvailableDoctor(@RequestHeader HttpHeaders headers, @PathVariable String datetime) {
+    ResponseEntity<ResponseWrapper<UsersDataResponse>> getAvailableDoctor(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable String datetime
+    ) {
         try {
-            return new ResponseEntity<>(appointmentService.getAvailableDoctor(headers, datetime), HttpStatus.OK);
+            return ResponseEntity.ok(ResponseWrapper.fromData(appointmentService.getAvailableDoctor(headers, datetime)));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
