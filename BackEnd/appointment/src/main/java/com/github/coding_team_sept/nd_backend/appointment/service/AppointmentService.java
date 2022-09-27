@@ -52,39 +52,79 @@ public record AppointmentService(
         return new UsersDataResponse(List.of());
     }
 
-    public List<PatientAppointmentResponse> getPatientAppointment(HttpHeaders headers) {
-        final var httpValidateResponse = restTemplate.exchange(
-                url + "/auth/validate",
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                ValidateResponse.class
-        );
-        if (httpValidateResponse.getBody() != null) {
-            final var validateResponse = httpValidateResponse.getBody();
-            final var role = validateResponse.role().toLowerCase();
-            if (role.contains("patient")) {
-                final var appointments = appointmentRepo.getAppointmentByPatientId(validateResponse.id());
-                final var doctorsId = appointments.stream()
-                        .map(Appointment::getDoctorId)
-                        .distinct()
-                        .toList();
-
-                // Retrieve doctors data
-                final var doctors = getUsers(headers, doctorsId, "doctor");
-                return appointments.stream()
-                        .map(appointment -> new PatientAppointmentResponse(
-                                appointment.getId(),
-                                doctors.stream()
-                                        .filter(
-                                                doctor -> doctor.id().equals(appointment.getDoctorId())
-                                        ).findAny()
-                                        .orElse(null),
-                                appointment.getAppointmentTime().toString()
-                        )).filter(
-                                appointment -> appointment.doctor() != null
-                        ).toList();
-            }
+    public PatientAppointmentResponse addAppointment(
+            HttpHeaders headers,
+            AppointmentRequest body
+    ) {
+        // Authorize requester and get its ID
+        final var patientId = authorizeAndGetId(headers);
+        if (patientId == null) {
+            // TODO: Throw patient not found error
+            return null;
         }
+
+        // Check doctor existence and get the doctor data
+        final var doctorResponse = validateAndGetDoctor(headers, body.doctorId());
+        if (doctorResponse == null) {
+            // TODO: Throw patient not found error
+            return null;
+        }
+
+        // Check if datetime valid
+        final var appointmentDatetime = validateAppointmentDatetime(body.datetime(), body.doctorId());
+        if (appointmentDatetime == null) {
+            // TODO: Throw patient not found error
+            return null;
+        }
+
+        // Register appointment
+        final var appointment = appointmentRepo.saveAndFlush(
+                Appointment.builder()
+                        .doctorId(doctorResponse.id)
+                        .patientId(patientId)
+                        .appointmentTime(appointmentDatetime).build()
+        );
+
+        return PatientAppointmentResponse.build(
+                appointment.getId(),
+                doctorResponse,
+                body.datetime()
+        );
+    }
+
+    public List<PatientAppointmentResponse> getPatientAppointment(HttpHeaders headers) {
+//        final var httpValidateResponse = restTemplate.exchange(
+//                url + "/auth/validate",
+//                HttpMethod.GET,
+//                new HttpEntity<>(headers),
+//                ValidateResponse.class
+//        );
+//        if (httpValidateResponse.getBody() != null) {
+//            final var validateResponse = httpValidateResponse.getBody();
+//            final var role = validateResponse.role().toLowerCase();
+//            if (role.contains("patient")) {
+//                final var appointments = appointmentRepo.getAppointmentByPatientId(validateResponse.id());
+//                final var doctorsId = appointments.stream()
+//                        .map(Appointment::getDoctorId)
+//                        .distinct()
+//                        .toList();
+//
+//                // Retrieve doctors data
+//                final var doctors = getUsers(headers, doctorsId, "doctor");
+//                return appointments.stream()
+//                        .map(appointment -> new PatientAppointmentResponse(
+//                                appointment.getId(),
+//                                doctors.stream()
+//                                        .filter(
+//                                                doctor -> doctor.id().equals(appointment.getDoctorId())
+//                                        ).findAny()
+//                                        .orElse(null),
+//                                appointment.getAppointmentTime().toString()
+//                        )).filter(
+//                                appointment -> appointment.doctor != null
+//                        ).toList();
+//            }
+//        }
         return null;
     }
 
@@ -143,43 +183,6 @@ public record AppointmentService(
         return List.of();
     }
 
-    public PatientAppointmentResponse addAppointment(HttpHeaders headers, AppointmentRequest body) {
-        // Authorize requester and get its ID
-        final var patientId = authorizeAndGetId(headers);
-        if (patientId == null) {
-            // TODO: Throw patient not found error
-            return null;
-        }
-
-        // Check doctor existence and get the doctor data
-        final var doctorResponse = validateAndGetDoctor(headers, body.doctorId());
-        if (doctorResponse == null) {
-            // TODO: Throw patient not found error
-            return null;
-        }
-
-        // Check if datetime valid
-        final var appointmentDatetime = validateAppointmentDatetime(body.datetime(), body.doctorId());
-        if (appointmentDatetime == null) {
-            // TODO: Throw patient not found error
-            return null;
-        }
-
-        // Register appointment
-        final var appointment = appointmentRepo.saveAndFlush(
-                Appointment.builder()
-                        .doctorId(doctorResponse.id())
-                        .patientId(patientId)
-                        .appointmentTime(appointmentDatetime).build()
-        );
-
-        return new PatientAppointmentResponse(
-                appointment.getId(),
-                doctorResponse,
-                body.datetime()
-        );
-    }
-
     private Long authorizeAndGetId(HttpHeaders headers) {
         // Check "Authorization"
         final var httpValidateResponse = restTemplate.exchange(
@@ -195,9 +198,9 @@ public record AppointmentService(
         return null;
     }
 
-    private AppUserResponse validateAndGetDoctor(HttpHeaders headers, Long doctorId) {
-        String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/doctor")
-                .queryParam("id", doctorId)
+    private UserDataResponse validateAndGetDoctor(HttpHeaders headers, Long doctorId) {
+        String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/admin/doctor")
+                .queryParam("ids", List.of(doctorId))
                 .encode()
                 .toUriString();
 
@@ -205,13 +208,15 @@ public record AppointmentService(
                 uri,
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                AppUserResponse[].class
+                new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
+                }
         );
 
-        if (httpDoctorResponse.hasBody()) {
-            final var doctorResponses = httpDoctorResponse.getBody();
-            if (doctorResponses != null && doctorResponses.length > 0) {
-                return doctorResponses[0];
+        if (httpDoctorResponse.getBody() != null && httpDoctorResponse.getBody().data != null) {
+            final var doctorResponses = httpDoctorResponse.getBody().data;
+
+            if (doctorResponses.users != null && doctorResponses.users.size() > 0) {
+                return doctorResponses.users.get(0);
             }
         }
         return null;

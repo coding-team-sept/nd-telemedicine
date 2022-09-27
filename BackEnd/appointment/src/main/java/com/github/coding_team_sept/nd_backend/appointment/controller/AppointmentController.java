@@ -30,7 +30,10 @@ public record AppointmentController(
     }
 
     @PostMapping("/patient/appointment")
-    ResponseEntity<PatientAppointmentResponse> addAppointment(@RequestHeader HttpHeaders headers, @RequestBody AppointmentRequest body) {
+    ResponseEntity<PatientAppointmentResponse> addAppointment(
+            @RequestHeader HttpHeaders headers,
+            @RequestBody AppointmentRequest body
+    ) {
         return ResponseEntity.ok(appointmentService.addAppointment(headers, body));
     }
 
