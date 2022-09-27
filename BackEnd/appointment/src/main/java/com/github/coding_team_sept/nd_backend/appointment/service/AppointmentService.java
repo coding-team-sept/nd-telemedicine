@@ -11,9 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -21,21 +19,22 @@ import java.util.List;
 @Service
 public record AppointmentService(
         AppointmentRepository appointmentRepo,
+        AuthenticationService authService,
         RestTemplate restTemplate,
         DateTimeUtils dateTimeUtils
 ) {
-    private static final String url = "http://localhost:9000/api/v1";
-
-    public UsersDataResponse getAvailableDoctor(HttpHeaders headers, String datetime) throws IOException {
+    public UsersDataResponse getAvailableDoctor(HttpHeaders headers, String datetime) {
         final var parsedDatetime = dateTimeUtils.parseString(datetime);
 
         final var occupiedDoctor = appointmentRepo.getAppointmentByAppointmentTimeBetween(
-                dateTimeUtils.getMin(parsedDatetime).toDate(),
-                dateTimeUtils.getMax(parsedDatetime).toDate()
-        ).stream().map(Appointment::getDoctorId).toList();
+                        dateTimeUtils.getMin(parsedDatetime).toDate(),
+                        dateTimeUtils.getMax(parsedDatetime).toDate()
+                ).stream()
+                .map(Appointment::getDoctorId)
+                .toList();
 
         final var result = restTemplate.exchange(
-                url + "/app/admin/doctor",
+                AuthenticationService.url + "/app/admin/doctor",
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
                 new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
@@ -57,8 +56,8 @@ public record AppointmentService(
             AppointmentRequest body
     ) {
         // Authorize requester and get its ID
-        final var patientId = authorizeAndGetId(headers);
-        if (patientId == null) {
+        final var validation = authService.getAuthorization(headers);
+        if (validation == null) {
             // TODO: Throw patient not found error
             return null;
         }
@@ -81,7 +80,7 @@ public record AppointmentService(
         final var appointment = appointmentRepo.saveAndFlush(
                 Appointment.builder()
                         .doctorId(doctorResponse.id)
-                        .patientId(patientId)
+                        .patientId(validation.id)
                         .appointmentTime(appointmentDatetime).build()
         );
 
@@ -93,24 +92,18 @@ public record AppointmentService(
     }
 
     public List<PatientAppointmentResponse> getPatientAppointment(HttpHeaders headers) {
-        final var httpValidateResponse = restTemplate.exchange(
-                url + "/auth/validate",
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                ValidateResponse.class
-        );
-        if (httpValidateResponse.getBody() != null) {
-            final var validateResponse = httpValidateResponse.getBody();
-            final var role = validateResponse.role().toLowerCase();
+        final var validation = authService.getAuthorization(headers);
+        if (validation != null) {
+            final var role = validation.role.toLowerCase();
             if (role.contains("patient")) {
-                final var appointments = appointmentRepo.getAppointmentByPatientId(validateResponse.id());
+                final var appointments = appointmentRepo.getAppointmentByPatientId(validation.id);
                 final var doctorsId = appointments.stream()
                         .map(Appointment::getDoctorId)
                         .distinct()
                         .toList();
 
                 // Retrieve doctors data
-                final var doctors = getUsers(headers, doctorsId, "doctor");
+                final var doctors = authService.getUsers(headers, doctorsId, "doctor");
                 return appointments.stream()
                         .map(appointment -> new PatientAppointmentResponse(
                                 appointment.getId(),
@@ -129,24 +122,18 @@ public record AppointmentService(
     }
 
     public List<DoctorAppointmentResponse> getDoctorAppointment(HttpHeaders headers) {
-        final var httpValidateResponse = restTemplate.exchange(
-                url + "/auth/validate",
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                ValidateResponse.class
-        );
-        if (httpValidateResponse.getBody() != null) {
-            final var validateResponse = httpValidateResponse.getBody();
-            final var role = validateResponse.role().toLowerCase();
+        final var validation = authService.getAuthorization(headers);
+        if (validation != null) {
+            final var role = validation.role.toLowerCase();
             if (role.contains("doctor")) {
-                final var appointments = appointmentRepo.getAppointmentByDoctorId(validateResponse.id());
+                final var appointments = appointmentRepo.getAppointmentByDoctorId(validation.id);
                 final var patientsId = appointments.stream()
                         .map(Appointment::getPatientId)
                         .distinct()
                         .toList();
 
                 // Retrieve doctors data
-                final var patients = getUsers(headers, patientsId, "patient");
+                final var patients = authService.getUsers(headers, patientsId, "patient");
                 return appointments.stream()
                         .map(appointment -> new DoctorAppointmentResponse(
                                 appointment.getId(),
@@ -164,61 +151,11 @@ public record AppointmentService(
         return null;
     }
 
-    private UsersDataResponse getUsers(HttpHeaders headers, List<Long> ids, String subject) {
-        String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/admin/" + subject)
-                .queryParam("ids", ids)
-                .encode()
-                .toUriString();
-
-        final var httpUserResponse = restTemplate.exchange(
-                uri,
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
-                }
-        );
-
-        if (httpUserResponse.getBody() != null && httpUserResponse.getBody().data.users != null) {
-            return httpUserResponse.getBody().data;
-        }
-        return UsersDataResponse.build(List.of());
-    }
-
-    private Long authorizeAndGetId(HttpHeaders headers) {
-        // Check "Authorization"
-        final var httpValidateResponse = restTemplate.exchange(
-                url + "/auth/validate",
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                ValidateResponse.class
-        );
-
-        if (httpValidateResponse.getBody() != null) {
-            return httpValidateResponse.getBody().id();
-        }
-        return null;
-    }
-
     private UserDataResponse validateAndGetDoctor(HttpHeaders headers, Long doctorId) {
-        String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/admin/doctor")
-                .queryParam("ids", List.of(doctorId))
-                .encode()
-                .toUriString();
+        final var doctors = authService.getUsers(headers, List.of(doctorId), "doctor");
 
-        final var httpDoctorResponse = restTemplate.exchange(
-                uri,
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
-                }
-        );
-
-        if (httpDoctorResponse.getBody() != null && httpDoctorResponse.getBody().data != null) {
-            final var doctorResponses = httpDoctorResponse.getBody().data;
-
-            if (doctorResponses.users != null && doctorResponses.users.size() > 0) {
-                return doctorResponses.users.get(0);
-            }
+        if (!doctors.users.isEmpty()) {
+            return doctors.users.get(0);
         }
         return null;
     }
