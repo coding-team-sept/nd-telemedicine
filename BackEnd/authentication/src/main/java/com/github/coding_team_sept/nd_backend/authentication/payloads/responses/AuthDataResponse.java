@@ -7,6 +7,10 @@ public class AuthDataResponse extends DataResponse {
     public final String name;
     public final String role;
 
+    public AuthDataResponse() {
+        this(null, null, null);
+    }
+
     public AuthDataResponse(String email, String name, String role) {
         this.email = email;
         this.name = name;

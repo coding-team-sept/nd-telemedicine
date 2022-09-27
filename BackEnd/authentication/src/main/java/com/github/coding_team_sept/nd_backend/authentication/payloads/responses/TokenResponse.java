@@ -3,6 +3,10 @@ package com.github.coding_team_sept.nd_backend.authentication.payloads.responses
 public class TokenResponse extends DataResponse {
     public final String access;
 
+    public TokenResponse() {
+        this(null);
+    }
+
     public TokenResponse(String access) {
         this.access = access;
     }

@@ -3,13 +3,16 @@ package com.github.coding_team_sept.nd_backend.authentication.services;
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
 import com.github.coding_team_sept.nd_backend.authentication.exceptions.AppException;
 import com.github.coding_team_sept.nd_backend.authentication.exceptions.EmailTakenException;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.EmailFormatException;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.PasswordFormatException;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.UserNameFormatException;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetails;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AuthDataResponse;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AuthResponse;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.TokenResponse;
-import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AuthDataResponse;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUserRepository;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
 import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
@@ -47,7 +50,10 @@ public record AuthenticationService(
         return new AuthResponse(TokenResponse.build(jwt), AuthDataResponse.fromUserDetails(userDetails));
     }
 
-    public AuthResponse register(RegisterRequest request, RoleType roleType) throws AppException {
+    public AuthResponse register(
+            RegisterRequest request,
+            RoleType roleType
+    ) throws EmailTakenException, EmailFormatException, UserNameFormatException, PasswordFormatException {
         // Check if email is used
         // Source: https://stackoverflow.com/a/27583544
         if (authenticationRepo.existsAppUserByEmail(request.email())) {

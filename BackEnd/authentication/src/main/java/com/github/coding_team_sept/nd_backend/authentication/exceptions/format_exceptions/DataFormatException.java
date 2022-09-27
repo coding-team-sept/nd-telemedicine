@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class DataFormatException extends AppException {
     public DataFormatException(String subject, String reason) {
-        super(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid " + subject.toLowerCase() + " format: " + reason);
+        super(HttpStatus.BAD_REQUEST, "Invalid " + subject.toLowerCase() + " format: " + reason);
     }
 }

@@ -7,6 +7,10 @@ public class AuthResponse extends DataResponse{
     public final TokenResponse token;
     public final AuthDataResponse user;
 
+    public AuthResponse() {
+        this(null, null);
+    }
+
     public AuthResponse(TokenResponse token, AuthDataResponse user) {
         this.token = token;
         this.user = user;

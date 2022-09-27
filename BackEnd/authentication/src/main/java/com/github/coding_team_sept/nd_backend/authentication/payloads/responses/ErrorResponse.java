@@ -5,6 +5,10 @@ import com.github.coding_team_sept.nd_backend.authentication.exceptions.AppExcep
 public class ErrorResponse extends AppResponse {
     public final String message;
 
+    ErrorResponse() {
+        this(null);
+    }
+
     public ErrorResponse(String message) {
         this.message = message;
     }

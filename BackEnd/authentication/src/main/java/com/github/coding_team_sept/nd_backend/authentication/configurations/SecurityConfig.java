@@ -62,8 +62,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and();
 
         security.authorizeRequests()
-                .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers("/api/v1/auth/validate").authenticated()
+                .antMatchers("/api/v1/auth/**").permitAll()
+                .antMatchers("/api/v1/app/admin/patient").hasAnyAuthority(RoleType.ROLE_DOCTOR.name())
+                .antMatchers("/api/v1/app/admin/doctor").hasAnyAuthority(RoleType.ROLE_ADMIN.name(), RoleType.ROLE_PATIENT.name())
                 .antMatchers("/api/v1/app/admin/**").hasAuthority(RoleType.ROLE_ADMIN.name())
                 .anyRequest().authenticated();
 
