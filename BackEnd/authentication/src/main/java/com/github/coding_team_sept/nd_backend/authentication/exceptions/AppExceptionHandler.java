@@ -6,6 +6,7 @@ import org.springframework.core.Ordered;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -25,6 +26,11 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     protected ResponseEntity<ErrorResponse> handleDataIntegrityException(DataIntegrityViolationException e) {
-        return new ResponseEntity<>(ErrorResponse.build("Email has been taken!"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ErrorResponse.build("Email has been taken"), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    protected ResponseEntity<ErrorResponse> handAuthenticationException(AuthenticationException e) {
+        return new ResponseEntity<>(ErrorResponse.fromException(e), HttpStatus.BAD_REQUEST);
     }
 }
