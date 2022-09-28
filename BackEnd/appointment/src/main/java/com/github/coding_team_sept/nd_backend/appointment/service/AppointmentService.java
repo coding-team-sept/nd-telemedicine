@@ -1,5 +1,6 @@
 package com.github.coding_team_sept.nd_backend.appointment.service;
 
+import com.github.coding_team_sept.nd_backend.appointment.exceptions.AppointmentDateTimeException;
 import com.github.coding_team_sept.nd_backend.appointment.model.Appointment;
 import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.DoctorAppointmentResponse;
@@ -7,12 +8,12 @@ import com.github.coding_team_sept.nd_backend.appointment.payload.responses.Pati
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.UserDataResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.UsersDataResponse;
 import com.github.coding_team_sept.nd_backend.appointment.repository.AppointmentRepository;
-import com.github.coding_team_sept.nd_backend.appointment.utils.DateTimeUtils;
+import com.github.coding_team_sept.nd_backend.appointment.utils.AppointmentDateTimeUtils;
+import org.joda.time.DateTime;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
 import java.util.List;
 
 // TODO: Handle failed HTTP requests (e.g. 400, 401)
@@ -21,13 +22,17 @@ public record AppointmentService(
         AppointmentRepository appointmentRepo,
         AuthenticationService authService,
         RestTemplate restTemplate,
-        DateTimeUtils dateTimeUtils
+        AppointmentDateTimeUtils datetimeUtils
 ) {
-    public UsersDataResponse getAvailableDoctor(HttpHeaders headers, String datetime) {
-        final var parsedDatetime = dateTimeUtils.parseString(datetime);
+    public UsersDataResponse getAvailableDoctor(
+            HttpHeaders headers,
+            String datetime
+    ) throws AppointmentDateTimeException {
+        final var parsedDatetime = datetimeUtils.parseString(datetime);
+        datetimeUtils.validateAppointmentDateTime(parsedDatetime);
         final var occupiedDoctor = appointmentRepo.getAppointmentByAppointmentTimeBetween(
-                        dateTimeUtils.getMin(parsedDatetime).toDate(),
-                        dateTimeUtils.getMax(parsedDatetime).toDate()
+                        datetimeUtils.getMin(parsedDatetime).toDate(),
+                        datetimeUtils.getMax(parsedDatetime).toDate()
                 ).stream()
                 .map(Appointment::getDoctorId)
                 .toList();
@@ -44,7 +49,7 @@ public record AppointmentService(
     public PatientAppointmentResponse addAppointment(
             HttpHeaders headers,
             AppointmentRequest body
-    ) {
+    ) throws AppointmentDateTimeException {
         // Authorize requester and get its ID
         final var validation = authService.getAuthorization(headers);
         if (validation == null) {
@@ -66,19 +71,46 @@ public record AppointmentService(
             return null;
         }
 
-        // Register appointment
-        final var appointment = appointmentRepo.saveAndFlush(
-                Appointment.builder()
-                        .doctorId(doctorResponse.id)
-                        .patientId(validation.id)
-                        .appointmentTime(appointmentDatetime).build()
-        );
+        if (datetimeUtils.validateAppointmentDateTime(appointmentDatetime)) {
+            // Register appointment
+            final var appointment = appointmentRepo.saveAndFlush(
+                    Appointment.builder()
+                            .doctorId(doctorResponse.id)
+                            .patientId(validation.id)
+                            .appointmentTime(appointmentDatetime.toDate()).build()
+            );
+            return PatientAppointmentResponse.build(
+                    appointment.getId(),
+                    doctorResponse,
+                    body.datetime()
+            );
+        }
+        return null;
+    }
 
-        return PatientAppointmentResponse.build(
-                appointment.getId(),
-                doctorResponse,
-                body.datetime()
-        );
+    private DateTime validateAppointmentDatetime(
+            String datetime,
+            Long doctorId
+    ) throws AppointmentDateTimeException {
+        final var appointmentDatetime = datetimeUtils.parseString(datetime);
+        if (datetimeUtils.validateAppointmentDateTime(appointmentDatetime)) {
+            if (!appointmentRepo.existsAppointmentByDoctorIdAndAppointmentTimeBetween(
+                    doctorId,
+                    datetimeUtils.getMin(appointmentDatetime).toDate(),
+                    datetimeUtils.getMax(appointmentDatetime).toDate()
+            )) {
+                return appointmentDatetime;
+            }
+        }
+        return null;
+    }
+
+    private UserDataResponse validateAndGetDoctor(HttpHeaders headers, Long doctorId) {
+        final var doctors = authService.getUsers(headers, List.of(doctorId), "doctor");
+        if (!doctors.users.isEmpty()) {
+            return doctors.users.get(0);
+        }
+        return null;
     }
 
     public List<PatientAppointmentResponse> getPatientAppointment(HttpHeaders headers) {
@@ -137,30 +169,6 @@ public record AppointmentService(
                                 appointment -> appointment.patient() != null
                         ).toList();
             }
-        }
-        return null;
-    }
-
-    private UserDataResponse validateAndGetDoctor(HttpHeaders headers, Long doctorId) {
-        final var doctors = authService.getUsers(headers, List.of(doctorId), "doctor");
-
-        if (!doctors.users.isEmpty()) {
-            return doctors.users.get(0);
-        }
-        return null;
-    }
-
-    private Date validateAppointmentDatetime(String datetime, Long doctorId) {
-        final var appointmentDatetime = dateTimeUtils.parseString(datetime);
-
-        // TODO: Validate datetime
-
-        if (!appointmentRepo.existsAppointmentByDoctorIdAndAppointmentTimeBetween(
-                doctorId,
-                dateTimeUtils.getMin(appointmentDatetime).toDate(),
-                dateTimeUtils.getMax(appointmentDatetime).toDate()
-        )) {
-            return appointmentDatetime.toDate();
         }
         return null;
     }

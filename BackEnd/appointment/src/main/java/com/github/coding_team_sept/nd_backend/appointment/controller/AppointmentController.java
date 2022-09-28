@@ -22,11 +22,7 @@ public record AppointmentController(
             @RequestHeader HttpHeaders headers,
             @PathVariable String datetime
     ) {
-        try {
-            return ResponseEntity.ok(ResponseWrapper.fromData(appointmentService.getAvailableDoctor(headers, datetime)));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        return ResponseEntity.ok(ResponseWrapper.fromData(appointmentService.getAvailableDoctor(headers, datetime)));
     }
 
     @PostMapping("/patient/appointment")
