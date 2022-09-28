@@ -19,6 +19,7 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleUnknownException(Exception e) {
+        e.printStackTrace();
         return new ResponseEntity<>(ErrorResponse.fromUnknownException(e), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

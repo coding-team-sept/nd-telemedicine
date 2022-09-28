@@ -1,5 +1,6 @@
 package com.github.coding_team_sept.nd_backend.appointment.service;
 
+import com.github.coding_team_sept.nd_backend.appointment.exceptions.RestClientException;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.ResponseWrapper;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.UsersDataResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.ValidateResponse;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -20,16 +23,20 @@ public record AuthenticationService(
     public static final String url = "http://localhost:9000/api/v1";
 
     public ValidateResponse getAuthorization(HttpHeaders headers) {
-        // Check "Authorization"
-        final var response = restTemplate.exchange(
-                url + "/auth/validate",
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                ValidateResponse.class
-        );
+        try {
+            // Check "Authorization"
+            final var response = restTemplate.exchange(
+                    url + "/auth/validates",
+                    HttpMethod.GET,
+                    new HttpEntity<>(headers),
+                    ValidateResponse.class
+            );
 
-        if (response.getBody() != null) {
-            return response.getBody();
+            if (response.getBody() != null) {
+                return response.getBody();
+            }
+        } catch (RestClientResponseException e) {
+            throw RestClientException.fromRestClientResponseException(e);
         }
         return null;
     }
@@ -39,21 +46,25 @@ public record AuthenticationService(
             List<Long> ids,
             String target
     ) {
-        String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/admin/" + target)
-                .queryParam("ids", ids)
-                .encode()
-                .toUriString();
+        try {
+            String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/admin/" + target)
+                    .queryParam("ids", ids)
+                    .encode()
+                    .toUriString();
 
-        final var response = restTemplate.exchange(
-                uri,
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
-                }
-        );
+            final var response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.GET,
+                    new HttpEntity<>(headers),
+                    new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
+                    }
+            );
 
-        if (response.getBody() != null && response.getBody().data.users != null) {
-            return response.getBody().data;
+            if (response.getBody() != null && response.getBody().data.users != null) {
+                return response.getBody().data;
+            }
+        } catch (HttpClientErrorException e) {
+            throw RestClientException.fromRestClientResponseException(e);
         }
         return UsersDataResponse.build(List.of());
     }
@@ -62,16 +73,20 @@ public record AuthenticationService(
             HttpHeaders headers,
             String target
     ) {
-        final var response = restTemplate.exchange(
-                AuthenticationService.url + "/app/admin/" + target,
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
-                }
-        );
+        try {
+            final var response = restTemplate.exchange(
+                    AuthenticationService.url + "/app/admin/" + target,
+                    HttpMethod.GET,
+                    new HttpEntity<>(headers),
+                    new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
+                    }
+            );
 
-        if (response.getBody() != null && response.getBody().data.users != null) {
-            return response.getBody().data;
+            if (response.getBody() != null && response.getBody().data.users != null) {
+                return response.getBody().data;
+            }
+        } catch (RestClientResponseException e) {
+            throw RestClientException.fromRestClientResponseException(e);
         }
         return UsersDataResponse.build(List.of());
     }
