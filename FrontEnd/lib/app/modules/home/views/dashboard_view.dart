@@ -64,8 +64,6 @@ class DashboardView extends GetView<DashboardController> {
               onPressed: () => Get.toNamed(Routes.ADMIN_LIST_VIEW),
               child: const Text("Admin Listview")),
 
-
-
         ],
       ),
     );
