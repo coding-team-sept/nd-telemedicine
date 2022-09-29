@@ -26,7 +26,7 @@ public record AuthenticationService(
         try {
             // Check "Authorization"
             final var response = restTemplate.exchange(
-                    url + "/auth/validates",
+                    url + "/auth/validate",
                     HttpMethod.GET,
                     new HttpEntity<>(headers),
                     ValidateResponse.class
