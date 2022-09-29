@@ -32,11 +32,25 @@ class HomeView extends GetView<HomeController> {
         text: "Appointment",
       ),
     ];
+    const doctorTabBar = [
+      Tab(
+        icon: Icon(Icons.book_online),
+        text: "Offline Booking",
+      ),
+      Tab(
+        icon: Icon(Icons.book_outlined),
+        text: "Online Booking",
+      ),
+    ];
     const patientContent = [
       DashboardView(),
       AppointmentView(),
     ];
     var adminContent = [
+      Scaffold(),
+      Scaffold(),
+    ];
+    const doctorContent = [
       Scaffold(),
       Scaffold(),
     ];
@@ -50,7 +64,8 @@ class HomeView extends GetView<HomeController> {
             title: Text(controller.email.value ?? ""),
             bottom: TabBar(tabs: [
               if (controller.role.value == "ROLE_ADMIN") ...adminTabBar,
-              if (controller.role.value != "ROLE_ADMIN") ...patientTabBar,
+              if (controller.role.value == "ROLE_PATIENT") ...patientTabBar,
+              if (controller.role.value == "ROLE_DOCTOR") ...doctorTabBar,
               const Tab(
                 icon: Icon(Icons.account_circle),
                 text: "Profile",
@@ -58,8 +73,9 @@ class HomeView extends GetView<HomeController> {
             ]),
           ),
           body: TabBarView(children: [
-            if (controller.role.value != "ROLE_ADMIN") ...patientContent,
+            if (controller.role.value == "ROLE_PATIENT") ...patientContent,
             if (controller.role.value == "ROLE_ADMIN") ...adminContent,
+            if (controller.role.value == "ROLE_DOCTOR") ...doctorContent,
             const ProfileView(),
           ]),
         ),
