@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:nd/app/modules/home/views/doctor_online_booking_view.dart';
 
 import 'package:nd/app/routes/app_pages.dart';
 import '../controllers/dashboard_controller.dart';
@@ -62,6 +63,13 @@ class DashboardView extends GetView<DashboardController> {
           ElevatedButton(
               onPressed: () => Get.toNamed(Routes.ADMIN_LIST_VIEW),
               child: const Text("Admin Listview")),
+
+          const SizedBox(
+            height: 12,
+          ),
+          ElevatedButton(
+              onPressed: () => Get.to(DoctorOnlineBookingView()),
+              child: const Text("Doctor online"))
 
         ],
       ),
