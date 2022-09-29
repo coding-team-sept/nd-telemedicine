@@ -3,10 +3,11 @@ package com.github.coding_team_sept.nd_backend.appointment.service;
 import com.github.coding_team_sept.nd_backend.appointment.exceptions.*;
 import com.github.coding_team_sept.nd_backend.appointment.model.Appointment;
 import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.DoctorAppointmentResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.PatientAppointmentResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.UserDataResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payload.responses.UsersDataResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.appointment.AppointmentsResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.appointment.DoctorAppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payload.responses.appointment.PatientAppointmentResponse;
 import com.github.coding_team_sept.nd_backend.appointment.repository.AppointmentRepository;
 import com.github.coding_team_sept.nd_backend.appointment.utils.AppointmentDateTimeUtils;
 import org.joda.time.DateTime;
@@ -104,7 +105,7 @@ public record AppointmentService(
         throw new UserNotFoundException();
     }
 
-    public List<PatientAppointmentResponse> getPatientAppointment(
+    public AppointmentsResponse<PatientAppointmentResponse> getPatientAppointment(
             HttpHeaders headers
     ) throws RestClientException, UnauthorizedException {
         final var validation = authService.getAuthorization(headers);
@@ -118,7 +119,7 @@ public record AppointmentService(
 
             // Retrieve doctors data
             final var doctors = authService.getUsers(headers, doctorsId, "doctor");
-            return appointments.stream()
+            return AppointmentsResponse.build(appointments.stream()
                     .map(appointment -> new PatientAppointmentResponse(
                             appointment.getId(),
                             doctors.users.stream()
@@ -128,13 +129,13 @@ public record AppointmentService(
                                     .orElse(null),
                             appointment.getAppointmentTime().toString()
                     )).filter(
-                            appointment -> appointment.doctor != null
-                    ).toList();
+                            appointment -> appointment.appointedUser != null
+                    ).toList());
         }
         throw new UnauthorizedException("Unauthorized role");
     }
 
-    public List<DoctorAppointmentResponse> getDoctorAppointment(
+    public AppointmentsResponse<DoctorAppointmentResponse> getDoctorAppointment(
             HttpHeaders headers
     ) throws RestClientException, UnauthorizedException {
         final var validation = authService.getAuthorization(headers);
@@ -148,7 +149,7 @@ public record AppointmentService(
 
             // Retrieve doctors data
             final var patients = authService.getUsers(headers, patientsId, "patient");
-            return appointments.stream()
+            return AppointmentsResponse.build(appointments.stream()
                     .map(appointment -> new DoctorAppointmentResponse(
                             appointment.getId(),
                             patients.users.stream()
@@ -158,8 +159,8 @@ public record AppointmentService(
                                     .orElse(null),
                             appointment.getAppointmentTime().toString()
                     )).filter(
-                            appointment -> appointment.patient != null
-                    ).toList();
+                            appointment -> appointment.appointedUser != null
+                    ).toList());
         }
         throw new UnauthorizedException("Unauthorized role");
     }
