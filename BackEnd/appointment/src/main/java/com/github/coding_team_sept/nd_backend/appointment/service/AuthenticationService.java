@@ -8,6 +8,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientResponseException;
@@ -22,7 +23,9 @@ public record AuthenticationService(
 ) {
     public static final String url = "http://localhost:9000/api/v1";
 
-    public ValidateResponse getAuthorization(HttpHeaders headers) {
+    public ValidateResponse getAuthorization(
+            HttpHeaders headers
+    ) throws RestClientException {
         try {
             // Check "Authorization"
             final var response = restTemplate.exchange(
@@ -35,17 +38,17 @@ public record AuthenticationService(
             if (response.getBody() != null) {
                 return response.getBody();
             }
+            throw RestClientException.build(HttpStatus.INTERNAL_SERVER_ERROR, "Empty response body");
         } catch (RestClientResponseException e) {
             throw RestClientException.fromRestClientResponseException(e);
         }
-        return null;
     }
 
     public UsersDataResponse getUsers(
             HttpHeaders headers,
             List<Long> ids,
             String target
-    ) {
+    ) throws RestClientException {
         try {
             String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/admin/" + target)
                     .queryParam("ids", ids)
@@ -72,7 +75,7 @@ public record AuthenticationService(
     public UsersDataResponse getUsers(
             HttpHeaders headers,
             String target
-    ) {
+    ) throws RestClientException {
         try {
             final var response = restTemplate.exchange(
                     AuthenticationService.url + "/app/admin/" + target,

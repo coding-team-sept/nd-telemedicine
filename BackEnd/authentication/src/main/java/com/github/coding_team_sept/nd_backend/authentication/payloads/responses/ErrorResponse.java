@@ -5,7 +5,7 @@ import com.github.coding_team_sept.nd_backend.authentication.exceptions.AppExcep
 public class ErrorResponse extends AppResponse {
     public final String message;
 
-    ErrorResponse() {
+    public ErrorResponse() {
         this(null);
     }
 

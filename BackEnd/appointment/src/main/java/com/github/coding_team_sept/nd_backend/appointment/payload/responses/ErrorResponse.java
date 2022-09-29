@@ -6,7 +6,7 @@ import com.github.coding_team_sept.nd_backend.appointment.exceptions.AppExceptio
 public class ErrorResponse extends AppResponse {
     public final String message;
 
-    ErrorResponse() {
+    public ErrorResponse() {
         this(null);
     }
 

@@ -1,7 +1,5 @@
 package com.github.coding_team_sept.nd_backend.appointment.payload.responses;
 
-import com.github.coding_team_sept.nd_backend.appointment.model.Appointment;
-
 public class PatientAppointmentResponse extends DataResponse {
     public final Long id;
     public final UserDataResponse doctor;
