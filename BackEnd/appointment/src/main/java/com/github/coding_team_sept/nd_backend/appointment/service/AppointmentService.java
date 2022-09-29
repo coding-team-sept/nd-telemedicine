@@ -17,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-// TODO: Add check user's timetable apart from the doctor's timetable
 @Service
 public record AppointmentService(
         AppointmentRepository appointmentRepo,
@@ -29,8 +28,10 @@ public record AppointmentService(
             HttpHeaders headers,
             String datetime
     ) throws AppointmentDateTimeException, RestClientException {
+        final var validation = authService.getAuthorization(headers);
         final var parsedDatetime = datetimeUtils.parseString(datetime);
         datetimeUtils.validateAppointmentDateTime(parsedDatetime);
+        checkPatientAvailability(parsedDatetime, validation.id);
         final var occupiedDoctor = appointmentRepo.getAppointmentByAppointmentTimeBetween(
                         datetimeUtils.getMin(parsedDatetime).toDate(),
                         datetimeUtils.getMax(parsedDatetime).toDate()
@@ -82,7 +83,9 @@ public record AppointmentService(
             Long doctorId
     ) throws AppointmentDateTimeException, AppointmentConflictException {
         final var appointmentDatetime = datetimeUtils.parseString(datetime);
-        if (datetimeUtils.validateAppointmentDateTime(appointmentDatetime)) {
+        if (datetimeUtils.validateAppointmentDateTime(appointmentDatetime)
+                && checkPatientAvailability(appointmentDatetime, doctorId)
+        ) {
             if (!appointmentRepo.existsAppointmentByDoctorIdAndAppointmentTimeBetween(
                     doctorId,
                     datetimeUtils.getMin(appointmentDatetime).toDate(),
@@ -91,7 +94,7 @@ public record AppointmentService(
                 return appointmentDatetime;
             }
         }
-        throw new AppointmentConflictException("Doctor occupied");
+        throw new AppointmentConflictException("Doctor is occupied");
     }
 
     private UserDataResponse getDoctor(
@@ -103,6 +106,17 @@ public record AppointmentService(
             return doctors.users.get(0);
         }
         throw new UserNotFoundException();
+    }
+
+    private boolean checkPatientAvailability(DateTime appointmentDatetime, Long patientId) {
+        if (!appointmentRepo.existsAppointmentByPatientIdAndAppointmentTimeBetween(
+                patientId,
+                datetimeUtils.getMin(appointmentDatetime).toDate(),
+                datetimeUtils.getMax(appointmentDatetime).toDate()
+        )) {
+            return true;
+        }
+        throw new AppointmentConflictException("Patient is occupied");
     }
 
     public AppointmentsResponse<PatientAppointmentResponse> getPatientAppointment(
