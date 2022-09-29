@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppointmentDateTimeUtils {
     static final String pattern = "yyyy-MM-dd_HH:mm";
-    static final Long interval = 15L;
+    static final int intervalInMinutes = 15; // minutes
     private static final LocalTime closeTime = LocalTime.parse("20:00", DateTimeFormat.forPattern("HH:mm"));
     private static final LocalTime openTime = LocalTime.parse("08:00", DateTimeFormat.forPattern("HH:mm"));
 
@@ -19,11 +19,11 @@ public class AppointmentDateTimeUtils {
     }
 
     public DateTime getMin(DateTime datetime) {
-        return datetime.minus(interval);
+        return datetime.minusMinutes(intervalInMinutes);
     }
 
     public DateTime getMax(DateTime datetime) {
-        return datetime.plus(interval);
+        return datetime.plusMinutes(intervalInMinutes);
     }
 
     public boolean validateAppointmentDateTime(DateTime datetime) throws AppointmentDateTimeException {
@@ -36,7 +36,7 @@ public class AppointmentDateTimeUtils {
         }
 
         if (!(datetime.isAfter(getDateTimeWithTime(datetime, openTime))
-                && datetime.isBefore(getDateTimeWithTime(datetime, closeTime)))) {
+                && datetime.isBefore(getDateTimeWithTime(datetime, closeTime.minusMinutes(intervalInMinutes))))) {
             throw new AppointmentDateTimeException("Out of operation time");
         }
         return true;

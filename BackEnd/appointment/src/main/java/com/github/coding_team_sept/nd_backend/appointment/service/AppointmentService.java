@@ -97,7 +97,7 @@ public record AppointmentService(
     private UserDataResponse getDoctor(
             HttpHeaders headers,
             Long doctorId
-    ) throws UserNotFoundException {
+    ) throws RestClientException, UserNotFoundException {
         final var doctors = authService.getUsers(headers, List.of(doctorId), "doctor");
         if (!doctors.users.isEmpty()) {
             return doctors.users.get(0);
