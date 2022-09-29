@@ -57,6 +57,10 @@ class HomeView extends GetView<HomeController> {
       Scaffold(),
       DoctorOnlineBookingView(),
     ];
+    const doctorContent = [
+      Scaffold(),
+      Scaffold(),
+    ];
     Get.put(DashboardController());
 
     return DefaultTabController(
