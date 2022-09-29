@@ -64,12 +64,7 @@ class DashboardView extends GetView<DashboardController> {
               onPressed: () => Get.toNamed(Routes.ADMIN_LIST_VIEW),
               child: const Text("Admin Listview")),
 
-          const SizedBox(
-            height: 12,
-          ),
-          ElevatedButton(
-              onPressed: () => Get.to(DoctorOnlineBookingView()),
-              child: const Text("Doctor online"))
+
 
         ],
       ),

@@ -8,20 +8,27 @@ class DoctorOnlineBookingView extends GetView<DoctorOnlineBookingController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('DoctorOnlineBookingView'),
-        centerTitle: true,
-      ),
       body: Flex(
         direction: Axis.vertical,
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                  hintText: "Search",
+                  suffixIcon: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.search),
+                  )),
+            ),
+          ),
           Expanded(
               child: ListView(
                 children: [
                   Divider(),
                   ListTile(
                       onTap: controller.newChat,
-                      title: Text("Steve johnson"),
+                      title: Text("Steve Johnson"),
                       subtitle: Text("patient1@patient.com")),
                   Divider(),
                   ListTile(
