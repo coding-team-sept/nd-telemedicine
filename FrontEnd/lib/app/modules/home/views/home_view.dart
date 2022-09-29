@@ -9,7 +9,6 @@ import 'package:nd/app/modules/home/views/doctor_manager_view.dart';
 import 'package:nd/app/modules/home/views/doctor_online_booking_view.dart';
 
 import 'package:nd/app/modules/home/views/offline_doctor_booking_view.dart';
-import 'package:nd/app/modules/home/views/offline_doctor_booking_view.dart';
 
 import 'package:nd/app/modules/home/views/profile_view.dart';
 
@@ -73,7 +72,9 @@ class HomeView extends GetView<HomeController> {
             title: Text(controller.email.value ?? ""),
             bottom: TabBar(tabs: [
               if (controller.role.value == "ROLE_ADMIN") ...adminTabBar,
-              if (controller.role.value == "ROLE_PATIENT") ...patientTabBar,
+              if (controller.role.value == "ROLE_PATIENT" ||
+                  controller.role.value == "patient")
+                ...patientTabBar,
               if (controller.role.value == "ROLE_DOCTOR") ...doctorTabBar,
               const Tab(
                 icon: Icon(Icons.account_circle),
@@ -82,7 +83,9 @@ class HomeView extends GetView<HomeController> {
             ]),
           ),
           body: TabBarView(children: [
-            if (controller.role.value == "ROLE_PATIENT") ...patientContent,
+            if (controller.role.value == "ROLE_PATIENT" ||
+                controller.role.value == "patient")
+              ...patientContent,
             if (controller.role.value == "ROLE_ADMIN") ...adminContent,
             if (controller.role.value == "ROLE_DOCTOR") ...doctorContent,
             const ProfileView(),
