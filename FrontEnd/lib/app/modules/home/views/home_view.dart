@@ -5,6 +5,7 @@ import 'package:nd/app/modules/home/controllers/dashboard_controller.dart';
 import 'package:nd/app/modules/home/views/dashboard_view.dart';
 import 'package:nd/app/modules/home/views/appointment_view.dart';
 import 'package:nd/app/modules/home/views/doctor_manager_view.dart';
+import 'package:nd/app/modules/home/views/offline_doctor_booking_view.dart';
 import 'package:nd/app/modules/home/views/profile_view.dart';
 
 import '../controllers/home_controller.dart';
@@ -53,7 +54,7 @@ class HomeView extends GetView<HomeController> {
       const DoctorManagerView(),
     ];
     const doctorContent = [
-      Scaffold(),
+      OfflineDoctorBookingView(),
       Scaffold(),
     ];
     Get.put(DashboardController());
