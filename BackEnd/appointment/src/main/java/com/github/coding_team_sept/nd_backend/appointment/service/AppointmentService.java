@@ -22,19 +22,20 @@ public record AppointmentService(
         AppointmentRepository appointmentRepo,
         AuthenticationService authService,
         RestTemplate restTemplate,
-        AppointmentDateTimeUtils datetimeUtils
+        AppointmentDateTimeUtils datetimeUtils,
+        ScheduleService scheduleService
 ) {
     public UsersDataResponse getAvailableDoctor(
             HttpHeaders headers,
             String datetime
-    ) throws AppointmentDateTimeException, RestClientException {
+    ) throws RestClientException,
+            AppointmentDateTimeException,
+            AppointmentConflictException {
         final var validation = authService.getAuthorization(headers);
-        final var parsedDatetime = datetimeUtils.parseString(datetime);
-        datetimeUtils.validateAppointmentDateTime(parsedDatetime);
-        checkPatientAvailability(parsedDatetime, validation.id);
+        final var appointmentDatetime = getDateTime(datetime, validation.id, null);
         final var occupiedDoctor = appointmentRepo.getAppointmentByAppointmentTimeBetween(
-                        datetimeUtils.getMin(parsedDatetime).toDate(),
-                        datetimeUtils.getMax(parsedDatetime).toDate()
+                        datetimeUtils.getMin(appointmentDatetime).toDate(),
+                        datetimeUtils.getMax(appointmentDatetime).toDate()
                 ).stream()
                 .map(Appointment::getDoctorId)
                 .toList();
@@ -62,7 +63,7 @@ public record AppointmentService(
         final var doctorResponse = getDoctor(headers, body.doctorId());
 
         // Validate datetime and convert the type
-        final var appointmentDatetime = getDateTime(body.datetime(), body.doctorId());
+        final var appointmentDatetime = getDateTime(body.datetime(), validation.id, doctorResponse.id);
 
         // Register appointment
         final var appointment = appointmentRepo.saveAndFlush(
@@ -78,25 +79,6 @@ public record AppointmentService(
         );
     }
 
-    private DateTime getDateTime(
-            String datetime,
-            Long doctorId
-    ) throws AppointmentDateTimeException, AppointmentConflictException {
-        final var appointmentDatetime = datetimeUtils.parseString(datetime);
-        if (datetimeUtils.validateAppointmentDateTime(appointmentDatetime)
-                && checkPatientAvailability(appointmentDatetime, doctorId)
-        ) {
-            if (!appointmentRepo.existsAppointmentByDoctorIdAndAppointmentTimeBetween(
-                    doctorId,
-                    datetimeUtils.getMin(appointmentDatetime).toDate(),
-                    datetimeUtils.getMax(appointmentDatetime).toDate()
-            )) {
-                return appointmentDatetime;
-            }
-        }
-        throw new AppointmentConflictException("Doctor is occupied");
-    }
-
     private UserDataResponse getDoctor(
             HttpHeaders headers,
             Long doctorId
@@ -108,15 +90,20 @@ public record AppointmentService(
         throw new UserNotFoundException();
     }
 
-    private boolean checkPatientAvailability(DateTime appointmentDatetime, Long patientId) {
-        if (!appointmentRepo.existsAppointmentByPatientIdAndAppointmentTimeBetween(
-                patientId,
-                datetimeUtils.getMin(appointmentDatetime).toDate(),
-                datetimeUtils.getMax(appointmentDatetime).toDate()
-        )) {
-            return true;
+    private DateTime getDateTime(
+            String datetime,
+            Long patientId,
+            Long doctorId
+    ) throws AppointmentDateTimeException, AppointmentConflictException {
+        final var appointmentDatetime = datetimeUtils.parseString(datetime);
+        scheduleService.validateAppointmentDateTime(appointmentDatetime);
+        if (patientId != null) {
+            scheduleService.checkPatientAvailability(appointmentDatetime, patientId);
         }
-        throw new AppointmentConflictException("Patient is occupied");
+        if (doctorId != null) {
+            scheduleService.checkDoctorAvailability(appointmentDatetime, doctorId);
+        }
+        return appointmentDatetime;
     }
 
     public AppointmentsResponse<PatientAppointmentResponse> getPatientAppointment(
