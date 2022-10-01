@@ -1,4 +1,4 @@
-package com.github.coding_team_sept.nd_backend.appointment.configuration;
+package com.github.coding_team_sept.nd_backend.appointment.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

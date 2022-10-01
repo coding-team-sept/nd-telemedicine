@@ -1,4 +1,4 @@
-package com.github.coding_team_sept.nd_backend.appointment.model;
+package com.github.coding_team_sept.nd_backend.appointment.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

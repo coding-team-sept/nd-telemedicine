@@ -1,9 +1,9 @@
-package com.github.coding_team_sept.nd_backend.appointment.service;
+package com.github.coding_team_sept.nd_backend.appointment.services;
 
 import com.github.coding_team_sept.nd_backend.appointment.exceptions.RestClientException;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.ResponseWrapper;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.UsersDataResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.ValidateResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.ResponseWrapper;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UsersDataResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.ValidateResponse;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

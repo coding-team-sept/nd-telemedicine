@@ -1,7 +1,7 @@
-package com.github.coding_team_sept.nd_backend.appointment.payload.responses.appointment;
+package com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.UserDataResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UserDataResponse;
 
 public class DoctorAppointmentResponse extends AppointmentResponse {
     @JsonProperty("patient")

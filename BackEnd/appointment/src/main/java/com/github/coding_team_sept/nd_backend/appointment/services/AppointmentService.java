@@ -1,14 +1,14 @@
-package com.github.coding_team_sept.nd_backend.appointment.service;
+package com.github.coding_team_sept.nd_backend.appointment.services;
 
 import com.github.coding_team_sept.nd_backend.appointment.exceptions.*;
-import com.github.coding_team_sept.nd_backend.appointment.model.Appointment;
-import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.UserDataResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.UsersDataResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.appointment.AppointmentsResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.appointment.DoctorAppointmentResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.appointment.PatientAppointmentResponse;
-import com.github.coding_team_sept.nd_backend.appointment.repository.AppointmentRepository;
+import com.github.coding_team_sept.nd_backend.appointment.models.Appointment;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.requests.AppointmentRequest;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UserDataResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UsersDataResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.AppointmentsResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.DoctorAppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.PatientAppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.repositories.AppointmentRepository;
 import com.github.coding_team_sept.nd_backend.appointment.utils.AppointmentDateTimeUtils;
 import org.joda.time.DateTime;
 import org.springframework.http.HttpHeaders;

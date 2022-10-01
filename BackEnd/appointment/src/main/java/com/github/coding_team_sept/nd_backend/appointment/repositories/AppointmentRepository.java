@@ -1,6 +1,6 @@
-package com.github.coding_team_sept.nd_backend.appointment.repository;
+package com.github.coding_team_sept.nd_backend.appointment.repositories;
 
-import com.github.coding_team_sept.nd_backend.appointment.model.Appointment;
+import com.github.coding_team_sept.nd_backend.appointment.models.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

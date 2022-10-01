@@ -1,4 +1,4 @@
-package com.github.coding_team_sept.nd_backend.appointment.payload.responses;
+package com.github.coding_team_sept.nd_backend.appointment.payloads.responses;
 
 public class ValidateResponse {
     public final Long id;

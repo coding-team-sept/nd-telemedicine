@@ -1,8 +1,8 @@
-package com.github.coding_team_sept.nd_backend.appointment.service;
+package com.github.coding_team_sept.nd_backend.appointment.services;
 
 import com.github.coding_team_sept.nd_backend.appointment.exceptions.AppointmentConflictException;
 import com.github.coding_team_sept.nd_backend.appointment.exceptions.AppointmentDateTimeException;
-import com.github.coding_team_sept.nd_backend.appointment.repository.AppointmentRepository;
+import com.github.coding_team_sept.nd_backend.appointment.repositories.AppointmentRepository;
 import com.github.coding_team_sept.nd_backend.appointment.utils.AppointmentDateTimeUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;

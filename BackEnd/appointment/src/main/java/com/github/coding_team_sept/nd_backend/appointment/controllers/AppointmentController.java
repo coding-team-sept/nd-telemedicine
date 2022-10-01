@@ -1,17 +1,15 @@
-package com.github.coding_team_sept.nd_backend.appointment.controller;
+package com.github.coding_team_sept.nd_backend.appointment.controllers;
 
-import com.github.coding_team_sept.nd_backend.appointment.payload.requests.AppointmentRequest;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.appointment.AppointmentsResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.appointment.DoctorAppointmentResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.appointment.PatientAppointmentResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.ResponseWrapper;
-import com.github.coding_team_sept.nd_backend.appointment.payload.responses.UsersDataResponse;
-import com.github.coding_team_sept.nd_backend.appointment.service.AppointmentService;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.requests.AppointmentRequest;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.AppointmentsResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.DoctorAppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.PatientAppointmentResponse;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.ResponseWrapper;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UsersDataResponse;
+import com.github.coding_team_sept.nd_backend.appointment.services.AppointmentService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/v1")
