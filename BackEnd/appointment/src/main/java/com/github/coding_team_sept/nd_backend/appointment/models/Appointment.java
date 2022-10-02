@@ -31,4 +31,10 @@ public class Appointment {
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date appointmentTime;
+    @ManyToOne(
+            targetEntity = AppointmentSession.class,
+            cascade = CascadeType.ALL,
+            optional = false
+    )
+    private AppointmentSession session;
 }

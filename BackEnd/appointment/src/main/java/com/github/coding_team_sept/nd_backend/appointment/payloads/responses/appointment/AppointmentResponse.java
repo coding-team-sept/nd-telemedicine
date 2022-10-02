@@ -1,5 +1,6 @@
 package com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment;
 
+import com.github.coding_team_sept.nd_backend.appointment.enums.SessionType;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.DataResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UserDataResponse;
 
@@ -7,18 +8,20 @@ public class AppointmentResponse extends DataResponse {
     public final Long id;
     public final UserDataResponse appointedUser;
     public final String datetime;
-
-    public UserDataResponse getAppointedUser() {
-        return appointedUser;
-    }
+    public final String session;
 
     public AppointmentResponse() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
-    public AppointmentResponse(Long id, UserDataResponse appointedUser, String datetime) {
+    public AppointmentResponse(Long id, UserDataResponse appointedUser, String datetime, SessionType session) {
         this.id = id;
         this.appointedUser = appointedUser;
         this.datetime = datetime;
+        this.session = session.name();
+    }
+
+    public UserDataResponse getAppointedUser() {
+        return appointedUser;
     }
 }

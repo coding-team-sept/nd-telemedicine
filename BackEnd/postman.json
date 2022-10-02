@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5e49126c-c495-4de8-98cf-e04499302b6a",
+		"_postman_id": "3751d314-8d0e-44e9-89a7-2ba7093c5c52",
 		"name": "Telemedic App",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "13106056"
@@ -770,7 +770,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoxLCJleHAiOjE2OTUwNTM0OTIsImlhdCI6MTY2MzYwMzg5Mn0.1GbXLxIFckS1LTt3OGapZ_9aU7sJcPAihkUfVwN0spk",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoxLCJleHAiOjE2OTYxMjM0NjcsImlhdCI6MTY2NDY3Mzg2N30.xEh_-SaXT7QTwUMJvgnrjFhhEFQdQwuYH9od9fNTPQ0",
 											"type": "string"
 										}
 									]
@@ -1016,7 +1016,7 @@
 														}
 													],
 													"cookie": [],
-													"body": null
+													"body": ""
 												},
 												{
 													"name": "Email Taken",
@@ -1581,7 +1581,7 @@
 														}
 													],
 													"cookie": [],
-													"body": null
+													"body": ""
 												},
 												{
 													"name": "Email Taken",
@@ -2610,7 +2610,7 @@
 								"bearer": [
 									{
 										"key": "token",
-										"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoxLCJleHAiOjE2OTUwNTM0OTIsImlhdCI6MTY2MzYwMzg5Mn0.1GbXLxIFckS1LTt3OGapZ_9aU7sJcPAihkUfVwN0spk",
+										"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoxLCJleHAiOjE2OTYxMjM0NjcsImlhdCI6MTY2NDY3Mzg2N30.xEh_-SaXT7QTwUMJvgnrjFhhEFQdQwuYH9od9fNTPQ0",
 										"type": "string"
 									}
 								]
@@ -2720,7 +2720,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"doctorId\": 3,\n    \"datetime\": \"2022-09-04_12:00\"\n}",
+											"raw": "{\n    \"doctorId\": 3,\n    \"datetime\": \"2022-11-01_12:00\",\n    \"session\": \"OFFLINE\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2763,7 +2763,7 @@
 											"variable": [
 												{
 													"key": "timestamp",
-													"value": "2022-09-04_12:00"
+													"value": "2022-11-01_12:00"
 												}
 											]
 										}
@@ -2771,6 +2771,36 @@
 									"response": []
 								}
 							]
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjoyLCJleHAiOjE2OTYxMjM1MDIsImlhdCI6MTY2NDY3MzkwMn0.V8cCt7BJfAEGsIuMpDA-c78XXFHg_JslZfJ7ol6ORv4",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
 						}
 					]
 				},
@@ -2795,18 +2825,41 @@
 							},
 							"response": []
 						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb2N0b3JAZG9jdG9yLmNvbSIsInJvbGUiOiJST0xFX0RPQ1RPUiIsImlkIjozLCJleHAiOjE2OTYxMjM1ODksImlhdCI6MTY2NDY3Mzk4OX0.VcZ1v_lMGZeDnLGuP7wyyb0mZOPfoZ5cQnuQa1SatbI",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
 					]
 				}
 			],
 			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjoyMDMsImV4cCI6MTY2MjQ0OTgzMSwiaWF0IjoxNjYyMzYzNDMxfQ.nJJkFCXA8w5kE3mplZ0r8vxQq3RpX6G-g-PEHOFZK84",
-						"type": "string"
-					}
-				]
+				"type": "noauth"
 			},
 			"event": [
 				{

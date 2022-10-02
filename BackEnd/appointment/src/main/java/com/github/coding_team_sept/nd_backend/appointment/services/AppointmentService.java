@@ -1,7 +1,10 @@
 package com.github.coding_team_sept.nd_backend.appointment.services;
 
+import com.github.coding_team_sept.nd_backend.appointment.enums.SessionType;
 import com.github.coding_team_sept.nd_backend.appointment.exceptions.*;
+import com.github.coding_team_sept.nd_backend.appointment.exceptions.format_exceptions.InvalidSessionException;
 import com.github.coding_team_sept.nd_backend.appointment.models.Appointment;
+import com.github.coding_team_sept.nd_backend.appointment.models.AppointmentSession;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.requests.AppointmentRequest;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UserDataResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UsersDataResponse;
@@ -55,9 +58,25 @@ public record AppointmentService(
     ) throws AppointmentDateTimeException,
             RestClientException,
             UserNotFoundException,
-            AppointmentConflictException {
+            AppointmentConflictException,
+            InvalidSessionException {
         // Authorize requester and get its ID
         final var validation = authService.getAuthorization(headers);
+
+        // Check session
+        final var rawSession = body.session();
+        AppointmentSession session;
+        try {
+            if (rawSession == null) {
+                throw new IllegalArgumentException();
+            } else  {
+                session = AppointmentSession.builder()
+                        .name(SessionType.valueOf(body.session().toUpperCase()))
+                    .build();
+            }
+        } catch (IllegalArgumentException e) {
+            throw new InvalidSessionException((rawSession == null) ? "NULL" : rawSession);
+        }
 
         // Check doctor existence and get the doctor data
         final var doctorResponse = getDoctor(headers, body.doctorId());
@@ -70,12 +89,15 @@ public record AppointmentService(
                 Appointment.builder()
                         .doctorId(doctorResponse.id)
                         .patientId(validation.id)
-                        .appointmentTime(appointmentDatetime.toDate()).build()
+                        .appointmentTime(appointmentDatetime.toDate())
+                        .session(session)
+                        .build()
         );
         return PatientAppointmentResponse.build(
                 appointment.getId(),
                 doctorResponse,
-                body.datetime()
+                body.datetime(),
+                appointment.getSession().getName()
         );
     }
 
@@ -128,7 +150,8 @@ public record AppointmentService(
                                             doctor -> doctor.id.equals(appointment.getDoctorId())
                                     ).findAny()
                                     .orElse(null),
-                            appointment.getAppointmentTime().toString()
+                            appointment.getAppointmentTime().toString(),
+                            appointment.getSession().getName()
                     )).filter(
                             appointment -> appointment.appointedUser != null
                     ).toList());
@@ -158,7 +181,8 @@ public record AppointmentService(
                                             patient -> patient.id.equals(appointment.getPatientId())
                                     ).findAny()
                                     .orElse(null),
-                            appointment.getAppointmentTime().toString()
+                            appointment.getAppointmentTime().toString(),
+                            appointment.getSession().getName()
                     )).filter(
                             appointment -> appointment.appointedUser != null
                     ).toList());
