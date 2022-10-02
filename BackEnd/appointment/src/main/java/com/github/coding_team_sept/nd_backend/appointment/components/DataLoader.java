@@ -35,8 +35,8 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     @Transactional
     void createSession(SessionType sessionType) {
-        final var role = sessionRepo.findRoleByName(sessionType);
-        if (role.isEmpty()) {
+        final var session = sessionRepo.findRoleByName(sessionType);
+        if (session.isEmpty()) {
             final var newRole = AppointmentSession.builder().name(sessionType).build();
             sessionRepo.save(newRole);
         }

@@ -12,18 +12,21 @@ import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.app
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.DoctorAppointmentResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.PatientAppointmentResponse;
 import com.github.coding_team_sept.nd_backend.appointment.repositories.AppointmentRepository;
+import com.github.coding_team_sept.nd_backend.appointment.repositories.SessionRepository;
 import com.github.coding_team_sept.nd_backend.appointment.utils.AppointmentDateTimeUtils;
 import org.joda.time.DateTime;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 public record AppointmentService(
         AppointmentRepository appointmentRepo,
         AuthenticationService authService,
+        SessionRepository sessionRepo,
         RestTemplate restTemplate,
         AppointmentDateTimeUtils datetimeUtils,
         ScheduleService scheduleService
@@ -69,10 +72,10 @@ public record AppointmentService(
         try {
             if (rawSession == null) {
                 throw new IllegalArgumentException();
-            } else  {
-                session = AppointmentSession.builder()
-                        .name(SessionType.valueOf(body.session().toUpperCase()))
-                    .build();
+            } else {
+                session = sessionRepo.findRoleByName(
+                        SessionType.valueOf(body.session().toUpperCase())
+                ).orElseThrow(IllegalArgumentException::new);
             }
         } catch (IllegalArgumentException e) {
             throw new InvalidSessionException((rawSession == null) ? "NULL" : rawSession);
@@ -143,7 +146,12 @@ public record AppointmentService(
             // Retrieve doctors data
             final var doctors = authService.getUsers(headers, doctorsId, "doctor");
             return AppointmentsResponse.build(appointments.stream()
-                    .map(appointment -> new PatientAppointmentResponse(
+                    .filter(appointment -> datetimeUtils.getMax(
+                                    new DateTime(appointment.getAppointmentTime())
+                            ).isAfter(DateTime.now())
+                    ).sorted(
+                            Comparator.comparing(Appointment::getAppointmentTime)
+                    ).map(appointment -> new PatientAppointmentResponse(
                             appointment.getId(),
                             doctors.users.stream()
                                     .filter(
@@ -174,7 +182,12 @@ public record AppointmentService(
             // Retrieve doctors data
             final var patients = authService.getUsers(headers, patientsId, "patient");
             return AppointmentsResponse.build(appointments.stream()
-                    .map(appointment -> new DoctorAppointmentResponse(
+                    .filter(appointment -> datetimeUtils.getMax(
+                                    new DateTime(appointment.getAppointmentTime())
+                            ).isAfter(DateTime.now())
+                    ).sorted(
+                            Comparator.comparing(Appointment::getAppointmentTime)
+                    ).map(appointment -> new DoctorAppointmentResponse(
                             appointment.getId(),
                             patients.users.stream()
                                     .filter(
