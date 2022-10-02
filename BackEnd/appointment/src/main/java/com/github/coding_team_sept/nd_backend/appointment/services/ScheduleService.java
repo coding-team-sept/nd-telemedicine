@@ -51,7 +51,7 @@ public record ScheduleService(
             DateTime appointmentDatetime,
             Long doctorId
     ) throws AppointmentConflictException {
-        if (appointmentRepo.existsAppointmentByPatientIdAndAppointmentTimeBetween(
+        if (appointmentRepo.existsAppointmentByDoctorIdAndAppointmentTimeBetween(
                 doctorId,
                 datetimeUtils.getMin(appointmentDatetime).toDate(),
                 datetimeUtils.getMax(appointmentDatetime).toDate()
