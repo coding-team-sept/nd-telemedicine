@@ -2,7 +2,7 @@ all: run
 
 run: start
 
-start: start-docker app-start
+start: docker-start app-start
 
 app-start: app-package app-start-authentication app-start-appointment
 
