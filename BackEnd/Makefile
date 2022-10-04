@@ -2,7 +2,8 @@ all: run
 
 run: start
 
-start: docker-start app-start
+start: docker-start app-package
+	make app-start -j2
 
 app-start: app-package app-start-authentication app-start-appointment
 
