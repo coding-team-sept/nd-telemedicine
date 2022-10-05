@@ -14,8 +14,8 @@ public record ScheduleService(
         AppointmentRepository appointmentRepo,
         AppointmentDateTimeUtils datetimeUtils
 ) {
-    private static final LocalTime closeTime = LocalTime.parse("20:00", DateTimeFormat.forPattern("HH:mm"));
-    private static final LocalTime openTime = LocalTime.parse("08:00", DateTimeFormat.forPattern("HH:mm"));
+    public static final LocalTime closeTime = LocalTime.parse("20:00", DateTimeFormat.forPattern("HH:mm"));
+    public static final LocalTime openTime = LocalTime.parse("08:00", DateTimeFormat.forPattern("HH:mm"));
 
     public void validateAppointmentDateTime(
             DateTime datetime
