@@ -29,7 +29,7 @@ public class AuthenticationServiceTest {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private AuthenticationService authenticationService = new AuthenticationService();
+    private AuthenticationService authenticationService;
 
     @Test
     public void testGetAuthorizationService() {

@@ -4,7 +4,6 @@ import com.github.coding_team_sept.nd_backend.appointment.exceptions.RestClientE
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.ResponseWrapper;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UsersDataResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.ValidateResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,10 +18,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @Service
-public class AuthenticationService {
-    @Autowired
-    RestTemplate restTemplate;
-
+public record AuthenticationService(
+        RestTemplate restTemplate
+) {
     public static final String url = "http://localhost:9000/api/v1";
 
     public ValidateResponse getAuthorization(
