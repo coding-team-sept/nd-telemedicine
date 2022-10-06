@@ -82,7 +82,7 @@ public class AppointmentServiceTest {
         }
     }
 
-    void mockGetUsersBasedOnId(
+    void mockGetUsers(
             HttpHeaders headers,
             String target,
             List<UserDataResponse> users,
@@ -250,7 +250,7 @@ public class AppointmentServiceTest {
                                 .build()
                 )
         );
-        mockGetUsersBasedOnId(
+        mockGetUsers(
                 headers,
                 "doctor",
                 doctors,
@@ -285,7 +285,7 @@ public class AppointmentServiceTest {
                 .build();
         mockAuthorization(headers, patientValidation, true);
         mockSessionRepository(SessionType.OFFLINE);
-        mockGetUsersBasedOnId(
+        mockGetUsers(
                 headers,
                 "doctor",
                 List.of(doctors.get(0)),
@@ -314,5 +314,76 @@ public class AppointmentServiceTest {
                         SessionType.OFFLINE.name()
                 )
         );
+    }
+
+    @Test
+    void testGetPatientAppointment() {
+        final var patientValidation = new ValidateResponse(0L, "PATIENT_ROLE");
+        final var doctors = sampleDoctorIds.stream()
+                .map(sampleDoctorId -> UserDataResponse.build(
+                        sampleDoctorId,
+                        "doctor" + sampleDoctorId + "@doctor.com",
+                        "Doctor"
+                )).toList();
+        final var appointments = doctors.stream()
+                .map(doctor -> Appointment.builder()
+                        .id(doctor.id)
+                        .patientId(patientValidation.id)
+                        .doctorId(doctor.id)
+                        .appointmentTime(appointmentDatetime.toDate())
+                        .session(getSession(SessionType.OFFLINE))
+                        .build()
+                ).toList();
+        mockAuthorization(headers, patientValidation, true);
+        mockGetAppointmentById(
+                patientValidation.id,
+                "patient",
+                appointments
+        );
+        mockGetUsers(
+                headers,
+                "doctor",
+                doctors,
+                true,
+                true
+        );
+        mockGetMax(appointmentDatetime);
+        appointmentService.getPatientAppointment(headers);
+    }
+
+    @Test
+    void testGetDoctorAppointment() {
+        final var doctorValidation = new ValidateResponse(100L, "DOCTOR_ROLE");
+        final var patients = List.of(
+                UserDataResponse.build(
+                        0L,
+                        "patient0@patient.com",
+                        "Patient"
+                )
+        );
+        final var appointments = patients.stream()
+                .map(patient -> Appointment.builder()
+                        .id(patient.id)
+                        .patientId(patient.id)
+                        .doctorId(doctorValidation.id)
+                        .appointmentTime(appointmentDatetime.toDate())
+                        .session(getSession(SessionType.OFFLINE))
+                        .build()
+                ).toList();
+        mockAuthorization(headers, doctorValidation, true);
+        mockGetAppointmentById(
+                doctorValidation.id,
+                "doctor",
+                appointments
+        );
+        mockGetUsers(
+                headers,
+                "patient",
+                patients,
+                true,
+                true
+        );
+        mockGetMax(appointmentDatetime);
+        appointmentService.getDoctorAppointment(headers);
     }
 }
