@@ -17,20 +17,45 @@ import com.github.coding_team_sept.nd_backend.appointment.utils.AppointmentDateT
 import org.joda.time.DateTime;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Comparator;
 import java.util.List;
 
 @Service
 public record AppointmentService(
-        AppointmentRepository appointmentRepo,
         AuthenticationService authService,
+        ScheduleService scheduleService,
+        AppointmentRepository appointmentRepo,
         SessionRepository sessionRepo,
-        RestTemplate restTemplate,
-        AppointmentDateTimeUtils datetimeUtils,
-        ScheduleService scheduleService
+        AppointmentDateTimeUtils datetimeUtils
 ) {
+    private DateTime getDateTime(
+            String datetime,
+            Long patientId,
+            Long doctorId
+    ) throws AppointmentDateTimeException, AppointmentConflictException {
+        final var appointmentDatetime = datetimeUtils.parseString(datetime);
+        scheduleService.validateAppointmentDateTime(appointmentDatetime);
+        if (patientId != null) {
+            scheduleService.checkPatientAvailability(appointmentDatetime, patientId);
+        }
+        if (doctorId != null) {
+            scheduleService.checkDoctorAvailability(appointmentDatetime, doctorId);
+        }
+        return appointmentDatetime;
+    }
+
+    private UserDataResponse getDoctor(
+            HttpHeaders headers,
+            Long doctorId
+    ) throws RestClientException, UserNotFoundException {
+        final var doctors = authService.getUsers(headers, List.of(doctorId), "doctor");
+        if (!doctors.users.isEmpty()) {
+            return doctors.users.get(0);
+        }
+        throw new UserNotFoundException();
+    }
+
     public UsersDataResponse getAvailableDoctor(
             HttpHeaders headers,
             String datetime
@@ -102,33 +127,6 @@ public record AppointmentService(
                 body.datetime(),
                 appointment.getSession().getName()
         );
-    }
-
-    private UserDataResponse getDoctor(
-            HttpHeaders headers,
-            Long doctorId
-    ) throws RestClientException, UserNotFoundException {
-        final var doctors = authService.getUsers(headers, List.of(doctorId), "doctor");
-        if (!doctors.users.isEmpty()) {
-            return doctors.users.get(0);
-        }
-        throw new UserNotFoundException();
-    }
-
-    private DateTime getDateTime(
-            String datetime,
-            Long patientId,
-            Long doctorId
-    ) throws AppointmentDateTimeException, AppointmentConflictException {
-        final var appointmentDatetime = datetimeUtils.parseString(datetime);
-        scheduleService.validateAppointmentDateTime(appointmentDatetime);
-        if (patientId != null) {
-            scheduleService.checkPatientAvailability(appointmentDatetime, patientId);
-        }
-        if (doctorId != null) {
-            scheduleService.checkDoctorAvailability(appointmentDatetime, doctorId);
-        }
-        return appointmentDatetime;
     }
 
     public AppointmentsResponse<PatientAppointmentResponse> getPatientAppointment(
