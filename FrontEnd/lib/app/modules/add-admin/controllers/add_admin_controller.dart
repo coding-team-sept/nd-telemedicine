@@ -74,7 +74,7 @@ class AddAdminController extends GetxController {
     var url = 'http://10.0.2.2:9000/api/v1';
 
     try {
-      var response = await Dio().post('$url/admin/admin',
+      var response = await Dio().post('$url/app/admin/admin',
           data: {
             'name': name.value,
             'email': email.value,
@@ -92,6 +92,7 @@ class AddAdminController extends GetxController {
       }
       //this is from website DIO Flutter, Copy that, but not found dio so we Make a new Dio() and import.
     } on DioError catch (e, _) {
+      print(e);
       isLoading.value = false;
       if (e.response?.statusCode == 401) {
         Get.dialog(const AlertDialog(

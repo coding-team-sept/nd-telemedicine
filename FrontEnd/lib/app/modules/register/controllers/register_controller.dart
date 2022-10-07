@@ -39,7 +39,7 @@ class RegisterController extends GetxController {
     var url = 'http://10.0.2.2:9000/api/v1';
 
     try {
-      var response = await Dio().post('$url/register', data: {
+      var response = await Dio().post('$url/auth/register', data: {
         'name': fullName.value,
         'email': email.value,
         'password': password.value,
@@ -48,14 +48,14 @@ class RegisterController extends GetxController {
       if (response.statusCode == 201) {
         const storage = FlutterSecureStorage();
         await storage.write(
-            key: 'token', value: response.data['data']['token']['token']);
+            key: 'token', value: response.data['data']['token']['access']);
         await storage.write(key: 'role', value: 'patient');
         await storage.write(key: 'email', value: email.value);
         Get.offNamedUntil(Routes.HOME, (route) => false);
       } else {
         Get.dialog(AlertDialog(
           title: const Text('Error'),
-          content: Text(response.data['error']['message']),
+          content: Text(response.data['message']),
         ));
       }
       //this is from website DIO Flutter, Copy that, but not found dio so we Make a new Dio() and import.
@@ -63,7 +63,7 @@ class RegisterController extends GetxController {
       isLoading.value = false;
       Get.dialog(AlertDialog(
         title: const Text('Error'),
-        content: Text(e.response?.data['error']['message'] ?? 'Unknown error'),
+        content: Text(e.response?.data['message'] ?? 'Unknown error'),
       ));
     }
   }
