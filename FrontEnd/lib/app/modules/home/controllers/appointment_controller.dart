@@ -26,7 +26,7 @@ class AppointmentController extends GetxController {
     // Get doctors list from server
     const url = 'http://10.0.2.2:9001/api/v1';
     try {
-      final response = await Dio().get('$url/patient/appointment',
+      final response = await Dio().get('$url/app/patient/appointment',
           options: Options(headers: {"Authorization": "Bearer $token"}));
       appointmentData.clear();
       for (var element in (response.data as List)) {
