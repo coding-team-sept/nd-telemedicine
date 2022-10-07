@@ -214,12 +214,13 @@ public class AppointmentServiceTest {
         mockValidateAppointmentDateTime(appointmentDatetime);
     }
 
-    /** Test a successful [getAvailableDoctor] method
+    /**
+     * Test a successful [getAvailableDoctor] method
      * Scenario: A patient with id(0) looks for doctors available at a specific timeframe.
      * There are 3 doctors (ids: 100, 101, 102) in the database. The doctor with id(100)
      * already has an appointment with patient id(1) at the same time specified by patient id(0).
      * The expected result is an array which contains only 2 doctors (ids: 101, 102).
-     * */
+     */
     @Test
     void testGetAvailableDoctor() {
         // Setup data
@@ -269,30 +270,29 @@ public class AppointmentServiceTest {
 
     @Test
     void testAddAppointment() {
+        // Setup data
         final var patientValidation = new ValidateResponse(0L, "PATIENT_ROLE");
-        final var doctors = sampleDoctorIds.stream()
-                .map(sampleDoctorId -> UserDataResponse.build(
-                        sampleDoctorId,
-                        "doctor" + sampleDoctorId + "@doctor.com",
-                        "Doctor"
-                ))
-                .toList();
-        final var stringDatetime = appointmentDatetime.toString(
-                AppointmentDateTimeUtils.pattern
+        final var doctor = UserDataResponse.build(
+                sampleDoctorIds.get(0),
+                "doctor" + sampleDoctorIds.get(0) + "@doctor.com",
+                "Doctor"
         );
+        final var stringDatetime = appointmentDatetime.toString(AppointmentDateTimeUtils.pattern);
         final var appointment = Appointment.builder()
-                .id(0L)
+                .id(doctor.id)
                 .patientId(patientValidation.id)
-                .doctorId(doctors.get(0).id)
-                .session(getSession(SessionType.OFFLINE))
+                .doctorId(doctor.id)
                 .appointmentTime(appointmentDatetime.toDate())
+                .session(getSession(SessionType.OFFLINE))
                 .build();
+
+        // Create mocks
         mockAuthorization(headers, patientValidation, true);
         mockSessionRepository(SessionType.OFFLINE);
         mockGetUsers(
                 headers,
                 "doctor",
-                List.of(doctors.get(0)),
+                List.of(doctor),
                 true,
                 true
         );
@@ -306,18 +306,22 @@ public class AppointmentServiceTest {
         mockCheckAvailability(
                 appointmentDatetime,
                 "doctor",
-                doctors.get(0).id,
+                doctor.id,
                 true
         );
         mockSaveAndFlush(appointment);
-        appointmentService.addAppointment(
+
+        // Test
+        final var response = appointmentService.addAppointment(
                 headers,
                 new AppointmentRequest(
-                        doctors.get(0).id,
+                        doctor.id,
                         stringDatetime,
                         SessionType.OFFLINE.name()
                 )
         );
+        Assertions.assertEquals(doctor.id, response.appointedUser.id);
+        Assertions.assertEquals(stringDatetime, response.datetime);
     }
 
     @Test
