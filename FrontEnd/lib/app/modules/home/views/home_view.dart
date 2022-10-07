@@ -69,6 +69,7 @@ class HomeView extends GetView<HomeController> {
       child: Obx(
         () => Scaffold(
           appBar: AppBar(
+            leading: Image.asset("assets/icon.jpg"),
             title: Text(controller.email.value ?? ""),
             bottom: TabBar(tabs: [
               if (controller.role.value == "ROLE_ADMIN") ...adminTabBar,

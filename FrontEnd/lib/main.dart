@@ -18,6 +18,7 @@ void main() async {
     GetMaterialApp(
       title: "ND Telemedicine",
       initialRoute: AppPages.INITIAL,
+      debugShowCheckedModeBanner: false,
       getPages: AppPages.routes,
       theme: themeData,
     ),

@@ -21,17 +21,28 @@ class AppointmentView extends GetView<AppointmentController> {
               ? const Center(
                   child: CircularProgressIndicator(),
                 )
-              : ListView.builder(
-                  itemBuilder: (context, index) =>
-                      index == controller.appointmentData.length
-                          ? ElevatedButton(
-                              onPressed: controller.getAppointment,
-                              child: const Text("Refresh"))
-                          : AppointmentTile(
-                              controller.appointmentData[index],
-                              controller.showAppointmentDetail,
-                            ),
-                  itemCount: controller.appointmentData.length + 1),
+              : RefreshIndicator(
+                onRefresh: () async => controller.getAppointment(),
+                child: Flex(
+                  direction: Axis.vertical,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Text('Pull down to refresh'),
+                    ),
+                    Divider(),
+                    Expanded(
+                      child: ListView.builder(
+                          itemBuilder: (context, index) =>
+                             AppointmentTile(
+                                      controller.appointmentData[index],
+                                      controller.showAppointmentDetail,
+                                    ),
+                          itemCount: controller.appointmentData.length),
+                    ),
+                  ],
+                ),
+              ),
         ));
   }
 }

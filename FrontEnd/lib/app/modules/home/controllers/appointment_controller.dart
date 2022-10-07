@@ -29,18 +29,23 @@ class AppointmentController extends GetxController {
       final response = await Dio().get('$url/app/patient/appointment',
           options: Options(headers: {"Authorization": "Bearer $token"}));
       appointmentData.clear();
-      for (var element in (response.data as List)) {
+      for (var element in (response.data["data"] as List)) {
+        print(element);
         appointmentData.add(AppointmentModel(
             id: element['id'],
             name: element['doctor']['name'],
             time: element['datetime'],
-            isOnline: true));
+            isOnline: element['session'] == "ONLINE"));
       }
+
       print(response.data);
     } on DioError catch (e, s) {
       print(s);
       print(e.error);
+
     }
+
+
 
     isLoading.value = false;
   }
@@ -48,7 +53,7 @@ class AppointmentController extends GetxController {
   void newAppointment() => Get.toNamed(Routes.CREATE_APPOINTMENT);
 
   void showAppointmentDetail(int id, bool isOnline) {
-    if (isOnline) {
+    if (!isOnline) {
       Get.dialog(const AlertDialog(
         title: Text("Booking is Offline"),
         content: Text("Please go to the clinic and meet the doctor directly"),
@@ -56,9 +61,6 @@ class AppointmentController extends GetxController {
 
       return;
     }
-    Get.dialog(AlertDialog(
-      title: const Text("Not implemented"),
-      content: Text(id.toString()),
-    ));
+    Get.toNamed(Routes.CHAT);
   }
 }
