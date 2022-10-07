@@ -16,6 +16,16 @@ dependencies:
   flutter: 
     sdk: flutter
   nock: ^1.2.1
+  flutter_launcher_icons:
+
+flutter_icons:
+  adaptive_icon_foreground: "assets/icon.jpg"
+  image_path: "assets/icon.jpg"
+  android: true
+  ios: false
+  image_path_ios: "assets/icon-ios.jpg"
+  adaptive_icon_background: "#24736A"
+
 
 dev_dependencies: 
   build_runner: ^2.2.1
@@ -24,6 +34,7 @@ dev_dependencies:
     sdk: flutter
   mockito: ^5.3.1
   test: ^1.21.1
+
 
 flutter: 
   assets: 
