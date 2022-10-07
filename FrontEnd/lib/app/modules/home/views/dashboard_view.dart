@@ -11,59 +11,72 @@ class DashboardView extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      body: Stack(
         children: [
-          const SizedBox(
-            height: 12,
+          Container(
+            height: 600,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('assets/icon.jpg'),
+                    colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.3), BlendMode.modulate,)
+                )
+            ),
           ),
-          const Text(
-            'DashboardView is working, and will be replaced with actual content later',
-            style: TextStyle(fontSize: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 12,
+              ),
+              const Text(
+                'DashboardView is working, and will be replaced with actual content later',
+                style: TextStyle(fontSize: 20),
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+
+              ElevatedButton(
+                  onPressed: () => Get.toNamed(Routes.LOGIN),
+                  child: const Text("Login")),
+              const SizedBox(
+                height: 12,
+              ),
+
+              ElevatedButton(
+                  onPressed: () => Get.toNamed(Routes.REGISTER),
+                  child: const Text("Register")),
+
+              const SizedBox(
+                height: 12,
+              ),
+              ElevatedButton(
+                  onPressed: () => Get.toNamed(Routes.ADD_DOCTOR),
+                  child: const Text("Add Doctor")),
+
+            const SizedBox(
+              height: 12,
+            ),
+            ElevatedButton(
+                onPressed: () => Get.toNamed(Routes.ADD_ADMIN),
+                child: const Text("Add Admin")),
+
+              const SizedBox(
+                height: 12,
+              ),
+              ElevatedButton(
+                  onPressed: () => Get.toNamed(Routes.CHAT),
+                  child: const Text("Chat")),
+
+              const SizedBox(
+                height: 12,
+              ),
+              ElevatedButton(
+                  onPressed: () => Get.toNamed(Routes.ADMIN_LIST_VIEW),
+                  child: const Text("Admin Listview")),
+
+            ],
           ),
-          const SizedBox(
-            height: 12,
-          ),
-
-          ElevatedButton(
-              onPressed: () => Get.toNamed(Routes.LOGIN),
-              child: const Text("Login")),
-          const SizedBox(
-            height: 12,
-          ),
-
-          ElevatedButton(
-              onPressed: () => Get.toNamed(Routes.REGISTER),
-              child: const Text("Register")),
-
-          const SizedBox(
-            height: 12,
-          ),
-          ElevatedButton(
-              onPressed: () => Get.toNamed(Routes.ADD_DOCTOR),
-              child: const Text("Add Doctor")),
-
-        const SizedBox(
-          height: 12,
-        ),
-        ElevatedButton(
-            onPressed: () => Get.toNamed(Routes.ADD_ADMIN),
-            child: const Text("Add Admin")),
-
-          const SizedBox(
-            height: 12,
-          ),
-          ElevatedButton(
-              onPressed: () => Get.toNamed(Routes.CHAT),
-              child: const Text("Chat")),
-
-          const SizedBox(
-            height: 12,
-          ),
-          ElevatedButton(
-              onPressed: () => Get.toNamed(Routes.ADMIN_LIST_VIEW),
-              child: const Text("Admin Listview")),
-
         ],
       ),
     );

@@ -13,7 +13,7 @@ class AppointmentTile extends StatelessWidget {
       title: Text("Dr. ${data.name}"),
       subtitle: Text(data.time),
       trailing: Chip(
-        label: Text(!data.isOnline ? "ONLINE" : "OFFLINE"),
+        label: Text(data.isOnline ? "ONLINE" : "OFFLINE"),
       ),
     );
   }
