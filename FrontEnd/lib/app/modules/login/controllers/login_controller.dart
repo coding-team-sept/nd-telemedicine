@@ -36,7 +36,7 @@ class LoginController extends GetxController {
     //send request to server
     var url = "http://10.0.2.2:9000/api/v1";
     try {
-      var response = await Dio().post('$url/login', data: {
+      var response = await Dio().post('$url/auth/login', data: {
         'email': email.value,
         'password': password.value,
       });
@@ -44,7 +44,7 @@ class LoginController extends GetxController {
       if (response.statusCode == 200) {
         var storage = const FlutterSecureStorage();
         await storage.write(
-            key: 'token', value: response.data["data"]["token"]["token"]);
+            key: 'token', value: response.data["data"]["token"]["access"]);
         await storage.write(
             key: 'role', value: response.data["data"]["user"]["role"]);
         await storage.write(key: 'email', value: email.value);
@@ -52,14 +52,14 @@ class LoginController extends GetxController {
       } else {
         Get.dialog(AlertDialog(
           title: const Text("Error"),
-          content: Text(response.data['error']['message']),
+          content: Text(response.data['message']),
         ));
       }
     } on DioError catch (e, _) {
       isLoading.value = false;
       Get.dialog(AlertDialog(
         title: Text("Error"),
-        content: Text(e.response?.data['error']['message'] ?? "Unknown error!"),
+        content: Text(e.response?.data['message'] ?? "Unknown error!"),
       ));
     }
   }

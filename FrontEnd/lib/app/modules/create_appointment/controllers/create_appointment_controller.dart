@@ -44,10 +44,10 @@ class CreateAppointmentController extends GetxController {
     final timestamp =
         '${date.value.year}-${date.value.month}-${date.value.day}_${time.value.hour}:${time.value.minute}';
     try {
-      final response = await Dio().get('$url/patient/doctor/$timestamp',
+      final response = await Dio().get('$url/app/patient/doctor/$timestamp',
           options: Options(headers: {"Authorization": "Bearer $token"}));
       doctorData.clear();
-      for (var element in (response.data as List)) {
+      for (var element in (response.data['data'])) {
         doctorData.add(DoctorModel(name: element['name'], id: element['id']));
       }
       print(response.data);
@@ -89,8 +89,8 @@ class CreateAppointmentController extends GetxController {
     final timestamp =
         '${date.value.year}-${date.value.month}-${date.value.day}_${time.value.hour}:${time.value.minute}';
     try {
-      final response = await Dio().post('$url/patient/appointment',
-          data: {'doctorId': id, 'datetime': timestamp},
+      final response = await Dio().post('$url/app/patient/appointment',
+          data: {'doctorId': id, 'datetime': timestamp,'session': "OFFLINE"},
           options: Options(headers: {"Authorization": "Bearer $token"}));
       Get.back();
     } on DioError catch (e, s) {

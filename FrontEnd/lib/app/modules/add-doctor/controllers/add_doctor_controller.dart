@@ -75,7 +75,7 @@ class AddDoctorController extends GetxController {
     var url = 'http://10.0.2.2:9000/api/v1';
 
     try {
-      var response = await Dio().post('$url/admin/doctor', data: {
+      var response = await Dio().post('$url/app/admin/doctor', data: {
         'name': name.value,
         'email': email.value,
         'password': password.value,
@@ -92,8 +92,8 @@ class AddDoctorController extends GetxController {
       //this is from website DIO Flutter, Copy that, but not found dio so we Make a new Dio() and import.
     } on DioError catch (e, _) {
       isLoading.value = false;
-      Get.dialog(AlertDialog(
-        title: const Text('Error'),
+      Get.dialog(const AlertDialog(
+        title: Text('Error'),
         content: Text('Unknown error'),
       ));
     }
