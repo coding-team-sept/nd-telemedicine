@@ -273,7 +273,7 @@ public class AppointmentServiceTest {
      * Scenario: A patient with id(0) makes an appointment with doctor with id(100).
      * Both patient and doctor are available at the specified time, therefore the
      * appointment is successfully made.
-     * */
+     */
     @Test
     void testAddAppointment() {
         // Setup data
@@ -330,8 +330,16 @@ public class AppointmentServiceTest {
         Assertions.assertEquals(stringDatetime, response.datetime);
     }
 
+    /**
+     * Test a successful [getPatientAppointment] method.
+     * Scenario: A patient with id(0) gets all of its appointment. The patient has 3 appointments
+     * with doctor (ids: 100, 101, 102). Only the appointment with doctor of id(100) was done yesterday.
+     * The rest of the appointments will be done in the upcoming days. Thus, the appointment with
+     * doctor id(0) will not appear in the appointments list.
+     * */
     @Test
     void testGetPatientAppointment() {
+        // Setup data
         final var patientValidation = new ValidateResponse(0L, "PATIENT_ROLE");
         final var doctors = sampleDoctorIds.stream()
                 .map(sampleDoctorId -> UserDataResponse.build(
@@ -344,10 +352,15 @@ public class AppointmentServiceTest {
                         .id(doctor.id)
                         .patientId(patientValidation.id)
                         .doctorId(doctor.id)
-                        .appointmentTime(appointmentDatetime.toDate())
+                        .appointmentTime(
+                                (doctor.id == 100)
+                                        ? appointmentDatetime.minusDays(1).toDate()
+                                        : appointmentDatetime.plusDays(doctor.id.intValue() % 100).toDate())
                         .session(getSession(SessionType.OFFLINE))
                         .build()
                 ).toList();
+
+        // Create mocks
         mockAuthorization(headers, patientValidation, true);
         mockGetAppointmentById(
                 patientValidation.id,
@@ -361,8 +374,12 @@ public class AppointmentServiceTest {
                 true,
                 true
         );
-        mockGetMax(appointmentDatetime);
-        appointmentService.getPatientAppointment(headers);
+        appointments.forEach(appointment -> mockGetMax(new DateTime(appointment.getAppointmentTime())));
+
+        // Test
+        final var response = appointmentService.getPatientAppointment(headers);
+        Assertions.assertEquals(2, response.appointments.size());
+        Assertions.assertTrue(response.appointments.stream().noneMatch(appointment -> appointment.id == 100));
     }
 
     @Test
