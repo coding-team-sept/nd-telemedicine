@@ -1,8 +1,8 @@
 package com.github.coding_team_sept.nd_backend.authentication.exceptions;
 
 import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ErrorResponse;
-import org.junit.jupiter.api.Order;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

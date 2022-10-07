@@ -8,14 +8,14 @@ start: docker-start app-package
 app-start: app-package app-start-authentication app-start-appointment
 
 app-start-authentication:
-	java -jar ./authentication/target/authentication-0.0.0-alpha.0.jar
+	java -jar ./authentication/target/authentication-0.0.0-alpha.1.jar
 
 app-start-appointment:
-	java -jar ./appointment/target/appointment-0.0.0-alpha.0.jar
+	java -jar ./appointment/target/appointment-0.0.0-alpha.1.jar
 
 app-package:
 	mvn clean
-	mvn package spring-boot:repackage
+	mvn package spring-boot:repackage -Dmaven.test.skip
 
 docker-start:
 	docker compose up --detach --force-recreate
