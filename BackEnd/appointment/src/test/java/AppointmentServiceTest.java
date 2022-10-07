@@ -215,7 +215,7 @@ public class AppointmentServiceTest {
     }
 
     /**
-     * Test a successful [getAvailableDoctor] method
+     * Test a successful [getAvailableDoctor] method.
      * Scenario: A patient with id(0) looks for doctors available at a specific timeframe.
      * There are 3 doctors (ids: 100, 101, 102) in the database. The doctor with id(100)
      * already has an appointment with patient id(1) at the same time specified by patient id(0).
@@ -268,6 +268,12 @@ public class AppointmentServiceTest {
         Assertions.assertTrue(responseIds.contains(doctors.get(2).id));
     }
 
+    /**
+     * Test a successful [addAppointment] method.
+     * Scenario: A patient with id(0) makes an appointment with doctor with id(100).
+     * Both patient and doctor are available at the specified time, therefore the
+     * appointment is successfully made.
+     * */
     @Test
     void testAddAppointment() {
         // Setup data
