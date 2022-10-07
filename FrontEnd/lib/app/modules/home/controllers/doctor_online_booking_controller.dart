@@ -14,6 +14,7 @@ class DoctorOnlineBookingController extends GetxController {
   @override
   void onInit() async{
     token = await const FlutterSecureStorage().read(key: "token") ?? '';
+    getOnlinePatientAppointment();
     super.onInit();
   }
 
