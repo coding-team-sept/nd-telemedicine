@@ -21,7 +21,7 @@ public class ScheduleServiceTest {
     AppointmentRepository appointmentRepo;
 
     @Mock
-    AppointmentDateTimeUtils dateTimeUtils;
+    AppointmentDateTimeUtils datetimeUtils;
 
     @InjectMocks
     ScheduleService scheduleService;
@@ -83,16 +83,16 @@ public class ScheduleServiceTest {
         final var patientId = 0L;
         final var appointmentDatetime = DateTime.now()
                 .withTime(ScheduleService.openTime.plusHours(1));
-        Mockito.when(dateTimeUtils.getMin(appointmentDatetime))
+        Mockito.when(datetimeUtils.getMin(appointmentDatetime))
                 .thenCallRealMethod();
-        Mockito.when(dateTimeUtils.getMax(appointmentDatetime))
+        Mockito.when(datetimeUtils.getMax(appointmentDatetime))
                 .thenCallRealMethod();
 
         // Available
         Mockito.when(appointmentRepo.existsAppointmentByPatientIdAndAppointmentTimeBetween(
                 patientId,
-                dateTimeUtils.getMin(appointmentDatetime).toDate(),
-                dateTimeUtils.getMax(appointmentDatetime).toDate()
+                datetimeUtils.getMin(appointmentDatetime).toDate(),
+                datetimeUtils.getMax(appointmentDatetime).toDate()
         )).thenReturn(false);
         Assertions.assertDoesNotThrow(
                 () -> scheduleService.checkPatientAvailability(appointmentDatetime, patientId)
@@ -101,8 +101,8 @@ public class ScheduleServiceTest {
         // Not available
         Mockito.when(appointmentRepo.existsAppointmentByPatientIdAndAppointmentTimeBetween(
                 patientId,
-                dateTimeUtils.getMin(appointmentDatetime).toDate(),
-                dateTimeUtils.getMax(appointmentDatetime).toDate()
+                datetimeUtils.getMin(appointmentDatetime).toDate(),
+                datetimeUtils.getMax(appointmentDatetime).toDate()
         )).thenReturn(true);
         final var thrown = Assertions.assertThrows(
                 AppointmentConflictException.class,
@@ -116,16 +116,16 @@ public class ScheduleServiceTest {
         final var doctorId = 0L;
         final var appointmentDatetime = DateTime.now()
                 .withTime(ScheduleService.openTime.plusHours(1));
-        Mockito.when(dateTimeUtils.getMin(appointmentDatetime))
+        Mockito.when(datetimeUtils.getMin(appointmentDatetime))
                 .thenCallRealMethod();
-        Mockito.when(dateTimeUtils.getMax(appointmentDatetime))
+        Mockito.when(datetimeUtils.getMax(appointmentDatetime))
                 .thenCallRealMethod();
 
         // Available
         Mockito.when(appointmentRepo.existsAppointmentByDoctorIdAndAppointmentTimeBetween(
                 doctorId,
-                dateTimeUtils.getMin(appointmentDatetime).toDate(),
-                dateTimeUtils.getMax(appointmentDatetime).toDate()
+                datetimeUtils.getMin(appointmentDatetime).toDate(),
+                datetimeUtils.getMax(appointmentDatetime).toDate()
         )).thenReturn(false);
         Assertions.assertDoesNotThrow(
                 () -> scheduleService.checkDoctorAvailability(appointmentDatetime, doctorId)
@@ -134,8 +134,8 @@ public class ScheduleServiceTest {
         // Not available
         Mockito.when(appointmentRepo.existsAppointmentByDoctorIdAndAppointmentTimeBetween(
                 doctorId,
-                dateTimeUtils.getMin(appointmentDatetime).toDate(),
-                dateTimeUtils.getMax(appointmentDatetime).toDate()
+                datetimeUtils.getMin(appointmentDatetime).toDate(),
+                datetimeUtils.getMax(appointmentDatetime).toDate()
         )).thenReturn(true);
         final var thrown = Assertions.assertThrows(
                 AppointmentConflictException.class,

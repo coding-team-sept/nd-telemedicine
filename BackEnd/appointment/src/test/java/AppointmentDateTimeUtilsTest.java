@@ -7,11 +7,11 @@ import java.util.List;
 
 public class AppointmentDateTimeUtilsTest {
     final List<Integer> datetime = List.of(2022, 6, 15, 12, 30);
-    AppointmentDateTimeUtils dateTimeUtils = new AppointmentDateTimeUtils();
+    AppointmentDateTimeUtils datetimeUtils = new AppointmentDateTimeUtils();
 
     @Test
     void testParseValidDateTime() {
-        final var parsedDatetime = dateTimeUtils.parseString(
+        final var parsedDatetime = datetimeUtils.parseString(
                 datetime.get(0).toString() + "-"
                         + datetime.get(1).toString() + "-"
                         + datetime.get(2) + "_"
@@ -31,37 +31,37 @@ public class AppointmentDateTimeUtilsTest {
         final String wrongMonthDatetime = "2022-13-32_25:61";
         var thrown = Assertions.assertThrows(
                 IllegalFieldValueException.class,
-                () -> dateTimeUtils.parseString(wrongMonthDatetime)
+                () -> datetimeUtils.parseString(wrongMonthDatetime)
         );
         Assertions.assertTrue(thrown.getMessage().contains("Cannot parse \"2022-13-32_25:61\": Value 13 for monthOfYear must be in the range [1,12]"));
 
         final String wrongDateDatetime = "2022-12-32_25:61";
         thrown = Assertions.assertThrows(
                 IllegalFieldValueException.class,
-                () -> dateTimeUtils.parseString(wrongDateDatetime)
+                () -> datetimeUtils.parseString(wrongDateDatetime)
         );
         Assertions.assertTrue(thrown.getMessage().contains("Cannot parse \"2022-12-32_25:61\": Value 32 for dayOfMonth must be in the range [1,31]"));
 
         final String wrongHourDatetime = "2022-12-31_24:61";
         thrown = Assertions.assertThrows(
                 IllegalFieldValueException.class,
-                () -> dateTimeUtils.parseString(wrongHourDatetime)
+                () -> datetimeUtils.parseString(wrongHourDatetime)
         );
         Assertions.assertTrue(thrown.getMessage().contains("Cannot parse \"2022-12-31_24:61\": Value 24 for hourOfDay must be in the range [0,23]"));
 
         final String wrongMinuteDatetime = "2022-12-31_23:60";
         thrown = Assertions.assertThrows(
                 IllegalFieldValueException.class,
-                () -> dateTimeUtils.parseString(wrongMinuteDatetime)
+                () -> datetimeUtils.parseString(wrongMinuteDatetime)
         );
         Assertions.assertTrue(thrown.getMessage().contains("Cannot parse \"2022-12-31_23:60\": Value 60 for minuteOfHour must be in the range [0,59]"));
     }
 
     @Test
     void testGetMinDate() {
-        final var parsedDatetime = dateTimeUtils.parseString("2022-06-15_12:30");
+        final var parsedDatetime = datetimeUtils.parseString("2022-06-15_12:30");
         final var expectedMinDatetime = parsedDatetime.minusMinutes(AppointmentDateTimeUtils.intervalInMinutes);
-        final var minDatetime = dateTimeUtils.getMin(parsedDatetime);
+        final var minDatetime = datetimeUtils.getMin(parsedDatetime);
         Assertions.assertEquals(expectedMinDatetime.getYear(), minDatetime.getYear());
         Assertions.assertEquals(expectedMinDatetime.getMonthOfYear(), minDatetime.getMonthOfYear());
         Assertions.assertEquals(expectedMinDatetime.getDayOfMonth(), minDatetime.getDayOfMonth());
@@ -71,9 +71,9 @@ public class AppointmentDateTimeUtilsTest {
 
     @Test
     void testGetMaxDate() {
-        final var parsedDatetime = dateTimeUtils.parseString("2022-06-15_12:30");
+        final var parsedDatetime = datetimeUtils.parseString("2022-06-15_12:30");
         final var expectedMaxDatetime = parsedDatetime.plusMinutes(AppointmentDateTimeUtils.intervalInMinutes);
-        final var maxDatetime = dateTimeUtils.getMax(parsedDatetime);
+        final var maxDatetime = datetimeUtils.getMax(parsedDatetime);
         Assertions.assertEquals(expectedMaxDatetime.getYear(), maxDatetime.getYear());
         Assertions.assertEquals(expectedMaxDatetime.getMonthOfYear(), maxDatetime.getMonthOfYear());
         Assertions.assertEquals(expectedMaxDatetime.getDayOfMonth(), maxDatetime.getDayOfMonth());
