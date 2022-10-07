@@ -1,15 +1,22 @@
 package com.github.coding_team_sept.nd_backend.authentication.services;
 
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.AppException;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.EmailTakenException;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.EmailFormatException;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.PasswordFormatException;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.UserNameFormatException;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetails;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
 import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
-import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AppResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AuthDataResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AuthResponse;
+import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.TokenResponse;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUserRepository;
 import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
 import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
-import org.springframework.dao.DataIntegrityViolationException;
+import com.github.coding_team_sept.nd_backend.authentication.utils.ValidationUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +32,12 @@ public record AuthenticationService(
         AuthenticationManager authenticationManager,
         AppUserDetailsService userDetailsService
 ) {
-    public AppResponse login(LoginRequest request) {
+    public AuthResponse login(LoginRequest request) throws AppException {
+        // Validations
+        ValidationUtils.validateEmailElseThrow(request.email());
+        ValidationUtils.validatePasswordElseThrow(request.password());
+
+        // Authenticate
         final var authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
@@ -35,15 +47,23 @@ public record AuthenticationService(
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final var userDetails = (AppUserDetails) authentication.getPrincipal();
         final var jwt = jwtUtils.generateToken(userDetails);
-        return AppResponse.login(jwt, userDetails);
+        return new AuthResponse(TokenResponse.build(jwt), AuthDataResponse.fromUserDetails(userDetails));
     }
 
-    public AppResponse register(RegisterRequest request, RoleType roleType) throws DataIntegrityViolationException {
-        // TODO: Create findBy for email. Source: https://stackoverflow.com/a/27583544
+    public AuthResponse register(
+            RegisterRequest request,
+            RoleType roleType
+    ) throws EmailTakenException, EmailFormatException, UserNameFormatException, PasswordFormatException {
+        // Check if email is used
+        // Source: https://stackoverflow.com/a/27583544
+        if (authenticationRepo.existsAppUserByEmail(request.email())) {
+            throw new EmailTakenException();
+        }
 
-        // TODO: Validate email
-        // TODO: Validate name
-        // TODO: Validate password
+        // Validations
+        ValidationUtils.validateEmailElseThrow(request.email());
+        ValidationUtils.validateUserNameElseThrow(request.name());
+        ValidationUtils.validatePasswordElseThrow(request.password());
 
         // Create model from request
         final var appUser = AppUser.builder()
@@ -59,6 +79,6 @@ public record AuthenticationService(
         // Generate jwt
         final var userDetails = AppUserDetails.fromAppUser(appUser);
         final var jwt = jwtUtils.generateToken(userDetails);
-        return AppResponse.register(jwt);
+        return AuthResponse.fromToken(TokenResponse.build(jwt));
     }
 }

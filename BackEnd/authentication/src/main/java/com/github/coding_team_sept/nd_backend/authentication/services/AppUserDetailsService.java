@@ -20,7 +20,6 @@ public class AppUserDetailsService implements UserDetailsService {
     @Autowired
     AppUserRepository repository;
 
-
     /**
      * This method retrieves the AppUserDetails from a given email. The "Username"
      * in this scenario is actually an email. In other words, email functions as the

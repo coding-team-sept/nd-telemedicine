@@ -25,7 +25,7 @@ services:
     volumes:
       - pgadmin:/var/lib/pgadmin
     ports:
-      - "5050:80"
+      - "9090:80"
     networks:
       - postgres
 
