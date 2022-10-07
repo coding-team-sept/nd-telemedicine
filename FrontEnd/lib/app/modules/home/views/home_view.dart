@@ -17,6 +17,7 @@ import 'admin_manager_view.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     const adminTabBar = [

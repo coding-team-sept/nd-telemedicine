@@ -26,11 +26,11 @@ class AppointmentView extends GetView<AppointmentController> {
                 child: Flex(
                   direction: Axis.vertical,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
                       child: Text('Pull down to refresh'),
                     ),
-                    Divider(),
+                    const Divider(),
                     Expanded(
                       child: ListView.builder(
                           itemBuilder: (context, index) =>

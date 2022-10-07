@@ -10,6 +10,7 @@ class AppointmentController extends GetxController {
   final isLoading = false.obs;
   RxList<AppointmentModel> appointmentData = <AppointmentModel>[].obs;
   late String token;
+
   @override
   void onInit() async {
     token = await const FlutterSecureStorage().read(key: "token") ?? '';
@@ -42,10 +43,7 @@ class AppointmentController extends GetxController {
     } on DioError catch (e, s) {
       print(s);
       print(e.error);
-
     }
-
-
 
     isLoading.value = false;
   }
