@@ -28,6 +28,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -336,7 +337,7 @@ public class AppointmentServiceTest {
      * with doctor (ids: 100, 101, 102). Only the appointment with doctor of id(100) was done yesterday.
      * The rest of the appointments will be done in the upcoming days. Thus, the appointment with
      * doctor id(0) will not appear in the appointments list.
-     * */
+     */
     @Test
     void testGetPatientAppointment() {
         // Setup data
@@ -353,10 +354,10 @@ public class AppointmentServiceTest {
                         .patientId(patientValidation.id)
                         .doctorId(doctor.id)
                         .appointmentTime(
-                                (doctor.id == 100)
+                                (doctor.id.equals(doctors.get(0).id))
                                         ? appointmentDatetime.minusDays(1).toDate()
-                                        : appointmentDatetime.plusDays(doctor.id.intValue() % 100).toDate())
-                        .session(getSession(SessionType.OFFLINE))
+                                        : appointmentDatetime.plusDays(doctor.id.intValue() % 100).toDate()
+                        ).session(getSession(SessionType.OFFLINE))
                         .build()
                 ).toList();
 
@@ -379,28 +380,40 @@ public class AppointmentServiceTest {
         // Test
         final var response = appointmentService.getPatientAppointment(headers);
         Assertions.assertEquals(2, response.appointments.size());
-        Assertions.assertTrue(response.appointments.stream().noneMatch(appointment -> appointment.id == 100));
+        Assertions.assertTrue(response.appointments.stream().noneMatch(appointment -> appointment.id.equals(doctors.get(0).id)));
     }
 
+    /**
+     * Test a successful [getDoctorAppointment] method.
+     * Scenario: A doctor with id(0) gets all of its appointment. The doctor has 3 appointments
+     * with patients (ids: 0, 1, 2). Only the appointment with patient of id(0) was done yesterday.
+     * The rest of the appointments will be done in the upcoming days. Thus, the appointment with
+     * patient id(0) will not appear in the appointments list.
+     */
     @Test
     void testGetDoctorAppointment() {
+        // Setup data
         final var doctorValidation = new ValidateResponse(100L, "DOCTOR_ROLE");
-        final var patients = List.of(
-                UserDataResponse.build(
-                        0L,
-                        "patient0@patient.com",
+        final var patients = Stream.of(0, 1, 2)
+                .map(id -> UserDataResponse.build(
+                        id.longValue(),
+                        "patient" + id + "@patient.com",
                         "Patient"
-                )
-        );
+                )).toList();
         final var appointments = patients.stream()
                 .map(patient -> Appointment.builder()
                         .id(patient.id)
                         .patientId(patient.id)
                         .doctorId(doctorValidation.id)
-                        .appointmentTime(appointmentDatetime.toDate())
-                        .session(getSession(SessionType.OFFLINE))
+                        .appointmentTime(
+                                (patient.id.equals(patients.get(0).id))
+                                        ? appointmentDatetime.minusDays(1).toDate()
+                                        : appointmentDatetime.plusDays(patient.id.intValue()).toDate()
+                        ).session(getSession(SessionType.OFFLINE))
                         .build()
                 ).toList();
+
+        // Create mocks
         mockAuthorization(headers, doctorValidation, true);
         mockGetAppointmentById(
                 doctorValidation.id,
@@ -414,7 +427,11 @@ public class AppointmentServiceTest {
                 true,
                 true
         );
-        mockGetMax(appointmentDatetime);
-        appointmentService.getDoctorAppointment(headers);
+        appointments.forEach(appointment -> mockGetMax(new DateTime(appointment.getAppointmentTime())));
+
+        // Test
+        final var response = appointmentService.getDoctorAppointment(headers);
+        Assertions.assertEquals(2, response.appointments.size());
+        Assertions.assertTrue(response.appointments.stream().noneMatch(appointment -> appointment.id.equals(patients.get(0).id)));
     }
 }
