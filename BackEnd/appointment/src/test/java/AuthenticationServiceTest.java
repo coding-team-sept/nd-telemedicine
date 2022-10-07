@@ -22,6 +22,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
+// TODO: Investigate the following problem:
+//  java.lang.NullPointerException: Cannot invoke "org.springframework.web.client.RestTemplate.exchange(String, org.springframework.http.HttpMethod, org.springframework.http.HttpEntity, org.springframework.core.ParameterizedTypeReference, Object[])" because "this.restTemplate" is null at AuthenticationServiceTest.test...
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AuthenticationServiceTest {
