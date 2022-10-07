@@ -1,4 +1,4 @@
-package com.github.coding_team_sept.nd_backend.authentication.payloads.responses;
+package com.github.coding_team_sept.nd_backend.appointment.payloads.responses;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -8,9 +8,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class ResponseWrapper<T extends DataResponse> {
     public final T data;
 
-   public ResponseWrapper() {
-       this(null);
-   }
+    public ResponseWrapper() {
+        this(null);
+    }
 
     public ResponseWrapper(T data) {
         this.data = data;

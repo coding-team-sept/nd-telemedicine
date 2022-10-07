@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5e49126c-c495-4de8-98cf-e04499302b6a",
+		"_postman_id": "3751d314-8d0e-44e9-89a7-2ba7093c5c52",
 		"name": "Telemedic App",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "13106056"
@@ -41,6 +41,261 @@
 								}
 							},
 							"response": [
+								{
+									"name": "Invalid Password",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Patient\",\n    \"email\": \"patient@patient.com\",\n    \"password\": \"patient\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url_authentication}}/auth/register",
+											"host": [
+												"{{url_authentication}}"
+											],
+											"path": [
+												"auth",
+												"register"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Method"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Headers"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 02 Oct 2022 14:44:02 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Invalid password format: minimum 8 characters\"\n}"
+								},
+								{
+									"name": "Invalid Email",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Patient\",\n    \"email\": \"patient@patient\",\n    \"password\": \"patient123\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url_authentication}}/auth/register",
+											"host": [
+												"{{url_authentication}}"
+											],
+											"path": [
+												"auth",
+												"register"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Method"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Headers"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 02 Oct 2022 14:44:35 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Invalid email format: pattern not match\"\n}"
+								},
+								{
+									"name": "Invalid Name",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Patient123\",\n    \"email\": \"patient@patient.com\",\n    \"password\": \"patient123\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url_authentication}}/auth/register",
+											"host": [
+												"{{url_authentication}}"
+											],
+											"path": [
+												"auth",
+												"register"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Method"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Headers"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 02 Oct 2022 14:45:24 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Invalid name format: pattern not match\"\n}"
+								},
 								{
 									"name": "Register Successful",
 									"originalRequest": {
@@ -116,7 +371,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 20 Sep 2022 02:16:47 GMT"
+											"value": "Sun, 02 Oct 2022 14:45:52 GMT"
 										},
 										{
 											"key": "Keep-Alive",
@@ -128,347 +383,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"data\": {\n        \"token\": {\n            \"access\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjoyNTIsImV4cCI6MTY5NTA4OTgwNywiaWF0IjoxNjYzNjQwMjA3fQ.ZN0_aIzuykPFPMT4jyJLE3s2_dbfr0vnNwf_sLohpbg\"\n        }\n    }\n}"
-								},
-								{
-									"name": "Email Taken",
-									"originalRequest": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"name\": \"Patient\",\n    \"email\": \"patient@patient.com\",\n    \"password\": \"patient123\"\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{url_authentication}}/auth/register",
-											"host": [
-												"{{url_authentication}}"
-											],
-											"path": [
-												"auth",
-												"register"
-											]
-										}
-									},
-									"status": "Internal Server Error",
-									"code": 500,
-									"_postman_previewlanguage": "json",
-									"header": [
-										{
-											"key": "Vary",
-											"value": "Origin"
-										},
-										{
-											"key": "Vary",
-											"value": "Access-Control-Request-Method"
-										},
-										{
-											"key": "Vary",
-											"value": "Access-Control-Request-Headers"
-										},
-										{
-											"key": "X-Content-Type-Options",
-											"value": "nosniff"
-										},
-										{
-											"key": "X-XSS-Protection",
-											"value": "1; mode=block"
-										},
-										{
-											"key": "Cache-Control",
-											"value": "no-cache, no-store, max-age=0, must-revalidate"
-										},
-										{
-											"key": "Pragma",
-											"value": "no-cache"
-										},
-										{
-											"key": "Expires",
-											"value": "0"
-										},
-										{
-											"key": "X-Frame-Options",
-											"value": "DENY"
-										},
-										{
-											"key": "Content-Type",
-											"value": "application/json"
-										},
-										{
-											"key": "Transfer-Encoding",
-											"value": "chunked"
-										},
-										{
-											"key": "Date",
-											"value": "Mon, 19 Sep 2022 16:20:49 GMT"
-										},
-										{
-											"key": "Connection",
-											"value": "close"
-										}
-									],
-									"cookie": [],
-									"body": "{\n    \"error\": {\n        \"message\": \"Email has been taken\"\n    }\n}"
-								},
-								{
-									"name": "Invalid Email",
-									"originalRequest": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"name\": \"Patient\",\n    \"email\": \"patient@patient\",\n    \"password\": \"patient123\"\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{url_authentication}}/auth/register",
-											"host": [
-												"{{url_authentication}}"
-											],
-											"path": [
-												"auth",
-												"register"
-											]
-										}
-									},
-									"status": "Internal Server Error",
-									"code": 500,
-									"_postman_previewlanguage": "json",
-									"header": [
-										{
-											"key": "Vary",
-											"value": "Origin"
-										},
-										{
-											"key": "Vary",
-											"value": "Access-Control-Request-Method"
-										},
-										{
-											"key": "Vary",
-											"value": "Access-Control-Request-Headers"
-										},
-										{
-											"key": "X-Content-Type-Options",
-											"value": "nosniff"
-										},
-										{
-											"key": "X-XSS-Protection",
-											"value": "1; mode=block"
-										},
-										{
-											"key": "Cache-Control",
-											"value": "no-cache, no-store, max-age=0, must-revalidate"
-										},
-										{
-											"key": "Pragma",
-											"value": "no-cache"
-										},
-										{
-											"key": "Expires",
-											"value": "0"
-										},
-										{
-											"key": "X-Frame-Options",
-											"value": "DENY"
-										},
-										{
-											"key": "Content-Type",
-											"value": "application/json"
-										},
-										{
-											"key": "Transfer-Encoding",
-											"value": "chunked"
-										},
-										{
-											"key": "Date",
-											"value": "Mon, 19 Sep 2022 16:24:00 GMT"
-										},
-										{
-											"key": "Connection",
-											"value": "close"
-										}
-									],
-									"cookie": [],
-									"body": "{\n    \"error\": {\n        \"message\": \"Invalid email format: pattern not match\"\n    }\n}"
-								},
-								{
-									"name": "Invalid Name",
-									"originalRequest": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"name\": \"Patient123\",\n    \"email\": \"patient@patient.com\",\n    \"password\": \"patient123\"\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{url_authentication}}/auth/register",
-											"host": [
-												"{{url_authentication}}"
-											],
-											"path": [
-												"auth",
-												"register"
-											]
-										}
-									},
-									"status": "Internal Server Error",
-									"code": 500,
-									"_postman_previewlanguage": "json",
-									"header": [
-										{
-											"key": "Vary",
-											"value": "Origin"
-										},
-										{
-											"key": "Vary",
-											"value": "Access-Control-Request-Method"
-										},
-										{
-											"key": "Vary",
-											"value": "Access-Control-Request-Headers"
-										},
-										{
-											"key": "X-Content-Type-Options",
-											"value": "nosniff"
-										},
-										{
-											"key": "X-XSS-Protection",
-											"value": "1; mode=block"
-										},
-										{
-											"key": "Cache-Control",
-											"value": "no-cache, no-store, max-age=0, must-revalidate"
-										},
-										{
-											"key": "Pragma",
-											"value": "no-cache"
-										},
-										{
-											"key": "Expires",
-											"value": "0"
-										},
-										{
-											"key": "X-Frame-Options",
-											"value": "DENY"
-										},
-										{
-											"key": "Content-Type",
-											"value": "application/json"
-										},
-										{
-											"key": "Transfer-Encoding",
-											"value": "chunked"
-										},
-										{
-											"key": "Date",
-											"value": "Mon, 19 Sep 2022 16:23:15 GMT"
-										},
-										{
-											"key": "Connection",
-											"value": "close"
-										}
-									],
-									"cookie": [],
-									"body": "{\n    \"error\": {\n        \"message\": \"Invalid name format: pattern not match\"\n    }\n}"
-								},
-								{
-									"name": "Invalid Password",
-									"originalRequest": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"name\": \"Patient\",\n    \"email\": \"patient@patient.com\",\n    \"password\": \"patient\"\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{url_authentication}}/auth/register",
-											"host": [
-												"{{url_authentication}}"
-											],
-											"path": [
-												"auth",
-												"register"
-											]
-										}
-									},
-									"status": "Internal Server Error",
-									"code": 500,
-									"_postman_previewlanguage": "json",
-									"header": [
-										{
-											"key": "Vary",
-											"value": "Origin"
-										},
-										{
-											"key": "Vary",
-											"value": "Access-Control-Request-Method"
-										},
-										{
-											"key": "Vary",
-											"value": "Access-Control-Request-Headers"
-										},
-										{
-											"key": "X-Content-Type-Options",
-											"value": "nosniff"
-										},
-										{
-											"key": "X-XSS-Protection",
-											"value": "1; mode=block"
-										},
-										{
-											"key": "Cache-Control",
-											"value": "no-cache, no-store, max-age=0, must-revalidate"
-										},
-										{
-											"key": "Pragma",
-											"value": "no-cache"
-										},
-										{
-											"key": "Expires",
-											"value": "0"
-										},
-										{
-											"key": "X-Frame-Options",
-											"value": "DENY"
-										},
-										{
-											"key": "Content-Type",
-											"value": "application/json"
-										},
-										{
-											"key": "Transfer-Encoding",
-											"value": "chunked"
-										},
-										{
-											"key": "Date",
-											"value": "Mon, 19 Sep 2022 16:24:57 GMT"
-										},
-										{
-											"key": "Connection",
-											"value": "close"
-										}
-									],
-									"cookie": [],
-									"body": "{\n    \"error\": {\n        \"message\": \"Invalid password format: minimum 8 characters\"\n    }\n}"
+									"body": "{\n    \"data\": {\n        \"token\": {\n            \"access\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjo1MywiZXhwIjoxNjk2MTcxNTUyLCJpYXQiOjE2NjQ3MjE5NTJ9.KhPVpMNoATNlXomuRZOsQcfgL1_uVGCDvXvwk3znHrk\"\n        }\n    }\n}"
 								}
 							]
 						},
@@ -501,6 +416,91 @@
 								}
 							},
 							"response": [
+								{
+									"name": "Bad Credential",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"admin@admin.coms\",\n    \"password\": \"admin1234\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url_authentication}}/auth/login",
+											"host": [
+												"{{url_authentication}}"
+											],
+											"path": [
+												"auth",
+												"login"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Method"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Headers"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 02 Oct 2022 14:40:44 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Bad credentials\"\n}"
+								},
 								{
 									"name": "Login Successful",
 									"originalRequest": {
@@ -576,7 +576,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Mon, 19 Sep 2022 16:11:32 GMT"
+											"value": "Sun, 02 Oct 2022 14:41:44 GMT"
 										},
 										{
 											"key": "Keep-Alive",
@@ -588,177 +588,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"data\": {\n        \"token\": {\n            \"access\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoxLCJleHAiOjE2OTUwNTM0OTIsImlhdCI6MTY2MzYwMzg5Mn0.1GbXLxIFckS1LTt3OGapZ_9aU7sJcPAihkUfVwN0spk\"\n        },\n        \"user\": {\n            \"email\": \"admin@admin.com\",\n            \"name\": \"Admin\",\n            \"role\": \"ROLE_ADMIN\"\n        }\n    }\n}"
-								},
-								{
-									"name": "Invalid Password",
-									"originalRequest": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"email\": \"admin@admin.com\",\n    \"password\": \"admin\"\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{url_authentication}}/auth/login",
-											"host": [
-												"{{url_authentication}}"
-											],
-											"path": [
-												"auth",
-												"login"
-											]
-										}
-									},
-									"status": "Internal Server Error",
-									"code": 500,
-									"_postman_previewlanguage": "json",
-									"header": [
-										{
-											"key": "Vary",
-											"value": "Origin"
-										},
-										{
-											"key": "Vary",
-											"value": "Access-Control-Request-Method"
-										},
-										{
-											"key": "Vary",
-											"value": "Access-Control-Request-Headers"
-										},
-										{
-											"key": "X-Content-Type-Options",
-											"value": "nosniff"
-										},
-										{
-											"key": "X-XSS-Protection",
-											"value": "1; mode=block"
-										},
-										{
-											"key": "Cache-Control",
-											"value": "no-cache, no-store, max-age=0, must-revalidate"
-										},
-										{
-											"key": "Pragma",
-											"value": "no-cache"
-										},
-										{
-											"key": "Expires",
-											"value": "0"
-										},
-										{
-											"key": "X-Frame-Options",
-											"value": "DENY"
-										},
-										{
-											"key": "Content-Type",
-											"value": "application/json"
-										},
-										{
-											"key": "Transfer-Encoding",
-											"value": "chunked"
-										},
-										{
-											"key": "Date",
-											"value": "Mon, 19 Sep 2022 16:19:06 GMT"
-										},
-										{
-											"key": "Connection",
-											"value": "close"
-										}
-									],
-									"cookie": [],
-									"body": "{\n    \"error\": {\n        \"message\": \"Invalid password format: minimum 8 characters\"\n    }\n}"
-								},
-								{
-									"name": "Invalid Email",
-									"originalRequest": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"email\": \"admin@admin\",\n    \"password\": \"admin123\"\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{url_authentication}}/auth/login",
-											"host": [
-												"{{url_authentication}}"
-											],
-											"path": [
-												"auth",
-												"login"
-											]
-										}
-									},
-									"status": "Internal Server Error",
-									"code": 500,
-									"_postman_previewlanguage": "json",
-									"header": [
-										{
-											"key": "Vary",
-											"value": "Origin"
-										},
-										{
-											"key": "Vary",
-											"value": "Access-Control-Request-Method"
-										},
-										{
-											"key": "Vary",
-											"value": "Access-Control-Request-Headers"
-										},
-										{
-											"key": "X-Content-Type-Options",
-											"value": "nosniff"
-										},
-										{
-											"key": "X-XSS-Protection",
-											"value": "1; mode=block"
-										},
-										{
-											"key": "Cache-Control",
-											"value": "no-cache, no-store, max-age=0, must-revalidate"
-										},
-										{
-											"key": "Pragma",
-											"value": "no-cache"
-										},
-										{
-											"key": "Expires",
-											"value": "0"
-										},
-										{
-											"key": "X-Frame-Options",
-											"value": "DENY"
-										},
-										{
-											"key": "Content-Type",
-											"value": "application/json"
-										},
-										{
-											"key": "Transfer-Encoding",
-											"value": "chunked"
-										},
-										{
-											"key": "Date",
-											"value": "Mon, 19 Sep 2022 16:19:36 GMT"
-										},
-										{
-											"key": "Connection",
-											"value": "close"
-										}
-									],
-									"cookie": [],
-									"body": "{\n    \"error\": {\n        \"message\": \"Invalid email format: pattern not match\"\n    }\n}"
+									"body": "{\n    \"data\": {\n        \"token\": {\n            \"access\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjo1MiwiZXhwIjoxNjk2MTcxMzA0LCJpYXQiOjE2NjQ3MjE3MDR9.YMeyu9AREErWGMcSGZkWLyBleLnyfvPnT7PZBVFQPVg\"\n        },\n        \"user\": {\n            \"email\": \"admin@admin.com\",\n            \"name\": \"Admin\",\n            \"role\": \"ROLE_ADMIN\"\n        }\n    }\n}"
 								}
 							]
 						},
@@ -770,7 +600,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoxLCJleHAiOjE2OTUwNTM0OTIsImlhdCI6MTY2MzYwMzg5Mn0.1GbXLxIFckS1LTt3OGapZ_9aU7sJcPAihkUfVwN0spk",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoxLCJleHAiOjE2OTYxMjM0NjcsImlhdCI6MTY2NDY3Mzg2N30.xEh_-SaXT7QTwUMJvgnrjFhhEFQdQwuYH9od9fNTPQ0",
 											"type": "string"
 										}
 									]
@@ -790,7 +620,7 @@
 							},
 							"response": [
 								{
-									"name": "Validate Successful",
+									"name": "Successful",
 									"originalRequest": {
 										"method": "GET",
 										"header": [],
@@ -855,7 +685,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Mon, 19 Sep 2022 16:25:47 GMT"
+											"value": "Sun, 02 Oct 2022 14:46:30 GMT"
 										},
 										{
 											"key": "Keep-Alive",
@@ -867,7 +697,83 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"id\": 1,\n    \"role\": \"ROLE_ADMIN\"\n}"
+									"body": "{\n    \"id\": 52,\n    \"role\": \"ROLE_ADMIN\"\n}"
+								},
+								{
+									"name": "Empty Token",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url_authentication}}/auth/validate",
+											"host": [
+												"{{url_authentication}}"
+											],
+											"path": [
+												"auth",
+												"validate"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Method"
+										},
+										{
+											"key": "Vary",
+											"value": "Access-Control-Request-Headers"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "0"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Length",
+											"value": "0"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 02 Oct 2022 14:46:42 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": null
 								}
 							]
 						}
@@ -1016,7 +922,7 @@
 														}
 													],
 													"cookie": [],
-													"body": null
+													"body": ""
 												},
 												{
 													"name": "Email Taken",
@@ -1581,7 +1487,7 @@
 														}
 													],
 													"cookie": [],
-													"body": null
+													"body": ""
 												},
 												{
 													"name": "Email Taken",
@@ -2610,7 +2516,7 @@
 								"bearer": [
 									{
 										"key": "token",
-										"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoxLCJleHAiOjE2OTUwNTM0OTIsImlhdCI6MTY2MzYwMzg5Mn0.1GbXLxIFckS1LTt3OGapZ_9aU7sJcPAihkUfVwN0spk",
+										"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjo1MiwiZXhwIjoxNjk2MTcxMjE5LCJpYXQiOjE2NjQ3MjE2MTl9.oPZoTS7iwg-P1wDZGfXi3L29QY2VbiCWhcY7DTPTIvA",
 										"type": "string"
 									}
 								]
@@ -2701,17 +2607,109 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{url_appointment}}/patient/appointment",
+											"raw": "{{url_appointment}}/app/patient/appointment",
 											"host": [
 												"{{url_appointment}}"
 											],
 											"path": [
+												"app",
 												"patient",
 												"appointment"
 											]
 										}
 									},
-									"response": []
+									"response": [
+										{
+											"name": "Appointment Empty",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{url_appointment}}/app/patient/appointment",
+													"host": [
+														"{{url_appointment}}"
+													],
+													"path": [
+														"app",
+														"patient",
+														"appointment"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Date",
+													"value": "Sun, 02 Oct 2022 14:54:26 GMT"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=60"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"data\": []\n}"
+										},
+										{
+											"name": "Appointment Successful",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{url_appointment}}/app/patient/appointment",
+													"host": [
+														"{{url_appointment}}"
+													],
+													"path": [
+														"app",
+														"patient",
+														"appointment"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Date",
+													"value": "Sun, 02 Oct 2022 15:05:27 GMT"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=60"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"data\": [\n        {\n            \"id\": 302,\n            \"datetime\": \"2022-12-01 12:00:00.0\",\n            \"session\": \"OFFLINE\",\n            \"doctor\": {\n                \"id\": 55,\n                \"email\": \"doctor@doctor.com\",\n                \"name\": \"Doctor\"\n            }\n        },\n        {\n            \"id\": 303,\n            \"datetime\": \"2022-12-02 12:00:00.0\",\n            \"session\": \"ONLINE\",\n            \"doctor\": {\n                \"id\": 55,\n                \"email\": \"doctor@doctor.com\",\n                \"name\": \"Doctor\"\n            }\n        }\n    ]\n}"
+										}
+									]
 								},
 								{
 									"name": "Appointment",
@@ -2720,7 +2718,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"doctorId\": 3,\n    \"datetime\": \"2022-09-04_12:00\"\n}",
+											"raw": "{\n    \"doctorId\": 55,\n    \"datetime\": \"2022-12-01_12:00\",\n    \"session\": \"OFFLINE\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2728,17 +2726,289 @@
 											}
 										},
 										"url": {
-											"raw": "{{url_appointment}}/patient/appointment",
+											"raw": "{{url_appointment}}/app/patient/appointment",
 											"host": [
 												"{{url_appointment}}"
 											],
 											"path": [
+												"app",
 												"patient",
 												"appointment"
 											]
 										}
 									},
-									"response": []
+									"response": [
+										{
+											"name": "User Not Found",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"doctorId\": 3,\n    \"datetime\": \"2022-12-01_12:00\",\n    \"session\": \"OFFLINE\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{url_appointment}}/app/patient/appointment",
+													"host": [
+														"{{url_appointment}}"
+													],
+													"path": [
+														"app",
+														"patient",
+														"appointment"
+													]
+												}
+											},
+											"status": "Not Found",
+											"code": 404,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Date",
+													"value": "Sun, 02 Oct 2022 14:54:53 GMT"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=60"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"message\": \"User not found\"\n}"
+										},
+										{
+											"name": "Patient Conflict",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"doctorId\": 55,\n    \"datetime\": \"2022-12-01_12:00\",\n    \"session\": \"OFFLINE\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{url_appointment}}/app/patient/appointment",
+													"host": [
+														"{{url_appointment}}"
+													],
+													"path": [
+														"app",
+														"patient",
+														"appointment"
+													]
+												}
+											},
+											"status": "Conflict",
+											"code": 409,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Date",
+													"value": "Sun, 02 Oct 2022 14:56:23 GMT"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=60"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"message\": \"Appointment conflicted: Patient is occupied\"\n}"
+										},
+										{
+											"name": "Doctor Conflict",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"doctorId\": 55,\n    \"datetime\": \"2022-12-01_12:00\",\n    \"session\": \"OFFLINE\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{url_appointment}}/app/patient/appointment",
+													"host": [
+														"{{url_appointment}}"
+													],
+													"path": [
+														"app",
+														"patient",
+														"appointment"
+													]
+												}
+											},
+											"status": "Conflict",
+											"code": 409,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Date",
+													"value": "Sun, 02 Oct 2022 15:01:49 GMT"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=60"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"message\": \"Appointment conflicted: Doctor is occupied\"\n}"
+										},
+										{
+											"name": "Appointment Successful Offline",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"doctorId\": 55,\n    \"datetime\": \"2022-12-01_12:00\",\n    \"session\": \"OFFLINE\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{url_appointment}}/app/patient/appointment",
+													"host": [
+														"{{url_appointment}}"
+													],
+													"path": [
+														"app",
+														"patient",
+														"appointment"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Date",
+													"value": "Sun, 02 Oct 2022 14:56:00 GMT"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=60"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"data\": {\n        \"id\": 252,\n        \"datetime\": \"2022-12-01_12:00\",\n        \"session\": \"OFFLINE\",\n        \"doctor\": {\n            \"id\": 55,\n            \"email\": \"doctor@doctor.com\",\n            \"name\": \"Doctor\"\n        }\n    }\n}"
+										},
+										{
+											"name": "Appointment Successful Online",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"doctorId\": 55,\n    \"datetime\": \"2022-12-02_12:00\",\n    \"session\": \"ONLINE\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{url_appointment}}/app/patient/appointment",
+													"host": [
+														"{{url_appointment}}"
+													],
+													"path": [
+														"app",
+														"patient",
+														"appointment"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Date",
+													"value": "Sun, 02 Oct 2022 15:04:52 GMT"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=60"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"data\": {\n        \"id\": 303,\n        \"datetime\": \"2022-12-02_12:00\",\n        \"session\": \"ONLINE\",\n        \"doctor\": {\n            \"id\": 55,\n            \"email\": \"doctor@doctor.com\",\n            \"name\": \"Doctor\"\n        }\n    }\n}"
+										}
+									]
 								}
 							]
 						},
@@ -2751,11 +3021,12 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{url_appointment}}/patient/doctor/:timestamp",
+											"raw": "{{url_appointment}}/app/patient/doctor/:timestamp",
 											"host": [
 												"{{url_appointment}}"
 											],
 											"path": [
+												"app",
 												"patient",
 												"doctor",
 												":timestamp"
@@ -2763,14 +3034,97 @@
 											"variable": [
 												{
 													"key": "timestamp",
-													"value": "2022-09-04_12:00"
+													"value": "2022-11-01_12:00"
 												}
 											]
 										}
 									},
-									"response": []
+									"response": [
+										{
+											"name": "Doctor Successful",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{url_appointment}}/app/patient/doctor/:timestamp",
+													"host": [
+														"{{url_appointment}}"
+													],
+													"path": [
+														"app",
+														"patient",
+														"doctor",
+														":timestamp"
+													],
+													"variable": [
+														{
+															"key": "timestamp",
+															"value": "2022-11-01_12:00"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Date",
+													"value": "Sun, 02 Oct 2022 14:52:14 GMT"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=60"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"data\": [\n        {\n            \"id\": 55,\n            \"email\": \"doctor@doctor.com\",\n            \"name\": \"Doctor\"\n        }\n    ]\n}"
+										}
+									]
 								}
 							]
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjo1MywiZXhwIjoxNjk2MTcyMTI4LCJpYXQiOjE2NjQ3MjI1Mjh9.RLotDcVJavwMc1gqp7vlcqryd9abV9D04J1Fws-lOVc",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
 						}
 					]
 				},
@@ -2783,30 +3137,145 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{url_appointment}}/doctor/appointment",
+									"raw": "{{url_appointment}}/app/doctor/appointment",
 									"host": [
 										"{{url_appointment}}"
 									],
 									"path": [
+										"app",
 										"doctor",
 										"appointment"
 									]
 								}
 							},
-							"response": []
+							"response": [
+								{
+									"name": "Appointment Empty",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url_appointment}}/app/doctor/appointment",
+											"host": [
+												"{{url_appointment}}"
+											],
+											"path": [
+												"app",
+												"doctor",
+												"appointment"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 02 Oct 2022 14:50:43 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": []\n}"
+								},
+								{
+									"name": "Appointment Successful",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url_appointment}}/app/doctor/appointment",
+											"host": [
+												"{{url_appointment}}"
+											],
+											"path": [
+												"app",
+												"doctor",
+												"appointment"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 02 Oct 2022 15:05:49 GMT"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=60"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": [\n        {\n            \"id\": 302,\n            \"datetime\": \"2022-12-01 12:00:00.0\",\n            \"session\": \"OFFLINE\",\n            \"patient\": {\n                \"id\": 53,\n                \"email\": \"patient@patient.com\",\n                \"name\": \"Patient\"\n            }\n        },\n        {\n            \"id\": 303,\n            \"datetime\": \"2022-12-02 12:00:00.0\",\n            \"session\": \"ONLINE\",\n            \"patient\": {\n                \"id\": 53,\n                \"email\": \"patient@patient.com\",\n                \"name\": \"Patient\"\n            }\n        }\n    ]\n}"
+								}
+							]
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb2N0b3JAZG9jdG9yLmNvbSIsInJvbGUiOiJST0xFX0RPQ1RPUiIsImlkIjo1NSwiZXhwIjoxNjk2MTcxODI3LCJpYXQiOjE2NjQ3MjIyMjd9.9e7ThmRFePrETwaGeowN8SeoS4Bb0mcFRBXl0pPH8f8",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
 						}
 					]
 				}
 			],
 			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjoyMDMsImV4cCI6MTY2MjQ0OTgzMSwiaWF0IjoxNjYyMzYzNDMxfQ.nJJkFCXA8w5kE3mplZ0r8vxQq3RpX6G-g-PEHOFZK84",
-						"type": "string"
-					}
-				]
+				"type": "noauth"
 			},
 			"event": [
 				{
