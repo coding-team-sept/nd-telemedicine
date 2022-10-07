@@ -14,6 +14,7 @@ import com.github.coding_team_sept.nd_backend.appointment.services.Authenticatio
 import com.github.coding_team_sept.nd_backend.appointment.services.ScheduleService;
 import com.github.coding_team_sept.nd_backend.appointment.utils.AppointmentDateTimeUtils;
 import org.joda.time.DateTime;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -120,24 +121,24 @@ public class AppointmentServiceTest {
 
     void mockCheckAvailability(
             DateTime appointmentDatetime,
-            String subject,
-            Long id,
+            String target,
+            Long targetId,
             boolean isAvailable
     ) {
         if (isAvailable) {
-            if (subject.equalsIgnoreCase("doctor")) {
+            if (target.equalsIgnoreCase("doctor")) {
                 Mockito.doNothing()
                         .when(scheduleService)
                         .checkDoctorAvailability(
                                 appointmentDatetime,
-                                id
+                                targetId
                         );
             } else {
                 Mockito.doNothing()
                         .when(scheduleService)
                         .checkPatientAvailability(
                                 appointmentDatetime,
-                                id
+                                targetId
                         );
             }
         } else {
@@ -145,7 +146,7 @@ public class AppointmentServiceTest {
                     .when(scheduleService)
                     .checkPatientAvailability(
                             appointmentDatetime,
-                            id
+                            targetId
                     );
         }
     }
@@ -213,24 +214,35 @@ public class AppointmentServiceTest {
         mockValidateAppointmentDateTime(appointmentDatetime);
     }
 
+    /** Test a successful [getAvailableDoctor] method
+     * Scenario: A patient with id(0) looks for doctors available at a specific timeframe.
+     * There are 3 doctors (ids: 100, 101, 102) in the database. The doctor with id(100)
+     * already has an appointment with patient id(1) at the same time specified by patient id(0).
+     * The expected result is an array which contains only 2 doctors (ids: 101, 102).
+     * */
     @Test
     void testGetAvailableDoctor() {
+        // Setup data
+        final var stringDatetime = appointmentDatetime.toString(AppointmentDateTimeUtils.pattern);
         final var patientValidation = new ValidateResponse(0L, "PATIENT_ROLE");
         final var doctors = sampleDoctorIds.stream()
                 .map(sampleDoctorId -> UserDataResponse.build(
                         sampleDoctorId,
                         "doctor" + sampleDoctorId + "@doctor.com",
                         "Doctor"
-                ))
-                .toList();
-        final var stringDatetime = appointmentDatetime.toString(
-                AppointmentDateTimeUtils.pattern
+                )).toList();
+        final var appointments = List.of(
+                Appointment.builder()
+                        .id(doctors.get(0).id)
+                        .patientId(1L)
+                        .doctorId(doctors.get(0).id)
+                        .session(getSession(SessionType.OFFLINE))
+                        .appointmentTime(appointmentDatetime.toDate())
+                        .build()
         );
-        mockAuthorization(
-                headers,
-                patientValidation,
-                true
-        );
+
+        // Create mocks
+        mockAuthorization(headers, patientValidation, true);
         mockGetDateTime(appointmentDatetime);
         mockCheckAvailability(
                 appointmentDatetime,
@@ -238,18 +250,7 @@ public class AppointmentServiceTest {
                 patientValidation.id,
                 true
         );
-        mockGetAppointmentByDateTimeBetween(
-                appointmentDatetime,
-                List.of(
-                        Appointment.builder()
-                                .id(0L)
-                                .patientId(1L)
-                                .doctorId(doctors.get(0).id)
-                                .session(getSession(SessionType.OFFLINE))
-                                .appointmentTime(appointmentDatetime.toDate())
-                                .build()
-                )
-        );
+        mockGetAppointmentByDateTimeBetween(appointmentDatetime, appointments);
         mockGetUsers(
                 headers,
                 "doctor",
@@ -257,10 +258,13 @@ public class AppointmentServiceTest {
                 false,
                 true
         );
-        appointmentService.getAvailableDoctor(
-                headers,
-                stringDatetime
-        );
+
+        // Test
+        final var response = appointmentService.getAvailableDoctor(headers, stringDatetime);
+        Assertions.assertEquals(2, response.users.size());
+        final var responseIds = response.users.stream().map(userDataResponse -> userDataResponse.id).toList();
+        Assertions.assertTrue(responseIds.contains(doctors.get(1).id));
+        Assertions.assertTrue(responseIds.contains(doctors.get(2).id));
     }
 
     @Test
