@@ -33,6 +33,7 @@ class AppointmentController extends GetxController {
       for (var element in (response.data["data"] as List)) {
         appointmentData.add(AppointmentModel(
             id: element['id'],
+            doctorID: element['doctor']['id'],
             name: element['doctor']['name'],
             time: element['datetime'],
             isOnline: element['session'] == "ONLINE"));
@@ -48,7 +49,7 @@ class AppointmentController extends GetxController {
 
   void newAppointment() => Get.toNamed(Routes.CREATE_APPOINTMENT);
 
-  void showAppointmentDetail(int id, bool isOnline) {
+  void showAppointmentDetail(int id, bool isOnline, int doctorID) {
     if (!isOnline) {
       Get.dialog(const AlertDialog(
         title: Text("Booking is Offline"),
@@ -57,6 +58,12 @@ class AppointmentController extends GetxController {
 
       return;
     }
-    Get.toNamed(Routes.CHAT);
+    Get.toNamed(Routes.CHAT, arguments: {
+      "isDoctor": false,
+      "appointmentID": id,
+      "token": token,
+      "doctorID": doctorID,
+      "patientID": -999
+    });
   }
 }

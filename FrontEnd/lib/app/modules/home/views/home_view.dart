@@ -72,26 +72,31 @@ class HomeView extends GetView<HomeController> {
           appBar: AppBar(
             leading: Image.asset("assets/icon.jpg"),
             title: Text(controller.email.value ?? ""),
-            bottom: TabBar(tabs: [
-              if (controller.role.value == "ROLE_ADMIN") ...adminTabBar,
-              if (controller.role.value == "ROLE_PATIENT" ||
-                  controller.role.value == "patient")
-                ...patientTabBar,
-              if (controller.role.value == "ROLE_DOCTOR") ...doctorTabBar,
-              const Tab(
-                icon: Icon(Icons.account_circle),
-                text: "Profile",
-              ),
-            ]),
+            bottom: controller.role.value == null
+                ? PreferredSize(
+                    preferredSize: const Size.fromHeight(0), child: Container())
+                : TabBar(tabs: [
+                    if (controller.role.value == "ROLE_ADMIN") ...adminTabBar,
+                    if (controller.role.value == "ROLE_PATIENT" ||
+                        controller.role.value == "patient")
+                      ...patientTabBar,
+                    if (controller.role.value == "ROLE_DOCTOR") ...doctorTabBar,
+                    const Tab(
+                      icon: Icon(Icons.account_circle),
+                      text: "Profile",
+                    ),
+                  ]),
           ),
-          body: TabBarView(children: [
-            if (controller.role.value == "ROLE_PATIENT" ||
-                controller.role.value == "patient")
-              ...patientContent,
-            if (controller.role.value == "ROLE_ADMIN") ...adminContent,
-            if (controller.role.value == "ROLE_DOCTOR") ...doctorContent,
-            const ProfileView(),
-          ]),
+          body: controller.role.value == null
+              ? const Center(child: CircularProgressIndicator())
+              : TabBarView(children: [
+                  if (controller.role.value == "ROLE_PATIENT" ||
+                      controller.role.value == "patient")
+                    ...patientContent,
+                  if (controller.role.value == "ROLE_ADMIN") ...adminContent,
+                  if (controller.role.value == "ROLE_DOCTOR") ...doctorContent,
+                  const ProfileView(),
+                ]),
         ),
       ),
     );
