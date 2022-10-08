@@ -2615,6 +2615,13 @@
 												"app",
 												"patient",
 												"appointment"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "0",
+													"disabled": true
+												}
 											]
 										}
 									},
@@ -3145,6 +3152,13 @@
 										"app",
 										"doctor",
 										"appointment"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "0",
+											"disabled": true
+										}
 									]
 								}
 							},
@@ -3376,6 +3390,13 @@
 												"chat",
 												"message",
 												":appointmentId"
+											],
+											"query": [
+												{
+													"key": "isAll",
+													"value": "true",
+													"disabled": true
+												}
 											],
 											"variable": [
 												{
