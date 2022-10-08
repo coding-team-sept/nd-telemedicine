@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:nd/app/data/const.dart';
 import 'package:nd/app/routes/app_pages.dart';
 
 class RegisterController extends GetxController {
@@ -36,10 +37,9 @@ class RegisterController extends GetxController {
     isLoading.value = true;
     await Future.delayed(const Duration(seconds: 1));
     //send request to server
-    var url = 'http://95.111.217.168:9000/api/v1';
 
     try {
-      var response = await Dio().post('$url/auth/register', data: {
+      var response = await Dio().post('${C.url}/auth/register', data: {
         'name': fullName.value,
         'email': email.value,
         'password': password.value,

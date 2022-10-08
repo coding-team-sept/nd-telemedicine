@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:nd/app/data/const.dart';
 import 'package:nd/app/routes/app_pages.dart';
 
 import '../model/appointment_model.dart';
@@ -25,24 +26,21 @@ class AppointmentController extends GetxController {
   void getAppointment() async {
     isLoading.value = true;
     // Get doctors list from server
-    const url = 'http://95.111.217.168:9001/api/v1';
     try {
-      final response = await Dio().get('$url/app/patient/appointment',
+      final response = await Dio().get('${C.urlA}/app/patient/appointment',
           options: Options(headers: {"Authorization": "Bearer $token"}));
       appointmentData.clear();
       for (var element in (response.data["data"] as List)) {
-        print(element);
         appointmentData.add(AppointmentModel(
             id: element['id'],
             name: element['doctor']['name'],
             time: element['datetime'],
             isOnline: element['session'] == "ONLINE"));
       }
-
-      print(response.data);
-    } on DioError catch (e, s) {
-      print(s);
-      print(e.error);
+    } on DioError catch (e, _) {
+      Get.dialog(const AlertDialog(
+        title: Text("Unknown Error"),
+      ));
     }
 
     isLoading.value = false;

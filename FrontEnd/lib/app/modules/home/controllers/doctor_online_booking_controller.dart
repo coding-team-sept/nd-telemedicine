@@ -1,18 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:nd/app/data/const.dart';
 import 'package:nd/app/modules/home/model/online_patient_appointment_model.dart';
 
 import '../../../routes/app_pages.dart';
 
 class DoctorOnlineBookingController extends GetxController {
-
   final isLoading = false.obs;
-  RxList<OnlinePatientAppointmentModel> onlinepatientappointmentData = <OnlinePatientAppointmentModel>[].obs;
+  RxList<OnlinePatientAppointmentModel> onlinepatientappointmentData =
+      <OnlinePatientAppointmentModel>[].obs;
   late String token;
 
   @override
-  void onInit() async{
+  void onInit() async {
     token = await const FlutterSecureStorage().read(key: "token") ?? '';
     getOnlinePatientAppointment();
     super.onInit();
@@ -31,13 +32,12 @@ class DoctorOnlineBookingController extends GetxController {
   void getOnlinePatientAppointment() async {
     isLoading.value = true;
     // Get doctors list from server
-    const url = 'http://95.111.217.168:9001/api/v1';
     try {
-      final response = await Dio().get('$url/app/doctor/appointment',
+      final response = await Dio().get('${C.urlA}/app/doctor/appointment',
           options: Options(headers: {"Authorization": "Bearer $token"}));
       onlinepatientappointmentData.clear();
       for (var element in (response.data["data"] as List)) {
-        if(element['session'] == "ONLINE"){
+        if (element['session'] == "ONLINE") {
           onlinepatientappointmentData.add(OnlinePatientAppointmentModel(
             id: element['id'],
             datetime: element['datetime'],
@@ -48,12 +48,10 @@ class DoctorOnlineBookingController extends GetxController {
           ));
         }
       }
-      } on DioError catch (e, s){
+    } on DioError catch (e, s) {}
+    isLoading.value = false;
+  }
 
-    }
-      isLoading.value = false;
-
-    }
   void showOnlinePatientAppointmentDetail(int id) {
     Get.toNamed(Routes.CHAT);
   }

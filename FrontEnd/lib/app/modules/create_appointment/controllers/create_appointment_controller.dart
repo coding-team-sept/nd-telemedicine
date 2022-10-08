@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:nd/app/data/const.dart';
 import 'package:nd/app/modules/create_appointment/model/doctor_model.dart';
 
 class CreateAppointmentController extends GetxController {
@@ -43,12 +44,11 @@ class CreateAppointmentController extends GetxController {
   void getDoctors() async {
     isLoading.value = true;
     // Get doctors list from server
-    const url = 'http://95.111.217.168:9001/api/v1';
     final timestamp =
         '${date.value.year}-${date.value.month}-${date.value.day}_${time.value.hour}:${time.value.minute}';
-    print(timestamp);
     try {
-      final response = await Dio().get('$url/app/patient/doctor/$timestamp',
+      final response = await Dio().get(
+          '${C.urlA}/app/patient/doctor/$timestamp',
           options: Options(headers: {"Authorization": "Bearer $token"}));
       doctorData.clear();
       for (var element in (response.data['data'] as List)) {
@@ -65,7 +65,7 @@ class CreateAppointmentController extends GetxController {
               title: Text("Error"),
               content: Text("Please select a time in the future")));
         }
-      } else {
+      } else if (e.response?.statusCode != 404) {
         Get.dialog(const AlertDialog(
             title: Text("Error"), content: Text("Unknown Error")));
       }
@@ -93,25 +93,20 @@ class CreateAppointmentController extends GetxController {
   void doOnlineBooking(int id) async {
     Get.back();
     isLoading.value = true;
-    print("booking");
     // Get doctors list from server
-    const url = 'http://95.111.217.168:9001/api/v1';
     final timestamp =
         '${date.value.year}-${date.value.month}-${date.value.day}_${time.value.hour}:${time.value.minute}';
     try {
-      final response = await Dio().post('$url/app/patient/appointment',
+      final response = await Dio().post('${C.urlA}/app/patient/appointment',
           data: {'doctorId': id, 'datetime': timestamp, 'session': "ONLINE"},
           options: Options(headers: {"Authorization": "Bearer $token"}));
       Get.back();
     } on DioError catch (e, s) {
-      print(s);
-      print(e.error);
       Get.dialog(AlertDialog(
         title: const Text("Error"),
         content: Text(e.response?.data ?? "Unknown error"),
       ));
     } catch (e) {
-      print(e);
       Get.dialog(const AlertDialog(
         title: Text("Error"),
         content: Text("Unknown Error"),
@@ -124,25 +119,20 @@ class CreateAppointmentController extends GetxController {
   void doOfflineBooking(int id) async {
     Get.back();
     isLoading.value = true;
-    print("booking");
     // Get doctors list from server
-    const url = 'http://95.111.217.168:9001/api/v1';
     final timestamp =
         '${date.value.year}-${date.value.month}-${date.value.day}_${time.value.hour}:${time.value.minute}';
     try {
-      final response = await Dio().post('$url/app/patient/appointment',
+      final response = await Dio().post('${C.urlA}/app/patient/appointment',
           data: {'doctorId': id, 'datetime': timestamp, 'session': "OFFLINE"},
           options: Options(headers: {"Authorization": "Bearer $token"}));
       Get.back();
     } on DioError catch (e, s) {
-      print(s);
-      print(e.error);
       Get.dialog(AlertDialog(
         title: const Text("Error"),
         content: Text(e.response?.data ?? "Unknown error"),
       ));
     } catch (e) {
-      print(e);
       Get.dialog(const AlertDialog(
         title: Text("Error"),
         content: Text("Unknown Error"),

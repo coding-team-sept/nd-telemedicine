@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:nd/app/data/const.dart';
 
 import '../model/offline_model.dart';
 
@@ -18,26 +19,14 @@ class OfflineDoctorBookingController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
   void getOfflineAppointment() async {
     isLoading.value = true;
     // Get doctors list from server
-    const url = 'http://95.111.217.168:9001/api/v1';
     try {
-      final response = await Dio().get('$url/app/doctor/appointment',
+      final response = await Dio().get('${C.urlA}/app/doctor/appointment',
           options: Options(headers: {"Authorization": "Bearer $token"}));
       offlineData.clear();
       for (var element in (response.data["data"] as List)) {
-        print(element);
         if (element['session'] == "OFFLINE") {
           offlineData.add(OfflinePatientAppointmentModel(
             id: element['id'],
@@ -48,11 +37,10 @@ class OfflineDoctorBookingController extends GetxController {
           ));
         }
       }
-
-      print(response.data);
-    } on DioError catch (e, s) {
-      print(s);
-      print(e.error);
+    } on DioError catch (e) {
+      Get.dialog(const AlertDialog(
+        title: Text("Unknown Error"),
+      ));
     }
 
     isLoading.value = false;

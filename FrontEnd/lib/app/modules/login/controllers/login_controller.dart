@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:nd/app/data/const.dart';
 
 import '../../../routes/app_pages.dart';
 
@@ -34,9 +35,8 @@ class LoginController extends GetxController {
     await Future.delayed(const Duration(seconds: 1));
 
     //send request to server
-    var url = "http://95.111.217.168:9000/api/v1";
     try {
-      var response = await Dio().post('$url/auth/login', data: {
+      var response = await Dio().post('${C.url}/auth/login', data: {
         'email': email.value,
         'password': password.value,
       });

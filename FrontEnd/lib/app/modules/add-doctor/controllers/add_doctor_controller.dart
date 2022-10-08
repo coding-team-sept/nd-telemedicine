@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:nd/app/data/const.dart';
 
 class AddDoctorController extends GetxController {
   final name = ''.obs;
@@ -73,14 +74,14 @@ class AddDoctorController extends GetxController {
     await Future.delayed(const Duration(seconds: 1));
     isLoading.value = false;
 
-    var url = 'http://95.111.217.168:9000/api/v1';
-
     try {
-      var response = await Dio().post('$url/app/admin/doctor', data: {
-        'name': name.value,
-        'email': email.value,
-        'password': password.value,
-      },options: Options(headers: {"Authorization": "Bearer $token"}));
+      var response = await Dio().post('${C.url}/app/admin/doctor',
+          data: {
+            'name': name.value,
+            'email': email.value,
+            'password': password.value,
+          },
+          options: Options(headers: {"Authorization": "Bearer $token"}));
       isLoading.value = false;
       if (response.statusCode == 201) {
         Get.back();

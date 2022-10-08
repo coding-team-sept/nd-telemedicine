@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:nd/app/data/const.dart';
 
 class AddAdminController extends GetxController {
   final name = ''.obs;
@@ -71,10 +72,8 @@ class AddAdminController extends GetxController {
     await Future.delayed(const Duration(seconds: 1));
     isLoading.value = false;
 
-    var url = 'http://95.111.217.168:9000/api/v1';
-
     try {
-      var response = await Dio().post('$url/app/admin/admin',
+      var response = await Dio().post('${C.url}/app/admin/admin',
           data: {
             'name': name.value,
             'email': email.value,
@@ -92,7 +91,6 @@ class AddAdminController extends GetxController {
       }
       //this is from website DIO Flutter, Copy that, but not found dio so we Make a new Dio() and import.
     } on DioError catch (e, _) {
-      print(e);
       isLoading.value = false;
       if (e.response?.statusCode == 401) {
         Get.dialog(const AlertDialog(
