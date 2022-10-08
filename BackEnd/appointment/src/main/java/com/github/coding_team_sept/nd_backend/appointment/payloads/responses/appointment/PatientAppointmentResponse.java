@@ -9,7 +9,7 @@ public class PatientAppointmentResponse extends AppointmentResponse {
         this(null, null, null, null);
     }
 
-    public PatientAppointmentResponse(Long id, UserDataResponse doctor, String datetime, SessionType session) {
+    public PatientAppointmentResponse(Long id, UserDataResponse doctor, String datetime, String session) {
         super(id, doctor, datetime, session);
     }
 
@@ -19,7 +19,7 @@ public class PatientAppointmentResponse extends AppointmentResponse {
             String datetime,
             SessionType session
     ) {
-        return new PatientAppointmentResponse(id, doctor, datetime, session);
+        return new PatientAppointmentResponse(id, doctor, datetime, session.name());
     }
 
     @JsonProperty("doctor")

@@ -1,8 +1,7 @@
-package com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment;
+package com.github.coding_team_sept.nd_backend.chat.payloads.responses.appointment;
 
-import com.github.coding_team_sept.nd_backend.appointment.enums.SessionType;
-import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.DataResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UserDataResponse;
+import com.github.coding_team_sept.nd_backend.chat.payloads.responses.DataResponse;
+import com.github.coding_team_sept.nd_backend.chat.payloads.responses.UserDataResponse;
 
 public class AppointmentResponse extends DataResponse {
     public final Long id;

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3751d314-8d0e-44e9-89a7-2ba7093c5c52",
+		"_postman_id": "1966001d-b569-4960-af52-b1acc2e9e032",
 		"name": "Telemedic App",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "13106056"
@@ -773,7 +773,7 @@
 										}
 									],
 									"cookie": [],
-									"body": null
+									"body": ""
 								}
 							]
 						}
@@ -2718,7 +2718,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"doctorId\": 55,\n    \"datetime\": \"2022-12-01_12:00\",\n    \"session\": \"OFFLINE\"\n}",
+											"raw": "{\n    \"doctorId\": 3,\n    \"datetime\": \"2022-12-01_12:00\",\n    \"session\": \"OFFLINE\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3297,6 +3297,131 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "ChatService",
+			"item": [
+				{
+					"name": "App",
+					"item": [
+						{
+							"name": "Chat",
+							"item": [
+								{
+									"name": "Status",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url_chat}}/app/chat/status/:appointmentId",
+											"host": [
+												"{{url_chat}}"
+											],
+											"path": [
+												"app",
+												"chat",
+												"status",
+												":appointmentId"
+											],
+											"variable": [
+												{
+													"key": "appointmentId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Message",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"appointmentId\": 1,\n    \"message\": \"Hello Doctor\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url_chat}}/app/chat/message",
+											"host": [
+												"{{url_chat}}"
+											],
+											"path": [
+												"app",
+												"chat",
+												"message"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Message",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url_chat}}/app/chat/message/:appointmentId",
+											"host": [
+												"{{url_chat}}"
+											],
+											"path": [
+												"app",
+												"chat",
+												"message",
+												":appointmentId"
+											],
+											"variable": [
+												{
+													"key": "appointmentId",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjoyLCJleHAiOjE2OTY2NTk3MzUsImlhdCI6MTY2NTIxMDEzNX0.az_IharAVbRh9HZ-wLyAQpBh2DdTNUQWpBXnKBjpa7k",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						}
+					]
+				}
+			]
 		}
 	],
 	"event": [
@@ -3328,6 +3453,11 @@
 		{
 			"key": "url_appointment",
 			"value": "http://localhost:9001/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "url_chat",
+			"value": "http://localhost:9002/api/v1",
 			"type": "string"
 		}
 	]

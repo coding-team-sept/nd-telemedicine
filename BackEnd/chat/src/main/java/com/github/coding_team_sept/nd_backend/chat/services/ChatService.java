@@ -17,7 +17,8 @@ import java.util.List;
 public record ChatService(
         ChatRepositories chatRepo,
         MessageRepositories msgRepo,
-        AuthenticationService authService
+        AuthenticationService authService,
+        AppointmentService appointmentService
 ) {
     private void createChatIfNotExists(Long appointmentId, Long patientId, Long doctorId) {
         final var isChatExists = chatRepo.existsById(appointmentId);
@@ -39,16 +40,19 @@ public record ChatService(
             Long appointmentId
     ) throws Exception {
         final var auth = authService.getAuthorization(headers);
-        if (auth.role.contains("doctor") || auth.role.contains("patient")) {
-            // TODO: Check appointment id
-            createChatIfNotExists(appointmentId, auth.id, 100L);
-            return ChatResponse.fromChat(
-                    chatRepo.findById(appointmentId)
-                            .orElseThrow(() -> new Exception("Chat is not created"))
-            );
+        if (auth.role.toLowerCase().contains("doctor")) {
+            final var appointment = appointmentService.getDoctorAppointment(headers, appointmentId);
+            createChatIfNotExists(appointmentId, auth.id, appointment.appointedUser.id);
+        } else if (auth.role.toLowerCase().contains("patient")) {
+            final var appointment = appointmentService.getPatientAppointment(headers, appointmentId);
+            createChatIfNotExists(appointmentId, auth.id, appointment.appointedUser.id);
         } else {
-            throw new Exception("Unauthorized");
+            throw new Exception("Unknown Role");
         }
+        return ChatResponse.fromChat(
+                chatRepo.findById(appointmentId)
+                        .orElseThrow(() -> new Exception("Chat is not created"))
+        );
     }
 
     public ChatResponse sendMessage(
@@ -70,6 +74,13 @@ public record ChatService(
             chat.setPatientUR(chat.getPatientUR() + 1);
         } else if (auth.role.toLowerCase().contains("patient")) {
             chat.setDoctorUR(chat.getDoctorUR() + 1);
+        } else {
+            throw new Exception("Role not found");
+        }
+        if (auth.role.toLowerCase().contains("doctor")) {
+            chat.setDoctorUR(0);
+        } else if (auth.role.toLowerCase().contains("patient")) {
+            chat.setPatientUR(0);
         } else {
             throw new Exception("Role not found");
         }
