@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
-
 class AddDoctorController extends GetxController {
   final name = ''.obs;
   final email = ''.obs;
@@ -18,7 +17,7 @@ class AddDoctorController extends GetxController {
   late final token;
 
   @override
-  void onInit() async{
+  void onInit() async {
     token = await FlutterSecureStorage().read(key: "token");
     super.onInit();
   }
@@ -39,40 +38,42 @@ class AddDoctorController extends GetxController {
 
   void passwordChanged(String n) => password.value = n;
 
-  bool validate(){
+  bool validate() {
     bool valid = true;
 
-    if (name.value.length < 4){
+    if (name.value.length < 4) {
       nameError.value = "Name should be at least 4";
       valid = false;
-    }else{
+    } else {
       nameError.value = null;
     }
 
-    if (password.value.length < 8 || password.value.length > 24){
+    if (password.value.length < 8 || password.value.length > 24) {
       passwordError.value = "Password length must be 8-24 characters";
       valid = false;
-    }else{
+    } else {
       passwordError.value = null;
     }
 
-    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email.value);
-    if (!emailValid){
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email.value);
+    if (!emailValid) {
       emailError.value = "Please input a valid email";
       valid = false;
-    } else{
+    } else {
       emailError.value = null;
     }
     return valid;
   }
 
-  void addDoctor() async{
-    if(!validate()) return;
+  void addDoctor() async {
+    if (!validate()) return;
     isLoading.value = true;
     await Future.delayed(const Duration(seconds: 1));
     isLoading.value = false;
 
-    var url = 'http://10.0.2.2:9000/api/v1';
+    var url = 'http://95.111.217.168:9000/api/v1';
 
     try {
       var response = await Dio().post('$url/app/admin/doctor', data: {
@@ -81,7 +82,7 @@ class AddDoctorController extends GetxController {
         'password': password.value,
       },options: Options(headers: {"Authorization": "Bearer $token"}));
       isLoading.value = false;
-      if (response.statusCode == 201){
+      if (response.statusCode == 201) {
         Get.back();
       } else {
         Get.dialog(AlertDialog(

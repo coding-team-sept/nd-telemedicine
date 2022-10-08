@@ -25,7 +25,7 @@ class AppointmentController extends GetxController {
   void getAppointment() async {
     isLoading.value = true;
     // Get doctors list from server
-    const url = 'http://10.0.2.2:9001/api/v1';
+    const url = 'http://95.111.217.168:9001/api/v1';
     try {
       final response = await Dio().get('$url/app/patient/appointment',
           options: Options(headers: {"Authorization": "Bearer $token"}));

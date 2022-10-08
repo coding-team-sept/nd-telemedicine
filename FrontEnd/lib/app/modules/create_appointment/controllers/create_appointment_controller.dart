@@ -43,7 +43,7 @@ class CreateAppointmentController extends GetxController {
   void getDoctors() async {
     isLoading.value = true;
     // Get doctors list from server
-    const url = 'http://10.0.2.2:9001/api/v1';
+    const url = 'http://95.111.217.168:9001/api/v1';
     final timestamp =
         '${date.value.year}-${date.value.month}-${date.value.day}_${time.value.hour}:${time.value.minute}';
     print(timestamp);
@@ -95,7 +95,7 @@ class CreateAppointmentController extends GetxController {
     isLoading.value = true;
     print("booking");
     // Get doctors list from server
-    const url = 'http://10.0.2.2:9001/api/v1';
+    const url = 'http://95.111.217.168:9001/api/v1';
     final timestamp =
         '${date.value.year}-${date.value.month}-${date.value.day}_${time.value.hour}:${time.value.minute}';
     try {
@@ -126,7 +126,7 @@ class CreateAppointmentController extends GetxController {
     isLoading.value = true;
     print("booking");
     // Get doctors list from server
-    const url = 'http://10.0.2.2:9001/api/v1';
+    const url = 'http://95.111.217.168:9001/api/v1';
     final timestamp =
         '${date.value.year}-${date.value.month}-${date.value.day}_${time.value.hour}:${time.value.minute}';
     try {

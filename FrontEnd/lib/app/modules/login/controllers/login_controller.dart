@@ -34,7 +34,7 @@ class LoginController extends GetxController {
     await Future.delayed(const Duration(seconds: 1));
 
     //send request to server
-    var url = "http://10.0.2.2:9000/api/v1";
+    var url = "http://95.111.217.168:9000/api/v1";
     try {
       var response = await Dio().post('$url/auth/login', data: {
         'email': email.value,
