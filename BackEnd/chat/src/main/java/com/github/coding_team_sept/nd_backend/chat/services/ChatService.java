@@ -13,9 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 
-
 @Service
-public record ChatServices(
+public record ChatService(
         ChatRepositories chatRepo,
         MessageRepositories msgRepo,
         AuthenticationService authService
@@ -31,6 +30,7 @@ public record ChatServices(
                     .doctorUR(0)
                     .lastMessageSid(0L)
                     .build();
+            chatRepo.save(chat);
         }
     }
 
@@ -39,12 +39,16 @@ public record ChatServices(
             Long appointmentId
     ) throws Exception {
         final var auth = authService.getAuthorization(headers);
-        // TODO: Check appointment id
-        createChatIfNotExists(appointmentId, auth.id, 100L);
-        return ChatResponse.fromChat(
-                chatRepo.findById(appointmentId)
-                        .orElseThrow(() -> new Exception(""))
-        );
+        if (auth.role.contains("doctor") || auth.role.contains("patient")) {
+            // TODO: Check appointment id
+            createChatIfNotExists(appointmentId, auth.id, 100L);
+            return ChatResponse.fromChat(
+                    chatRepo.findById(appointmentId)
+                            .orElseThrow(() -> new Exception("Chat is not created"))
+            );
+        } else {
+            throw new Exception("Unauthorized");
+        }
     }
 
     public ChatResponse sendMessage(
@@ -53,7 +57,7 @@ public record ChatServices(
     ) throws Exception {
         final var auth = authService.getAuthorization(headers);
         final var chat = chatRepo.findById(messageRequest.appointmentId())
-                .orElseThrow(() -> new Exception(""));
+                .orElseThrow(() -> new Exception("Chat does not exists"));
         final var newSid = chat.getLastMessageSid() + 1;
         final var message = Message.builder()
                 .sid(newSid)
@@ -67,7 +71,7 @@ public record ChatServices(
         } else if (auth.role.toLowerCase().contains("patient")) {
             chat.setDoctorUR(chat.getDoctorUR() + 1);
         } else {
-            throw new Exception("");
+            throw new Exception("Role not found");
         }
         chat.setLastMessageSid(newSid);
         return ChatResponse.fromChat(chatRepo.saveAndFlush(chat));
@@ -90,7 +94,7 @@ public record ChatServices(
     ) throws Exception {
         final var auth = authService.getAuthorization(headers);
         final var chat = chatRepo.findById(appointmentId)
-                .orElseThrow(() -> new Exception(""));
+                .orElseThrow(() -> new Exception("Chat does not exist"));
         List<MessageResponse> messages = List.of();
         if (!isAll) {
             final var sortedMessages = msgRepo.findAllByAppointmentId(appointmentId).stream()
@@ -114,7 +118,7 @@ public record ChatServices(
                 }
                 return getSortedMessages(sortedMessages, sid);
             } else {
-                throw new Exception("");
+                throw new Exception("Role not found");
             }
         } else {
             messages = msgRepo.findAllByAppointmentId(appointmentId).stream()
@@ -130,7 +134,7 @@ public record ChatServices(
         } else if (auth.role.toLowerCase().contains("patient")) {
             chat.setPatientUR(0);
         } else {
-            throw new Exception("");
+            throw new Exception("Role not found");
         }
         chatRepo.save(chat);
         return messages;
