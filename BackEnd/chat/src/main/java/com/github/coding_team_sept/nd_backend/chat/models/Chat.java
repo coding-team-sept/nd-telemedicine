@@ -18,7 +18,7 @@ public class Chat {
     private Long appointmentId;
     private Long patientId;
     private Long doctorId;
-    private Long patientRR;
-    private Long doctorRR;
-    private Long messageCount;
+    private Integer patientUR;
+    private Integer doctorUR;
+    private Long lastMessageSid;
 }

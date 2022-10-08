@@ -23,6 +23,7 @@ public class Message {
             generator = "chat_sequence_id"
     )
     private Long id;
+    private Long sid;
     private Long appointmentId;
     private Long senderId;
     private String message;
