@@ -92,7 +92,7 @@ public record ChatService(
 
     private List<MessageResponse> getSortedMessages(List<Message> sortedMessages, Long sid) {
         return sortedMessages.stream()
-                .filter(message -> message.getSid() > sid)
+                .filter(message -> message.getSid() >= sid)
                 .map(message -> new MessageResponse(
                         message.getId(),
                         message.getSenderId(),
@@ -113,23 +113,33 @@ public record ChatService(
             final var sortedMessages = msgRepo.findAllByAppointmentId(appointmentId).stream()
                     .sorted(Comparator.comparing(Message::getSid))
                     .toList();
-            Long sid = chat.getLastMessageSid();
+            Long sid = null;
             if (auth.role.toLowerCase().contains("doctor")) {
                 for (int i = sortedMessages.size() - 1, count = 0; i >= 0 && count < chat.getDoctorUR(); i--) {
                     if (!sortedMessages.get(i).getSenderId().equals(auth.id)) {
+                        if (sid == null) {
+                            sid = chat.getLastMessageSid();
+                        }
                         sid = sortedMessages.get(i).getSid();
                         count++;
                     }
                 }
-                messages = getSortedMessages(sortedMessages, sid);
+                if (sid != null) {
+                    messages = getSortedMessages(sortedMessages, sid);
+                }
             } else if (auth.role.toLowerCase().contains("patient")) {
                 for (int i = sortedMessages.size() - 1, count = 0; i >= 0 && count < chat.getPatientUR(); i--) {
                     if (!sortedMessages.get(i).getSenderId().equals(auth.id)) {
+                        if (sid == null) {
+                            sid = chat.getLastMessageSid();
+                        }
                         sid = sortedMessages.get(i).getSid();
                         count++;
                     }
                 }
-                messages = getSortedMessages(sortedMessages, sid);
+                if (sid != null) {
+                    messages = getSortedMessages(sortedMessages, sid);
+                }
             } else {
                 throw new Exception("Role not found");
             }
