@@ -52,7 +52,13 @@ class DoctorOnlineBookingController extends GetxController {
     isLoading.value = false;
   }
 
-  void showOnlinePatientAppointmentDetail(int id) {
-    Get.toNamed(Routes.CHAT);
+  void showOnlinePatientAppointmentDetail(int id, int patientId) {
+    Get.toNamed(Routes.CHAT, arguments: {
+      "isDoctor": true,
+      "appointmentID": id,
+      "token": token,
+      "patientID": patientId,
+      "doctorID": -999
+    });
   }
 }
