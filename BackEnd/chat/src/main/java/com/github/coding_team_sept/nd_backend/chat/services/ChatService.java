@@ -115,21 +115,21 @@ public record ChatService(
                     .toList();
             Long sid = chat.getLastMessageSid();
             if (auth.role.toLowerCase().contains("doctor")) {
-                for (int i = sortedMessages.size() - 1, count = 0; i > 0 && count > chat.getDoctorUR(); i++) {
-                    if (sortedMessages.get(i).getSenderId().equals(auth.id)) {
+                for (int i = sortedMessages.size() - 1, count = 0; i >= 0 && count < chat.getDoctorUR(); i--) {
+                    if (!sortedMessages.get(i).getSenderId().equals(auth.id)) {
                         sid = sortedMessages.get(i).getSid();
                         count++;
                     }
                 }
-                return getSortedMessages(sortedMessages, sid);
+                messages = getSortedMessages(sortedMessages, sid);
             } else if (auth.role.toLowerCase().contains("patient")) {
-                for (int i = sortedMessages.size() - 1, count = 0; i > 0 && count > chat.getPatientUR(); i++) {
-                    if (sortedMessages.get(i).getSenderId().equals(auth.id)) {
+                for (int i = sortedMessages.size() - 1, count = 0; i >= 0 && count < chat.getPatientUR(); i--) {
+                    if (!sortedMessages.get(i).getSenderId().equals(auth.id)) {
                         sid = sortedMessages.get(i).getSid();
                         count++;
                     }
                 }
-                return getSortedMessages(sortedMessages, sid);
+                messages = getSortedMessages(sortedMessages, sid);
             } else {
                 throw new Exception("Role not found");
             }
