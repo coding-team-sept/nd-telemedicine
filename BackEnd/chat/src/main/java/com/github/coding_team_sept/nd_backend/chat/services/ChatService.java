@@ -42,9 +42,11 @@ public record ChatService(
         final var auth = authService.getAuthorization(headers);
         if (auth.role.toLowerCase().contains("doctor")) {
             final var appointment = appointmentService.getDoctorAppointment(headers, appointmentId);
+            if (!appointment.session.toLowerCase().contains("online")) throw new Exception("Not an online session");
             createChatIfNotExists(appointmentId, auth.id, appointment.appointedUser.id);
         } else if (auth.role.toLowerCase().contains("patient")) {
             final var appointment = appointmentService.getPatientAppointment(headers, appointmentId);
+            if (!appointment.session.toLowerCase().contains("online")) throw new Exception("Not an online session");
             createChatIfNotExists(appointmentId, auth.id, appointment.appointedUser.id);
         } else {
             throw new Exception("Unknown Role");
