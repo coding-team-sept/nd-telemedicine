@@ -34,9 +34,10 @@ public record ChatController(
     @GetMapping("/chat/message/{appointmentId}")
     ResponseWrapper<MessagesResponse> getMessage(
             @RequestHeader HttpHeaders headers,
-            @PathVariable Long appointmentId
+            @PathVariable Long appointmentId,
+            @RequestParam(required = false, defaultValue = "true") Boolean isAll
     ) throws Exception {
-        final var response = chatService.getMessages(headers, appointmentId, true);
+        final var response = chatService.getMessages(headers, appointmentId, isAll);
         return ResponseWrapper.fromData(MessagesResponse.fromList(response));
     }
 }

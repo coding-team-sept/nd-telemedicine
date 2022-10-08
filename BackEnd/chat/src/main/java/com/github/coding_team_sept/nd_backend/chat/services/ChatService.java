@@ -26,7 +26,7 @@ public record ChatService(
             final var chat = Chat.builder()
                     .appointmentId(appointmentId)
                     .patientId(patientId)
-                    .doctorId(doctorId) // TODO: Get appointment doctor
+                    .doctorId(doctorId)
                     .patientUR(0)
                     .doctorUR(0)
                     .lastMessageSid(0L)
