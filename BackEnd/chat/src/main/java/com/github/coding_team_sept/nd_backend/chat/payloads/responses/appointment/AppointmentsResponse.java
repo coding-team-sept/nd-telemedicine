@@ -1,9 +1,9 @@
-package com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment;
+package com.github.coding_team_sept.nd_backend.chat.payloads.responses.appointment;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.DataResponse;
+import com.github.coding_team_sept.nd_backend.chat.payloads.responses.DataResponse;
 
 import java.util.List;
 

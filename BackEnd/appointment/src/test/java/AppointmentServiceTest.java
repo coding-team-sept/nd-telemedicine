@@ -378,7 +378,7 @@ public class AppointmentServiceTest {
         appointments.forEach(appointment -> mockGetMax(new DateTime(appointment.getAppointmentTime())));
 
         // Test
-        final var response = appointmentService.getPatientAppointment(headers);
+        final var response = appointmentService.getPatientAppointment(headers, null);
         Assertions.assertEquals(2, response.appointments.size());
         Assertions.assertTrue(response.appointments.stream().noneMatch(appointment -> appointment.id.equals(doctors.get(0).id)));
     }
@@ -430,7 +430,7 @@ public class AppointmentServiceTest {
         appointments.forEach(appointment -> mockGetMax(new DateTime(appointment.getAppointmentTime())));
 
         // Test
-        final var response = appointmentService.getDoctorAppointment(headers);
+        final var response = appointmentService.getDoctorAppointment(headers, null);
         Assertions.assertEquals(2, response.appointments.size());
         Assertions.assertTrue(response.appointments.stream().noneMatch(appointment -> appointment.id.equals(patients.get(0).id)));
     }
