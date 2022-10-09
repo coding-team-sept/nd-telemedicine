@@ -7,7 +7,7 @@ spring:
 
   datasource:
     username: 'admin'
-    url: jdbc:postgresql://localhost:5432/telemedic_appointment
+    url: jdbc:postgresql://db:5432/telemedic_appointment
     password: 'admin'
 
   jpa:
