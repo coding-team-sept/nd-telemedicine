@@ -3,15 +3,18 @@ all: run
 run: start
 
 start: docker-start app-package
-	make app-start -j2
+	make app-start -j3
 
-app-start: app-package app-start-authentication app-start-appointment
+app-start: app-package app-start-authentication app-start-appointment app-start-chat
 
 app-start-authentication:
 	java -jar ./authentication/target/authentication-0.0.0-alpha.1.jar
 
 app-start-appointment:
 	java -jar ./appointment/target/appointment-0.0.0-alpha.1.jar
+
+app-start-chat:
+	java -jar ./chat/target/chat-0.0.0-alpha.1.jar
 
 app-package:
 	mvn clean
