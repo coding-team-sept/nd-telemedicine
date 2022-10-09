@@ -18,7 +18,7 @@ app-start-chat:
 
 app-package:
 	mvn clean
-	mvn package spring-boot:repackage -Dmaven.test.skip
+	mvn package -Dmaven.test.skip
 
 docker-start:
 	docker compose up --detach --force-recreate
