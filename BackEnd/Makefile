@@ -2,23 +2,10 @@ all: run
 
 run: start
 
-start: docker-start app-package
-	make app-start -j3
+start: app-build-image docker-start
 
-app-start: app-package app-start-authentication app-start-appointment app-start-chat
-
-app-start-authentication:
-	java -jar ./authentication/target/authentication-0.0.0-alpha.1.jar
-
-app-start-appointment:
-	java -jar ./appointment/target/appointment-0.0.0-alpha.1.jar
-
-app-start-chat:
-	java -jar ./chat/target/chat-0.0.0-alpha.1.jar
-
-app-package:
-	mvn clean
-	mvn package spring-boot:repackage -Dmaven.test.skip
+app-build-image:
+	mvn clean install
 
 docker-start:
 	docker compose up --detach --force-recreate

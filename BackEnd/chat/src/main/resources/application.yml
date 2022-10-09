@@ -6,8 +6,8 @@ spring:
     name: chat
 
   datasource:
+    url: jdbc:postgresql://db:5432/telemedic_chat
     username: 'admin'
-    url: jdbc:postgresql://localhost:5432/telemedic_chat
     password: 'admin'
 
   jpa:
