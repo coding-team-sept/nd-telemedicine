@@ -12,28 +12,25 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public record AuthenticationService(
-        RestTemplate restTemplate
-) {
-    public static final String url = "http://localhost:9000/api/v1";
+    RestTemplate restTemplate) {
+  public static final String url = "http://authentication:9000/api/v1";
 
-    public ValidateResponse getAuthorization(
-            HttpHeaders headers
-    ) throws RestClientException {
-        try {
-            // Check "Authorization"
-            final var response = restTemplate.exchange(
-                    url + "/auth/validate",
-                    HttpMethod.GET,
-                    new HttpEntity<>(headers),
-                    ValidateResponse.class
-            );
+  public ValidateResponse getAuthorization(
+      HttpHeaders headers) throws RestClientException {
+    try {
+      // Check "Authorization"
+      final var response = restTemplate.exchange(
+          url + "/auth/validate",
+          HttpMethod.GET,
+          new HttpEntity<>(headers),
+          ValidateResponse.class);
 
-            if (response.getBody() != null) {
-                return response.getBody();
-            }
-            throw RestClientException.build(HttpStatus.INTERNAL_SERVER_ERROR, "Empty response body");
-        } catch (RestClientResponseException e) {
-            throw RestClientException.fromRestClientResponseException(e);
-        }
+      if (response.getBody() != null) {
+        return response.getBody();
+      }
+      throw RestClientException.build(HttpStatus.INTERNAL_SERVER_ERROR, "Empty response body");
+    } catch (RestClientResponseException e) {
+      throw RestClientException.fromRestClientResponseException(e);
     }
+  }
 }

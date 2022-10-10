@@ -21,8 +21,6 @@ services:
       - db
     container_name: pgadmin
     restart: always
-    ports:
-      - "9090:80"
     volumes:
       - pgadmin:/var/lib/pgadmin
     networks:
@@ -31,8 +29,11 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_CONFIG_SERVER_MODE: 'False'
-  nd-authentication:
-    image: nd-authentication:latest
+  authentication:
+    build: 
+      context: ./authentication/
+      args:
+        JAR_FILE: "target/authentication-0.0.0-alpha.1.jar"
     depends_on:
       - db
     container_name: nd-authentication
@@ -41,8 +42,11 @@ services:
       - "9000:9000"
     networks:
       - local-service
-  nd-appointment:
-    image: nd-appointment:latest
+  appointment:
+    build: 
+      context: ./appointment/
+      args:
+        JAR_FILE: "target/appointment-0.0.0-alpha.1.jar"
     depends_on:
       - db
     container_name: nd-appointment
@@ -51,8 +55,11 @@ services:
       - "9001:9001"
     networks:
       - local-service
-  nd-chat:
-    image: nd-chat:latest
+  chat:
+    build: 
+      context: ./chat/
+      args:
+        JAR_FILE: "target/chat-0.0.0-alpha.1.jar"
     depends_on:
       - db
     container_name: nd-chat
@@ -61,6 +68,17 @@ services:
       - "9002:9002"
     networks:
       - local-service
+  reverseproxy:
+    build: ./nginx/
+    depends_on:
+      - chat
+      - appointment
+      - authentication
+    ports:
+        - 80:80
+    networks:
+      - local-service
+    restart: always
 
 networks:
   admin:

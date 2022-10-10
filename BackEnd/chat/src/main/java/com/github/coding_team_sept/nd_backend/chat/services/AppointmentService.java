@@ -17,63 +17,58 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public record AppointmentService(
-        RestTemplate restTemplate
-) {
-    public static final String url = "http://localhost:9001/api/v1";
+    RestTemplate restTemplate) {
+  public static final String url = "http://appointment:9001/api/v1";
 
-    public DoctorAppointmentResponse getDoctorAppointment(
-            HttpHeaders headers,
-            Long id
-    ) throws RestClientException {
-        String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/doctor/appointment")
-                .queryParam("id", id)
-                .encode()
-                .toUriString();
+  public DoctorAppointmentResponse getDoctorAppointment(
+      HttpHeaders headers,
+      Long id) throws RestClientException {
+    String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/doctor/appointment")
+        .queryParam("id", id)
+        .encode()
+        .toUriString();
 
-        try {
-            // Check "Authorization"
-            final var response = restTemplate.exchange(
-                    uri,
-                    HttpMethod.GET,
-                    new HttpEntity<>(headers),
-                    new ParameterizedTypeReference<ResponseWrapper<AppointmentsResponse<DoctorAppointmentResponse>>>() {
-                    }
-            );
+    try {
+      // Check "Authorization"
+      final var response = restTemplate.exchange(
+          uri,
+          HttpMethod.GET,
+          new HttpEntity<>(headers),
+          new ParameterizedTypeReference<ResponseWrapper<AppointmentsResponse<DoctorAppointmentResponse>>>() {
+          });
 
-            if (response.getBody() != null) {
-                return response.getBody().data.appointments.get(0);
-            }
-            throw RestClientException.build(HttpStatus.INTERNAL_SERVER_ERROR, "Empty response body");
-        } catch (RestClientResponseException e) {
-            throw RestClientException.fromRestClientResponseException(e);
-        }
+      if (response.getBody() != null) {
+        return response.getBody().data.appointments.get(0);
+      }
+      throw RestClientException.build(HttpStatus.INTERNAL_SERVER_ERROR, "Empty response body");
+    } catch (RestClientResponseException e) {
+      throw RestClientException.fromRestClientResponseException(e);
     }
+  }
 
-    public PatientAppointmentResponse getPatientAppointment(
-            HttpHeaders headers,
-            Long id
-    ) throws RestClientException {
-        String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/patient/appointment")
-                .queryParam("id", id)
-                .encode()
-                .toUriString();
+  public PatientAppointmentResponse getPatientAppointment(
+      HttpHeaders headers,
+      Long id) throws RestClientException {
+    String uri = UriComponentsBuilder.fromHttpUrl(url + "/app/patient/appointment")
+        .queryParam("id", id)
+        .encode()
+        .toUriString();
 
-        try {
-            // Check "Authorization"
-            final var response = restTemplate.exchange(
-                    uri,
-                    HttpMethod.GET,
-                    new HttpEntity<>(headers),
-                    new ParameterizedTypeReference<ResponseWrapper<AppointmentsResponse<PatientAppointmentResponse>>>() {
-                    }
-            );
+    try {
+      // Check "Authorization"
+      final var response = restTemplate.exchange(
+          uri,
+          HttpMethod.GET,
+          new HttpEntity<>(headers),
+          new ParameterizedTypeReference<ResponseWrapper<AppointmentsResponse<PatientAppointmentResponse>>>() {
+          });
 
-            if (response.getBody() != null) {
-                return response.getBody().data.appointments.get(0);
-            }
-            throw RestClientException.build(HttpStatus.INTERNAL_SERVER_ERROR, "Empty response body");
-        } catch (RestClientResponseException e) {
-            throw RestClientException.fromRestClientResponseException(e);
-        }
+      if (response.getBody() != null) {
+        return response.getBody().data.appointments.get(0);
+      }
+      throw RestClientException.build(HttpStatus.INTERNAL_SERVER_ERROR, "Empty response body");
+    } catch (RestClientResponseException e) {
+      throw RestClientException.fromRestClientResponseException(e);
     }
+  }
 }
