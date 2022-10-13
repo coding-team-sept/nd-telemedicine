@@ -1,6 +1,7 @@
-package com.github.coding_team_sept.nd_backend.authentication.utils;
+package com.github.coding_team_sept.nd_backend.authentication.components;
 
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserDetailsService;
+import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,7 @@ package com.github.coding_team_sept.nd_backend.authentication.configurations;
 import com.github.coding_team_sept.nd_backend.authentication.components.AuthenticationEntryPointJwt;
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
 import com.github.coding_team_sept.nd_backend.authentication.services.AppUserDetailsService;
-import com.github.coding_team_sept.nd_backend.authentication.utils.JwtRequestFilter;
+import com.github.coding_team_sept.nd_backend.authentication.components.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
