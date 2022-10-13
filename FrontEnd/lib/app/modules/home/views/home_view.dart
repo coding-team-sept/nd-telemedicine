@@ -63,6 +63,10 @@ class HomeView extends GetView<HomeController> {
       OfflineDoctorBookingView(),
       DoctorOnlineBookingView(),
     ];
+     var emptyContent = [
+      Container(),
+      Container(),
+    ];
     Get.put(DashboardController());
 
     return DefaultTabController(
@@ -78,6 +82,7 @@ class HomeView extends GetView<HomeController> {
                   controller.role.value == "patient")
                 ...patientTabBar,
               if (controller.role.value == "ROLE_DOCTOR") ...doctorTabBar,
+              if(controller.role.value == null) ...doctorTabBar,
               const Tab(
                 icon: Icon(Icons.account_circle),
                 text: "Profile",
@@ -90,6 +95,7 @@ class HomeView extends GetView<HomeController> {
               ...patientContent,
             if (controller.role.value == "ROLE_ADMIN") ...adminContent,
             if (controller.role.value == "ROLE_DOCTOR") ...doctorContent,
+            if(controller.role.value == null) ...emptyContent,
             const ProfileView(),
           ]),
         ),
