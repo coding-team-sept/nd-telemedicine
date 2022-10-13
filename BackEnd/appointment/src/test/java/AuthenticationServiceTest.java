@@ -36,7 +36,7 @@ public class AuthenticationServiceTest {
         final var expectedResponse = new ValidateResponse(1L, "ROLE_PATIENT");
         final var header = new HttpHeaders();
         Mockito.when(restTemplate.exchange(
-                "http://localhost:9000/api/v1/auth/validate",
+                AuthenticationService.url + "/auth/validate",
                 HttpMethod.GET,
                 new HttpEntity<>(header),
                 ValidateResponse.class
@@ -58,7 +58,7 @@ public class AuthenticationServiceTest {
                 )
         );
         Mockito.when(restTemplate.exchange(
-                "http://localhost:9000/api/v1/app/admin/doctor",
+                AuthenticationService.url + "/app/admin/doctor",
                 HttpMethod.GET,
                 new HttpEntity<>(header),
                 new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
@@ -87,7 +87,7 @@ public class AuthenticationServiceTest {
                 )
         );
         Mockito.when(restTemplate.exchange(
-                "http://localhost:9000/api/v1/app/admin/patient",
+                AuthenticationService.url + "/app/admin/patient",
                 HttpMethod.GET,
                 new HttpEntity<>(header),
                 new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
@@ -120,8 +120,9 @@ public class AuthenticationServiceTest {
                 .map(userDataResponse -> userDataResponse.id)
                 .toList();
 
-        final var uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9000/api/v1/app/admin/doctor")
-                .queryParam("ids", ids)
+        final var uri = UriComponentsBuilder.fromHttpUrl(
+                        AuthenticationService.url + "/app/admin/doctor"
+                ).queryParam("ids", ids)
                 .encode()
                 .toUriString();
 
@@ -164,7 +165,7 @@ public class AuthenticationServiceTest {
                 .map(userDataResponse -> userDataResponse.id)
                 .toList();
 
-        final var uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9000/api/v1/app/admin/patient")
+        final var uri = UriComponentsBuilder.fromHttpUrl(AuthenticationService.url + "/app/admin/patient")
                 .queryParam("ids", ids)
                 .encode()
                 .toUriString();
