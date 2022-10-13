@@ -18,13 +18,13 @@ import org.mockito.quality.Strictness;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class ScheduleServiceTest {
     @Mock
-    AppointmentRepository appointmentRepo;
+    private AppointmentRepository appointmentRepo;
 
     @Mock
-    AppointmentDateTimeUtils datetimeUtils;
+    private AppointmentDateTimeUtils datetimeUtils;
 
     @InjectMocks
-    ScheduleService scheduleService;
+    private ScheduleService scheduleService;
 
     @Test
     public void testValidateAppointmentDateTimeWithValidDateTime() {

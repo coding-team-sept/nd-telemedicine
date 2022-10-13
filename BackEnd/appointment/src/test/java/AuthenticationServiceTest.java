@@ -22,8 +22,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
-// TODO: Investigate the following problem:
-//  java.lang.NullPointerException: Cannot invoke "org.springframework.web.client.RestTemplate.exchange(String, org.springframework.http.HttpMethod, org.springframework.http.HttpEntity, org.springframework.core.ParameterizedTypeReference, Object[])" because "this.restTemplate" is null at AuthenticationServiceTest.test...
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AuthenticationServiceTest {
@@ -34,7 +32,7 @@ public class AuthenticationServiceTest {
     private AuthenticationService authenticationService;
 
     @Test
-    void testGetAuthorizationService() {
+    public void testGetAuthorizationService() {
         final var expectedResponse = new ValidateResponse(1L, "ROLE_PATIENT");
         final var header = new HttpHeaders();
         Mockito.when(restTemplate.exchange(
@@ -50,7 +48,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    void testGetAllDoctorUsers() {
+    public void testGetAllDoctorUsers() {
         final var header = new HttpHeaders();
         final var expectedResponse = UsersDataResponse.build(
                 List.of(
@@ -79,7 +77,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    void testGetAllPatientUsers() {
+    public void testGetAllPatientUsers() {
         final var header = new HttpHeaders();
         final var expectedResponse = UsersDataResponse.build(
                 List.of(
@@ -108,7 +106,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    void testGetDoctorUsersBasedOnId() {
+    public void testGetDoctorUsersBasedOnId() {
         final var header = new HttpHeaders();
         final var expectedResponse = UsersDataResponse.build(
                 List.of(
@@ -152,7 +150,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    void testGetPatientUsersBasedOnId() {
+    public void testGetPatientUsersBasedOnId() {
         final var header = new HttpHeaders();
         final var expectedResponse = UsersDataResponse.build(
                 List.of(
