@@ -18,16 +18,16 @@ import org.mockito.quality.Strictness;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class ScheduleServiceTest {
     @Mock
-    AppointmentRepository appointmentRepo;
+    private AppointmentRepository appointmentRepo;
 
     @Mock
-    AppointmentDateTimeUtils datetimeUtils;
+    private AppointmentDateTimeUtils datetimeUtils;
 
     @InjectMocks
-    ScheduleService scheduleService;
+    private ScheduleService scheduleService;
 
     @Test
-    void testValidateAppointmentDateTimeWithValidDateTime() {
+    public void testValidateAppointmentDateTimeWithValidDateTime() {
         final var datetime = DateTime.now()
                 .plusDays(1)
                 .withTime(ScheduleService.openTime.plusHours(1));
@@ -37,7 +37,7 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    void testValidateAppointmentDateTimeWithInvalidDateTime() {
+    public void testValidateAppointmentDateTimeWithInvalidDateTime() {
         // Past datetime
         final var datetime1 = DateTime.now()
                 .minusDays(1)
@@ -79,7 +79,7 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    void testCheckPatientAvailability() {
+    public void testCheckPatientAvailability() {
         final var patientId = 0L;
         final var appointmentDatetime = DateTime.now()
                 .withTime(ScheduleService.openTime.plusHours(1));
@@ -112,7 +112,7 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    void testCheckDoctorAvailability() {
+    public void testCheckDoctorAvailability() {
         final var doctorId = 0L;
         final var appointmentDatetime = DateTime.now()
                 .withTime(ScheduleService.openTime.plusHours(1));

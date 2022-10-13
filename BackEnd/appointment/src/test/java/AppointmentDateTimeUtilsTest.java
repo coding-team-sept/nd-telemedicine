@@ -10,7 +10,7 @@ public class AppointmentDateTimeUtilsTest {
     AppointmentDateTimeUtils datetimeUtils = new AppointmentDateTimeUtils();
 
     @Test
-    void testParseValidDateTime() {
+    public void testParseValidDateTime() {
         final var parsedDatetime = datetimeUtils.parseString(
                 datetime.get(0).toString() + "-"
                         + datetime.get(1).toString() + "-"
@@ -27,7 +27,7 @@ public class AppointmentDateTimeUtilsTest {
     }
 
     @Test
-    void testParseInvalidDateTime() {
+    public void testParseInvalidDateTime() {
         final String wrongMonthDatetime = "2022-13-32_25:61";
         var thrown = Assertions.assertThrows(
                 IllegalFieldValueException.class,
@@ -58,7 +58,7 @@ public class AppointmentDateTimeUtilsTest {
     }
 
     @Test
-    void testGetMinDate() {
+    public void testGetMinDate() {
         final var parsedDatetime = datetimeUtils.parseString("2022-06-15_12:30");
         final var expectedMinDatetime = parsedDatetime.minusMinutes(AppointmentDateTimeUtils.intervalInMinutes);
         final var minDatetime = datetimeUtils.getMin(parsedDatetime);
@@ -70,7 +70,7 @@ public class AppointmentDateTimeUtilsTest {
     }
 
     @Test
-    void testGetMaxDate() {
+    public void testGetMaxDate() {
         final var parsedDatetime = datetimeUtils.parseString("2022-06-15_12:30");
         final var expectedMaxDatetime = parsedDatetime.plusMinutes(AppointmentDateTimeUtils.intervalInMinutes);
         final var maxDatetime = datetimeUtils.getMax(parsedDatetime);
