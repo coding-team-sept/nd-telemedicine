@@ -3,15 +3,17 @@ import 'package:nd/app/modules/home/model/online_patient_appointment_model.dart'
 
 class OnlinePatientAppointmentTile extends StatelessWidget {
   final OnlinePatientAppointmentModel data;
-  final Function(int) tapCallback;
-  const OnlinePatientAppointmentTile(this.data, this.tapCallback, {key}) : super(key: key);
+  const OnlinePatientAppointmentTile(this.data, this.tapCallback, {key})
+      : super(key: key);
+  final Function(int, int) tapCallback;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () => tapCallback(data.id),
+      onTap: () => tapCallback(data.id, data.patientId),
       title: Text("${data.patientName}"),
       subtitle: Text(data.datetime),
     );
   }
 }
+

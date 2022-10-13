@@ -16,8 +16,8 @@ class HomeBinding extends Bindings {
       DoctorOnlineBookingController(),
     );
 
-    Get.put<OfflineDoctorBookingController>(
-      OfflineDoctorBookingController(),
+    Get.lazyPut<OfflineDoctorBookingController>(
+      () => OfflineDoctorBookingController(),
     );
     Get.lazyPut<AdminManagerController>(
       () => AdminManagerController(),

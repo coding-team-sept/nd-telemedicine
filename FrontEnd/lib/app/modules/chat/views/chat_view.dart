@@ -15,11 +15,17 @@ class ChatView extends GetView<ChatController> {
           centerTitle: true,
         ),
         body: Obx(
-          () => Chat(
-            user: controller.user,
-            messages: controller.messages.value,
-            onSendPressed: controller.handleSendPressed,
-          ),
+          () => controller.isLoading.value
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Chat(
+                  user: controller.isDoctor
+                      ? controller.doctorUser
+                      : controller.patientUser,
+                  messages: controller.messages.value,
+                  onSendPressed: controller.handleSendPressed,
+                ),
         ));
   }
 }
