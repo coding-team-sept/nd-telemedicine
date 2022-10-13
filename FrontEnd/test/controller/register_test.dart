@@ -1,9 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:http_mock_adapter/http_mock_adapter.dart';
+import 'package:nd/app/data/const.dart';
 import 'package:nd/app/modules/register/controllers/register_controller.dart';
-import 'package:nd/app/modules/register/views/register_view.dart';
-import 'package:nock/nock.dart';
+import 'package:nd/app/routes/app_pages.dart';
 
 void main() {
   group("Register Controller Unit Testing", () {
@@ -157,36 +159,20 @@ void main() {
       expect(controller.confirmPasswordError.value,
           'Please input a non-empty value');
     });
-
-    //test("Test successful login", () async {
-    //WidgetsFlutterBinding.ensureInitialized();
-    //nock('http://10.0.2.2:9000/api/v1/register').post('/').reply(201, {
-    //'data': {
-    //'token': {'token': 'fasfsafsdafasfas'}
-    //}
-    //});
-    //controller.onNameChange("raveltan");
-    //controller.onEmailChange("ravel@ravel.com");
-    //controller.onPasswordChange("jokojokojoko");
-    //controller.onConfirmPasswordChange("jokojokojoko");
-    //try {
-    //controller.signUp();
-    //} catch (_) {}
-    //await Future.delayed(const Duration(milliseconds: 500));
-    //expect(controller.isLoading.value, true);
-    //});
   });
+
   group("Widget testing", () {
     late RegisterController c;
     late GetMaterialApp v;
-
-    setUpAll(nock.init);
+    final dio = Dio();
+    final dioAdapter = DioAdapter(dio: dio);
 
     setUp(() {
-      nock.cleanAll();
-      c = RegisterController();
-      v = const GetMaterialApp(
-        home: RegisterView(),
+      dio.httpClientAdapter = dioAdapter;
+      c = RegisterController(dio: dio, testMode: true);
+      v = GetMaterialApp(
+        initialRoute: Routes.REGISTER,
+        getPages: AppPages.routes,
       );
       Get.reset();
       Get.testMode = true;
@@ -196,21 +182,75 @@ void main() {
     tearDown(() {
       Get.reset();
     });
+    testWidgets("Testing if application show error if there is duplicate user",
+            (t) async {
+          dioAdapter.onPost("${C.url}/auth/register", (server) {
+            server.reply(
+                500,
+                {
+                  "message": "Email has been taken"
+                },
+                delay: const Duration(seconds: 1));
+          }, data:
+          {
+            "name": "Patient",
+            "email": "patient@patient.com",
+            "password": "patient123"
+          }
+          );
+          await t.pumpWidget(v);
+          var textFields = find.byType(TextField);
+          await t.enterText(textFields.at(0), "Patient");
+          await t.enterText(textFields.at(1), "patient@patient.com");
+          await t.enterText(textFields.at(2), "patient123");
+          await t.enterText(textFields.at(3), "patient123");
+          var registerButton = find.byType(ElevatedButton);
+          await t.tap(registerButton);
+          await t.pump(const Duration(milliseconds: 500));
+          expect(c.isLoading.value, true);
+          await t.pump(const Duration(seconds: 2));
+          expect(c.isLoading.value, false);
+          expect(Get.currentRoute, Routes.REGISTER);
+          var errorDialog = find.byType(AlertDialog);
+          expect(errorDialog, findsOneWidget);
+          var errorDialogWidget = errorDialog.evaluate().elementAt(0).widget as AlertDialog;
+          expect((errorDialogWidget.title as Text).data, "Error");
+          expect((errorDialogWidget.content as Text).data, "Email has been taken");
+        });
 
     testWidgets("Testing if application can register data successfully",
         (t) async {
-      nock('http://10.0.2.2:9000/api/v1/register').post('/').reply(201, null);
+          dioAdapter.onPost("${C.url}/auth/register", (server) {
+            server.reply(
+                201,
+                {
+                  "data": {
+                    "token": {
+                      "access": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjo1MywiZXhwIjoxNjk2MTcxNTUyLCJpYXQiOjE2NjQ3MjE5NTJ9.KhPVpMNoATNlXomuRZOsQcfgL1_uVGCDvXvwk3znHrk"
+                    }
+                  }
+                },
+                delay: const Duration(seconds: 1));
+          }, data:
+          {
+            "name": "Patient",
+            "email": "patient@patient.com",
+            "password": "patient123"
+          }
+          );
       await t.pumpWidget(v);
       var textFields = find.byType(TextField);
-      await t.enterText(textFields.at(0), "budi budi budi");
-      await t.enterText(textFields.at(1), "butdi@fads.com");
-      await t.enterText(textFields.at(2), "fsdfsadfsd@fads.com");
-      await t.enterText(textFields.at(3), "fsdfsadfsd@fads.com");
+      await t.enterText(textFields.at(0), "Patient");
+      await t.enterText(textFields.at(1), "patient@patient.com");
+      await t.enterText(textFields.at(2), "patient123");
+      await t.enterText(textFields.at(3), "patient123");
       var registerButton = find.byType(ElevatedButton);
       await t.tap(registerButton);
       await t.pump(const Duration(milliseconds: 500));
       expect(c.isLoading.value, true);
-      await t.pump(const Duration(seconds: 3));
+      await t.pump(const Duration(seconds: 2));
+      expect(c.isLoading.value, false);
+      expect(Get.currentRoute, Routes.HOME);
     });
 
     testWidgets(

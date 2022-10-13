@@ -24,6 +24,10 @@ class RegisterController extends GetxController {
   final showConfirmPassword = true.obs;
 
   final isLoading = false.obs;
+  final bool testMode;
+  final Dio dio;
+
+  RegisterController({bool? testMode, Dio? dio}) : testMode= testMode ?? false, dio = dio ?? Dio();
 
   void toggleShowPassword() {
     showPassword.value = !showPassword.value;
@@ -39,18 +43,20 @@ class RegisterController extends GetxController {
     //send request to server
 
     try {
-      var response = await Dio().post('${C.url}/auth/register', data: {
+      var response = await dio.post('${C.url}/auth/register', data: {
         'name': fullName.value,
         'email': email.value,
         'password': password.value,
       });
       isLoading.value = false;
       if (response.statusCode == 201) {
-        const storage = FlutterSecureStorage();
-        await storage.write(
-            key: 'token', value: response.data['data']['token']['access']);
-        await storage.write(key: 'role', value: 'patient');
-        await storage.write(key: 'email', value: email.value);
+        if(!testMode){
+          const storage = FlutterSecureStorage();
+          await storage.write(
+              key: 'token', value: response.data['data']['token']['access']);
+          await storage.write(key: 'role', value: 'patient');
+          await storage.write(key: 'email', value: email.value);
+        }
         Get.offNamedUntil(Routes.HOME, (route) => false);
       } else {
         Get.dialog(AlertDialog(
