@@ -355,7 +355,7 @@ public class AppointmentServiceTest {
                         .doctorId(doctor.id)
                         .appointmentTime(
                                 (doctor.id.equals(doctors.get(0).id))
-                                        ? appointmentDatetime.minusDays(1).toDate()
+                                        ? appointmentDatetime.minusDays(2).toDate()
                                         : appointmentDatetime.plusDays(doctor.id.intValue() % 100).toDate()
                         ).session(getSession(SessionType.OFFLINE))
                         .build()
@@ -407,7 +407,7 @@ public class AppointmentServiceTest {
                         .doctorId(doctorValidation.id)
                         .appointmentTime(
                                 (patient.id.equals(patients.get(0).id))
-                                        ? appointmentDatetime.minusDays(1).toDate()
+                                        ? appointmentDatetime.minusDays(2).toDate()
                                         : appointmentDatetime.plusDays(patient.id.intValue()).toDate()
                         ).session(getSession(SessionType.OFFLINE))
                         .build()
