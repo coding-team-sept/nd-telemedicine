@@ -130,12 +130,18 @@ public record AppointmentService(
     }
 
     public AppointmentsResponse<PatientAppointmentResponse> getPatientAppointment(
-            HttpHeaders headers
+            HttpHeaders headers,
+            Long id
     ) throws RestClientException, UnauthorizedException {
         final var validation = authService.getAuthorization(headers);
         final var role = validation.role.toLowerCase();
         if (role.contains("patient")) {
-            final var appointments = appointmentRepo.getAppointmentByPatientId(validation.id);
+            List<Appointment> appointments = List.of();
+            if (id != null) {
+                appointments = List.of(appointmentRepo.getById(id));
+            } else {
+                appointments = appointmentRepo.getAppointmentByPatientId(validation.id);
+            }
             final var doctorsId = appointments.stream()
                     .map(Appointment::getDoctorId)
                     .distinct()
@@ -157,7 +163,7 @@ public record AppointmentService(
                                     ).findAny()
                                     .orElse(null),
                             appointment.getAppointmentTime().toString(),
-                            appointment.getSession().getName()
+                            appointment.getSession().getName().name()
                     )).filter(
                             appointment -> appointment.appointedUser != null
                     ).toList());
@@ -166,12 +172,18 @@ public record AppointmentService(
     }
 
     public AppointmentsResponse<DoctorAppointmentResponse> getDoctorAppointment(
-            HttpHeaders headers
+            HttpHeaders headers,
+            Long id
     ) throws RestClientException, UnauthorizedException {
         final var validation = authService.getAuthorization(headers);
         final var role = validation.role.toLowerCase();
         if (role.contains("doctor")) {
-            final var appointments = appointmentRepo.getAppointmentByDoctorId(validation.id);
+            List<Appointment> appointments = List.of();
+            if (id != null) {
+                appointments = List.of(appointmentRepo.getById(id));
+            } else {
+                appointments = appointmentRepo.getAppointmentByDoctorId(validation.id);
+            }
             final var patientsId = appointments.stream()
                     .map(Appointment::getPatientId)
                     .distinct()
@@ -193,7 +205,7 @@ public record AppointmentService(
                                     ).findAny()
                                     .orElse(null),
                             appointment.getAppointmentTime().toString(),
-                            appointment.getSession().getName()
+                            appointment.getSession().getName().name()
                     )).filter(
                             appointment -> appointment.appointedUser != null
                     ).toList());

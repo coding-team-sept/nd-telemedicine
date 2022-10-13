@@ -1,0 +1,21 @@
+server:
+  port: 9002
+
+spring:
+  application:
+    name: chat
+
+  datasource:
+    url: jdbc:postgresql://db:5432/telemedic_chat
+    username: 'admin'
+    password: 'admin'
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+
