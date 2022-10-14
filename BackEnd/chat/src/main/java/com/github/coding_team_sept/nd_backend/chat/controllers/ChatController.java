@@ -22,12 +22,13 @@ public record ChatController(
         return ResponseWrapper.fromData(response);
     }
 
-    @PostMapping("/chat/message")
+    @PostMapping("/chat/message/{appointmentId}")
     ResponseWrapper<ChatResponse> sendMessage(
             @RequestHeader HttpHeaders headers,
+            @PathVariable Long appointmentId,
             @RequestBody MessageRequest messageRequest
     ) throws Exception {
-        final var response = chatService.sendMessage(headers, messageRequest);
+        final var response = chatService.sendMessage(headers, appointmentId, messageRequest);
         return ResponseWrapper.fromData(response);
     }
 

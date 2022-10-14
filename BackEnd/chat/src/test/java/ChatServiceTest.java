@@ -176,12 +176,11 @@ public class ChatServiceTest {
                 .lastMessageSid(0L)
                 .build();
         final var fakeMessageRequest = new MessageRequest(
-                fakeChat.getAppointmentId(),
                 "Hello"
         );
         final var fakeMessage = Message.builder()
                 .sid(fakeChat.getLastMessageSid() + 1)
-                .appointmentId(fakeMessageRequest.appointmentId())
+                .appointmentId(fakeChat.getAppointmentId())
                 .senderId(fakeValidateResponse.id)
                 .message(fakeMessageRequest.message())
                 .build();
@@ -194,6 +193,7 @@ public class ChatServiceTest {
         Assertions.assertDoesNotThrow(
                 () -> chatService.sendMessage(
                         new HttpHeaders(),
+                        fakeChat.getAppointmentId(),
                         fakeMessageRequest
                 )
         );
