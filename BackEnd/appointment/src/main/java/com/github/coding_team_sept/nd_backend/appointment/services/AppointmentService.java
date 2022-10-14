@@ -6,6 +6,7 @@ import com.github.coding_team_sept.nd_backend.appointment.exceptions.format_exce
 import com.github.coding_team_sept.nd_backend.appointment.models.Appointment;
 import com.github.coding_team_sept.nd_backend.appointment.models.AppointmentSession;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.requests.AppointmentRequest;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.ChatResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UserDataResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UsersDataResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.AppointmentsResponse;
@@ -25,6 +26,7 @@ import java.util.List;
 public record AppointmentService(
         AuthenticationService authService,
         ScheduleService scheduleService,
+        ChatService chatService,
         AppointmentRepository appointmentRepo,
         SessionRepository sessionRepo,
         AppointmentDateTimeUtils datetimeUtils
@@ -121,11 +123,22 @@ public record AppointmentService(
                         .session(session)
                         .build()
         );
+
+        // Create and get chat status
+        ChatResponse chatStatus;
+        try {
+            chatStatus = chatService.getChatStatus(headers, appointment.getId());
+        } catch (RestClientException e) {
+            System.out.println(e.message);
+            chatStatus = new ChatResponse(0, 0);
+        }
+
         return PatientAppointmentResponse.build(
                 appointment.getId(),
                 doctorResponse,
                 body.datetime(),
-                appointment.getSession().getName()
+                appointment.getSession().getName(),
+                chatStatus
         );
     }
 
@@ -155,16 +168,26 @@ public record AppointmentService(
                             ).isAfter(DateTime.now())
                     ).sorted(
                             Comparator.comparing(Appointment::getAppointmentTime)
-                    ).map(appointment -> new PatientAppointmentResponse(
-                            appointment.getId(),
-                            doctors.users.stream()
-                                    .filter(
-                                            doctor -> doctor.id.equals(appointment.getDoctorId())
-                                    ).findAny()
-                                    .orElse(null),
-                            appointment.getAppointmentTime().toString(),
-                            appointment.getSession().getName().name()
-                    )).filter(
+                    ).map(appointment -> {
+                        ChatResponse chatStatus;
+                        try {
+                            chatStatus = chatService.getChatStatus(headers, appointment.getId());
+                        } catch (RestClientException e) {
+                            System.out.println(e.message);
+                            chatStatus = new ChatResponse(0, 0);
+                        }
+                        return new PatientAppointmentResponse(
+                                appointment.getId(),
+                                doctors.users.stream()
+                                        .filter(
+                                                doctor -> doctor.id.equals(appointment.getDoctorId())
+                                        ).findAny()
+                                        .orElse(null),
+                                appointment.getAppointmentTime().toString(),
+                                appointment.getSession().getName().name(),
+                                chatStatus
+                        );
+                    }).filter(
                             appointment -> appointment.appointedUser != null
                     ).toList());
         }
@@ -197,16 +220,26 @@ public record AppointmentService(
                             ).isAfter(DateTime.now())
                     ).sorted(
                             Comparator.comparing(Appointment::getAppointmentTime)
-                    ).map(appointment -> new DoctorAppointmentResponse(
-                            appointment.getId(),
-                            patients.users.stream()
-                                    .filter(
-                                            patient -> patient.id.equals(appointment.getPatientId())
-                                    ).findAny()
-                                    .orElse(null),
-                            appointment.getAppointmentTime().toString(),
-                            appointment.getSession().getName().name()
-                    )).filter(
+                    ).map(appointment -> {
+                        ChatResponse chatStatus;
+                        try {
+                            chatStatus = chatService.getChatStatus(headers, appointment.getId());
+                        } catch (RestClientException e) {
+                            System.out.println(e.message);
+                            chatStatus = new ChatResponse(0, 0);
+                        }
+                        return new DoctorAppointmentResponse(
+                                appointment.getId(),
+                                patients.users.stream()
+                                        .filter(
+                                                patient -> patient.id.equals(appointment.getPatientId())
+                                        ).findAny()
+                                        .orElse(null),
+                                appointment.getAppointmentTime().toString(),
+                                appointment.getSession().getName().name(),
+                                chatStatus
+                        );
+                    }).filter(
                             appointment -> appointment.appointedUser != null
                     ).toList());
         }
