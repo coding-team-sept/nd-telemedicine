@@ -18,7 +18,7 @@ public record ChatService(
 ) {
     public static final String url = "http://chat:9002/api/v1";
 
-    ChatResponse getChatStatus(
+    public ChatResponse getChatStatus(
             HttpHeaders headers,
             Long appointmentId
     ) throws RestClientException {
