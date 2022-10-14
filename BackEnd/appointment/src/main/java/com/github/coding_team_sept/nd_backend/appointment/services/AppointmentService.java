@@ -125,6 +125,8 @@ public record AppointmentService(
         );
 
         // Create and get chat status
+        // Error can be ignored in case chat service is down
+        // TODO: Create queue for unregistered chat
         ChatResponse chatStatus;
         try {
             chatStatus = chatService.getChatStatus(headers, appointment.getId());
@@ -170,6 +172,9 @@ public record AppointmentService(
                             Comparator.comparing(Appointment::getAppointmentTime)
                     ).map(appointment -> {
                         ChatResponse chatStatus;
+                        // Create and get chat status
+                        // Error can be ignored in case chat service is down
+                        // TODO: Create queue for unregistered chat
                         try {
                             chatStatus = chatService.getChatStatus(headers, appointment.getId());
                         } catch (RestClientException e) {
@@ -222,6 +227,9 @@ public record AppointmentService(
                             Comparator.comparing(Appointment::getAppointmentTime)
                     ).map(appointment -> {
                         ChatResponse chatStatus;
+                        // Create and get chat status
+                        // Error can be ignored in case chat service is down
+                        // TODO: Create queue for unregistered chat
                         try {
                             chatStatus = chatService.getChatStatus(headers, appointment.getId());
                         } catch (RestClientException e) {
