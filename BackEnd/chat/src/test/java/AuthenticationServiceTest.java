@@ -19,12 +19,12 @@ import org.springframework.web.client.RestTemplate;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AuthenticationServiceTest {
     @Mock
-    public RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     @InjectMocks
-    public AuthenticationService authenticationService;
+    private AuthenticationService authenticationService;
 
-    public void mockGetAuthorizationRestTemplate(ValidateResponse validateResponse) {
+    private void mockGetAuthorizationRestTemplate(ValidateResponse validateResponse) {
         Mockito.when(restTemplate.exchange(
                 AuthenticationService.url + "/auth/validate",
                 HttpMethod.GET,

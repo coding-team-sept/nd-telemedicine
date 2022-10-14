@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 public class AppointmentDateTimeUtilsTest {
-    final List<Integer> datetime = List.of(2022, 6, 15, 12, 30);
-    AppointmentDateTimeUtils datetimeUtils = new AppointmentDateTimeUtils();
+    private final List<Integer> datetime = List.of(2022, 6, 15, 12, 30);
+    private final AppointmentDateTimeUtils datetimeUtils = new AppointmentDateTimeUtils();
 
     @Test
     public void testParseValidDateTime() {

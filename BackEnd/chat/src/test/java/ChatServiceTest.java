@@ -29,22 +29,22 @@ import java.util.Optional;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class ChatServiceTest {
     @InjectMocks
-    public ChatService chatService;
+    private ChatService chatService;
     @Mock
-    ChatRepositories chatRepo;
+    private ChatRepositories chatRepo;
     @Mock
-    MessageRepositories msgRepo;
+    private MessageRepositories msgRepo;
     @Mock
-    AuthenticationService authService;
+    private AuthenticationService authService;
     @Mock
-    AppointmentService appointmentService;
+    private AppointmentService appointmentService;
 
-    public void mockGetAuthorization(ValidateResponse validateResponse) {
+    private void mockGetAuthorization(ValidateResponse validateResponse) {
         Mockito.when(authService.getAuthorization(new HttpHeaders()))
                 .thenReturn(validateResponse);
     }
 
-    public void mockGetDoctorAppointment(
+    private void mockGetDoctorAppointment(
             DoctorAppointmentResponse doctorAppointmentResponse
     ) {
         Mockito.when(appointmentService.getDoctorAppointment(
@@ -53,7 +53,7 @@ public class ChatServiceTest {
         )).thenReturn(doctorAppointmentResponse);
     }
 
-    public void mockGetPatientAppointment(
+    private void mockGetPatientAppointment(
             PatientAppointmentResponse patientAppointmentResponse
     ) {
         Mockito.when(appointmentService.getPatientAppointment(
@@ -62,27 +62,27 @@ public class ChatServiceTest {
         )).thenReturn(patientAppointmentResponse);
     }
 
-    public void mockChatExistsById(Long id, boolean isExists) {
+    private void mockChatExistsById(Long id, boolean isExists) {
         Mockito.when(chatRepo.existsById(id))
                 .thenReturn(isExists);
     }
 
-    public void mockChatFindById(Chat chat) {
+    private void mockChatFindById(Chat chat) {
         Mockito.when(chatRepo.findById(chat.getAppointmentId()))
                 .thenReturn(Optional.of(chat));
     }
 
-    public void mockSaveMessage(Message msg) {
+    private void mockSaveMessage(Message msg) {
         Mockito.when(msgRepo.save(msg))
                 .thenReturn(msg);
     }
 
-    public void mockSaveAndFlushChat(Chat chat) {
+    private void mockSaveAndFlushChat(Chat chat) {
         Mockito.when(chatRepo.saveAndFlush(chat))
                 .thenReturn(chat);
     }
 
-    public void mockFindAllMessagesByAppointmentId(
+    private void mockFindAllMessagesByAppointmentId(
             Long id,
             List<Message> messages
     ) {
