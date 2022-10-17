@@ -120,6 +120,15 @@ void main() {
       expect((dialogWidget.content as Text).data, "Bad credentials");
       expect(Get.currentRoute, Routes.LOGIN);
     });
+    
+    testWidgets("Testing toggle password", (widgetTester) async {
+      await widgetTester.pumpWidget(view);
+      var showPasswordToggle = find.byType(IconButton);
+      expect(showPasswordToggle, findsOneWidget);
+      await widgetTester.tap(showPasswordToggle);
+      await widgetTester.pump(Duration(milliseconds: 500));
+      expect(controller.showPassword.value, false);
+    });
 
     testWidgets("Testing if application can login successfully",
         (tester) async {
@@ -157,6 +166,14 @@ void main() {
       expect(Get.currentRoute, Routes.HOME);
     });
 
+    testWidgets("Test if we can go to sign up page", (tester) async {
+      await tester.pumpWidget(view);
+      var signUpButton = find.byType(TextButton);
+      expect(signUpButton, findsOneWidget);
+      await tester.tap(signUpButton);
+      await tester.pump(Duration(milliseconds: 500));
+      expect(Get.currentRoute, Routes.REGISTER);
+    });
     testWidgets(
         "Testing if the Login error is displayed when the text field is all empty",
         (tester) async {

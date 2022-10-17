@@ -27,11 +27,6 @@ class LoginController extends GetxController {
     showPassword.value = !showPassword.value;
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
   void onEmailChange(String newEmail) => email.value = newEmail;
 
   void onPasswordChange(String newPassword) => password.value = newPassword;

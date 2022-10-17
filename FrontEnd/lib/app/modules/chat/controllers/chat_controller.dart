@@ -14,28 +14,36 @@ class ChatController extends GetxController {
   late final int doctorID;
   late final int patientID;
   late final bool isDoctor;
+  final bool debug;
+  final Dio dio;
+
+  ChatController({Dio? dio, bool? isDoctor, int? doctorID, int? patientID})
+      : dio = dio ?? Dio(),
+        debug = dio != null,
+        isDoctor = isDoctor ?? Get.arguments['doctorID'],
+        doctorID = doctorID ?? Get.arguments['doctorID'],
+        patientID = patientID ?? Get.arguments['patientID'];
 
   final isLoading = false.obs;
   bool checkMessage = true;
 
   @override
-  void onClose() {
-    checkMessage = false;
-    super.onClose();
-  }
-
-  @override
   void onInit() async {
-    isLoading.value = true;
-    appointmentID = Get.arguments['appointmentID'];
-    token = Get.arguments['token'];
-    isDoctor = Get.arguments['isDoctor'];
-    doctorID = Get.arguments['doctorID'];
-    patientID = Get.arguments['patientID'];
-    await getStatus();
-    await getMessages();
-    isLoading.value = false;
-    getNewMessages();
+    if (!debug) {
+      isLoading.value = true;
+      appointmentID = Get.arguments['appointmentID'];
+      token = Get.arguments['token'];
+      isDoctor = Get.arguments['isDoctor'];
+      doctorID = Get.arguments['doctorID'];
+      patientID = Get.arguments['patientID'];
+      await getStatus();
+      await getMessages();
+      isLoading.value = false;
+      getNewMessages();
+    } else {
+      appointmentID = 123;
+      token = "token";
+    }
     super.onInit();
   }
 

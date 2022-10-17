@@ -183,61 +183,77 @@ void main() {
       Get.reset();
     });
     testWidgets("Testing if application show error if there is duplicate user",
-            (t) async {
-          dioAdapter.onPost("${C.url}/auth/register", (server) {
-            server.reply(
-                500,
-                {
-                  "message": "Email has been taken"
-                },
-                delay: const Duration(seconds: 1));
-          }, data:
-          {
-            "name": "Patient",
-            "email": "patient@patient.com",
-            "password": "patient123"
-          }
-          );
-          await t.pumpWidget(v);
-          var textFields = find.byType(TextField);
-          await t.enterText(textFields.at(0), "Patient");
-          await t.enterText(textFields.at(1), "patient@patient.com");
-          await t.enterText(textFields.at(2), "patient123");
-          await t.enterText(textFields.at(3), "patient123");
-          var registerButton = find.byType(ElevatedButton);
-          await t.tap(registerButton);
-          await t.pump(const Duration(milliseconds: 500));
-          expect(c.isLoading.value, true);
-          await t.pump(const Duration(seconds: 2));
-          expect(c.isLoading.value, false);
-          expect(Get.currentRoute, Routes.REGISTER);
-          var errorDialog = find.byType(AlertDialog);
-          expect(errorDialog, findsOneWidget);
-          var errorDialogWidget = errorDialog.evaluate().elementAt(0).widget as AlertDialog;
-          expect((errorDialogWidget.title as Text).data, "Error");
-          expect((errorDialogWidget.content as Text).data, "Email has been taken");
-        });
+        (t) async {
+      dioAdapter.onPost("${C.url}/auth/register", (server) {
+        server.reply(500, {"message": "Email has been taken"},
+            delay: const Duration(seconds: 1));
+      }, data: {
+        "name": "Patient",
+        "email": "patient@patient.com",
+        "password": "patient123"
+      });
+      await t.pumpWidget(v);
+      var textFields = find.byType(TextField);
+      await t.enterText(textFields.at(0), "Patient");
+      await t.enterText(textFields.at(1), "patient@patient.com");
+      await t.enterText(textFields.at(2), "patient123");
+      await t.enterText(textFields.at(3), "patient123");
+      var registerButton = find.byType(ElevatedButton);
+      await t.tap(registerButton);
+      await t.pump(const Duration(milliseconds: 500));
+      expect(c.isLoading.value, true);
+      await t.pump(const Duration(seconds: 2));
+      expect(c.isLoading.value, false);
+      expect(Get.currentRoute, Routes.REGISTER);
+      var errorDialog = find.byType(AlertDialog);
+      expect(errorDialog, findsOneWidget);
+      var errorDialogWidget =
+          errorDialog.evaluate().elementAt(0).widget as AlertDialog;
+      expect((errorDialogWidget.title as Text).data, "Error");
+      expect((errorDialogWidget.content as Text).data, "Email has been taken");
+    });
+
+    testWidgets("Testing toggle password", (widgetTester) async {
+      await widgetTester.pumpWidget(v);
+      var showPasswordToggle = find.byType(IconButton);
+      expect(showPasswordToggle, findsNWidgets(2));
+      await widgetTester.tap(showPasswordToggle.at(0));
+      await widgetTester.pump(const Duration(milliseconds: 500));
+      expect(c.showPassword.value, false);
+      await widgetTester.tap(showPasswordToggle.at(1));
+      await widgetTester.pump(const Duration(milliseconds: 500));
+      expect(c.showPassword.value, false);
+    });
+
+
+    testWidgets("Test if we can go to sign in page", (tester) async {
+      await tester.pumpWidget(v);
+      var signUpButton = find.byType(TextButton);
+      expect(signUpButton, findsOneWidget);
+      await tester.tap(signUpButton);
+      await tester.pump(Duration(milliseconds: 500));
+      expect(Get.currentRoute, Routes.LOGIN);
+    });
 
     testWidgets("Testing if application can register data successfully",
         (t) async {
-          dioAdapter.onPost("${C.url}/auth/register", (server) {
-            server.reply(
-                201,
-                {
-                  "data": {
-                    "token": {
-                      "access": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjo1MywiZXhwIjoxNjk2MTcxNTUyLCJpYXQiOjE2NjQ3MjE5NTJ9.KhPVpMNoATNlXomuRZOsQcfgL1_uVGCDvXvwk3znHrk"
-                    }
-                  }
-                },
-                delay: const Duration(seconds: 1));
-          }, data:
-          {
-            "name": "Patient",
-            "email": "patient@patient.com",
-            "password": "patient123"
-          }
-          );
+      dioAdapter.onPost("${C.url}/auth/register", (server) {
+        server.reply(
+            201,
+            {
+              "data": {
+                "token": {
+                  "access":
+                      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjo1MywiZXhwIjoxNjk2MTcxNTUyLCJpYXQiOjE2NjQ3MjE5NTJ9.KhPVpMNoATNlXomuRZOsQcfgL1_uVGCDvXvwk3znHrk"
+                }
+              }
+            },
+            delay: const Duration(seconds: 1));
+      }, data: {
+        "name": "Patient",
+        "email": "patient@patient.com",
+        "password": "patient123"
+      });
       await t.pumpWidget(v);
       var textFields = find.byType(TextField);
       await t.enterText(textFields.at(0), "Patient");

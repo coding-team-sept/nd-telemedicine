@@ -30,6 +30,7 @@ class CreateAppointmentController extends GetxController {
   final date = DateTime.now().obs;
   final time = TimeOfDay.now().obs;
   final isLoading = false.obs;
+  var todayDate = DateTime.now();
 
   String get formattedDate => DateFormat.yMMMMd().format(date.value);
 
@@ -38,9 +39,9 @@ class CreateAppointmentController extends GetxController {
   void selectDate() async {
     date.value = await showDatePicker(
             context: Get.context!,
-            initialDate: date.value,
-            firstDate: DateTime.now(),
-            lastDate: DateTime.now().add(const Duration(days: 365))) ??
+            initialDate: todayDate,
+            firstDate: todayDate,
+            lastDate: todayDate.add(const Duration(days: 365))) ??
         date.value;
     getDoctors();
   }
@@ -80,7 +81,6 @@ class CreateAppointmentController extends GetxController {
             title: Text("Error"), content: Text("Unknown Error")));
       }
     }
-
     isLoading.value = false;
   }
 
