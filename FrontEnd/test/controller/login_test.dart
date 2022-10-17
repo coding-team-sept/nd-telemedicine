@@ -5,9 +5,7 @@ import 'package:get/get.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:nd/app/data/const.dart';
 import 'package:nd/app/modules/login/controllers/login_controller.dart';
-import 'package:nd/app/modules/login/views/login_view.dart';
 import 'package:nd/app/routes/app_pages.dart';
-import 'package:nock/nock.dart';
 
 void main() {
   group("Unit test for login test", () {

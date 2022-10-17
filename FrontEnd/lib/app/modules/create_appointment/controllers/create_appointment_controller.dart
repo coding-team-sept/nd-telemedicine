@@ -9,12 +9,23 @@ import 'package:nd/app/modules/create_appointment/model/doctor_model.dart';
 class CreateAppointmentController extends GetxController {
   RxList<DoctorModel> doctorData = <DoctorModel>[].obs;
   late String token;
+  final bool debug;
 
   @override
   void onInit() async {
-    token = await const FlutterSecureStorage().read(key: "token") ?? '';
+    if (debug) {
+      token = await const FlutterSecureStorage().read(key: "token") ?? 'token';
+    } else {
+      token = "";
+    }
     super.onInit();
   }
+
+  final Dio dio;
+
+  CreateAppointmentController({Dio? dio})
+      : dio = dio ?? Dio(),
+        debug = dio == null ? true : false;
 
   final date = DateTime.now().obs;
   final time = TimeOfDay.now().obs;
@@ -41,14 +52,13 @@ class CreateAppointmentController extends GetxController {
     getDoctors();
   }
 
-  void getDoctors() async {
+  Future getDoctors() async {
     isLoading.value = true;
     // Get doctors list from server
     final timestamp =
         '${date.value.year}-${date.value.month}-${date.value.day}_${time.value.hour}:${time.value.minute}';
     try {
-      final response = await Dio().get(
-          '${C.urlA}/app/patient/doctor/$timestamp',
+      final response = await dio.get('${C.urlA}/app/patient/doctor/$timestamp',
           options: Options(headers: {"Authorization": "Bearer $token"}));
       doctorData.clear();
       for (var element in (response.data['data'] as List)) {
@@ -97,7 +107,7 @@ class CreateAppointmentController extends GetxController {
     final timestamp =
         '${date.value.year}-${date.value.month}-${date.value.day}_${time.value.hour}:${time.value.minute}';
     try {
-      final response = await Dio().post('${C.urlA}/app/patient/appointment',
+      final response = await dio.post('${C.urlA}/app/patient/appointment',
           data: {'doctorId': id, 'datetime': timestamp, 'session': "ONLINE"},
           options: Options(headers: {"Authorization": "Bearer $token"}));
       Get.back();
@@ -116,14 +126,14 @@ class CreateAppointmentController extends GetxController {
     isLoading.value = false;
   }
 
-  void doOfflineBooking(int id) async {
+  Future<void> doOfflineBooking(int id) async {
     Get.back();
     isLoading.value = true;
     // Get doctors list from server
     final timestamp =
         '${date.value.year}-${date.value.month}-${date.value.day}_${time.value.hour}:${time.value.minute}';
     try {
-      final response = await Dio().post('${C.urlA}/app/patient/appointment',
+      final response = await dio.post('${C.urlA}/app/patient/appointment',
           data: {'doctorId': id, 'datetime': timestamp, 'session': "OFFLINE"},
           options: Options(headers: {"Authorization": "Bearer $token"}));
       Get.back();
