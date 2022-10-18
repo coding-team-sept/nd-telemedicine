@@ -1,11 +1,11 @@
 package com.github.coding_team_sept.nd_backend.appointment.controllers;
 
 import com.github.coding_team_sept.nd_backend.appointment.payloads.requests.AppointmentRequest;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.ResponseWrapper;
+import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UsersDataResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.AppointmentsResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.DoctorAppointmentResponse;
 import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.PatientAppointmentResponse;
-import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.ResponseWrapper;
-import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UsersDataResponse;
 import com.github.coding_team_sept.nd_backend.appointment.services.AppointmentService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +33,24 @@ public record AppointmentController(
     }
 
     @GetMapping("/patient/appointment")
-    ResponseEntity<ResponseWrapper<AppointmentsResponse<PatientAppointmentResponse>>> getPatientAppointment(@RequestHeader HttpHeaders headers) {
-        return ResponseEntity.ok(ResponseWrapper.fromData(appointmentService.getPatientAppointment(headers)));
+    ResponseEntity<ResponseWrapper<AppointmentsResponse<PatientAppointmentResponse>>> getPatientAppointment(
+            @RequestHeader HttpHeaders headers,
+            @RequestParam(required = false) Long id
+    ) {
+        return ResponseEntity.ok(ResponseWrapper.fromData(appointmentService.getPatientAppointment(
+                headers,
+                id
+        )));
     }
 
     @GetMapping("/doctor/appointment")
-    ResponseEntity<ResponseWrapper<AppointmentsResponse<DoctorAppointmentResponse>>> getDoctorAppointment(@RequestHeader HttpHeaders headers) {
-        return ResponseEntity.ok(ResponseWrapper.fromData(appointmentService.getDoctorAppointment(headers)));
+    ResponseEntity<ResponseWrapper<AppointmentsResponse<DoctorAppointmentResponse>>> getDoctorAppointment(
+            @RequestHeader HttpHeaders headers,
+            @RequestParam(required = false) Long id
+    ) {
+        return ResponseEntity.ok(ResponseWrapper.fromData(appointmentService.getDoctorAppointment(
+                headers,
+                id
+        )));
     }
 }

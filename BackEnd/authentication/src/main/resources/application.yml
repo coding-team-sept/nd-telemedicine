@@ -6,8 +6,8 @@ spring:
     name: authentication
 
   datasource:
+    url: jdbc:postgresql://db:5432/telemedic_authentication
     username: 'admin'
-    url: jdbc:postgresql://localhost:5432/telemedic_authentication
     password: 'admin'
 
   jpa:

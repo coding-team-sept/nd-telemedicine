@@ -22,23 +22,21 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
-// TODO: Investigate the following problem:
-//  java.lang.NullPointerException: Cannot invoke "org.springframework.web.client.RestTemplate.exchange(String, org.springframework.http.HttpMethod, org.springframework.http.HttpEntity, org.springframework.core.ParameterizedTypeReference, Object[])" because "this.restTemplate" is null at AuthenticationServiceTest.test...
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AuthenticationServiceTest {
     @Mock
-    private RestTemplate restTemplate;
+    RestTemplate restTemplate;
 
     @InjectMocks
-    private AuthenticationService authenticationService;
+    AuthenticationService authenticationService;
 
     @Test
-    public void testGetAuthorizationService() {
+    void testGetAuthorizationService() {
         final var expectedResponse = new ValidateResponse(1L, "ROLE_PATIENT");
         final var header = new HttpHeaders();
         Mockito.when(restTemplate.exchange(
-                "http://localhost:9000/api/v1/auth/validate",
+                AuthenticationService.url + "/auth/validate",
                 HttpMethod.GET,
                 new HttpEntity<>(header),
                 ValidateResponse.class
@@ -50,7 +48,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void testGetAllDoctorUsers() {
+    void testGetAllDoctorUsers() {
         final var header = new HttpHeaders();
         final var expectedResponse = UsersDataResponse.build(
                 List.of(
@@ -60,7 +58,7 @@ public class AuthenticationServiceTest {
                 )
         );
         Mockito.when(restTemplate.exchange(
-                "http://localhost:9000/api/v1/app/admin/doctor",
+                AuthenticationService.url + "/app/admin/doctor",
                 HttpMethod.GET,
                 new HttpEntity<>(header),
                 new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
@@ -79,7 +77,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void testGetAllPatientUsers() {
+    void testGetAllPatientUsers() {
         final var header = new HttpHeaders();
         final var expectedResponse = UsersDataResponse.build(
                 List.of(
@@ -89,7 +87,7 @@ public class AuthenticationServiceTest {
                 )
         );
         Mockito.when(restTemplate.exchange(
-                "http://localhost:9000/api/v1/app/admin/patient",
+                AuthenticationService.url + "/app/admin/patient",
                 HttpMethod.GET,
                 new HttpEntity<>(header),
                 new ParameterizedTypeReference<ResponseWrapper<UsersDataResponse>>() {
@@ -108,7 +106,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void testGetDoctorUsersBasedOnId() {
+    void testGetDoctorUsersBasedOnId() {
         final var header = new HttpHeaders();
         final var expectedResponse = UsersDataResponse.build(
                 List.of(
@@ -122,8 +120,9 @@ public class AuthenticationServiceTest {
                 .map(userDataResponse -> userDataResponse.id)
                 .toList();
 
-        final var uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9000/api/v1/app/admin/doctor")
-                .queryParam("ids", ids)
+        final var uri = UriComponentsBuilder.fromHttpUrl(
+                        AuthenticationService.url + "/app/admin/doctor"
+                ).queryParam("ids", ids)
                 .encode()
                 .toUriString();
 
@@ -152,7 +151,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void testGetPatientUsersBasedOnId() {
+    void testGetPatientUsersBasedOnId() {
         final var header = new HttpHeaders();
         final var expectedResponse = UsersDataResponse.build(
                 List.of(
@@ -166,7 +165,7 @@ public class AuthenticationServiceTest {
                 .map(userDataResponse -> userDataResponse.id)
                 .toList();
 
-        final var uri = UriComponentsBuilder.fromHttpUrl("http://localhost:9000/api/v1/app/admin/patient")
+        final var uri = UriComponentsBuilder.fromHttpUrl(AuthenticationService.url + "/app/admin/patient")
                 .queryParam("ids", ids)
                 .encode()
                 .toUriString();

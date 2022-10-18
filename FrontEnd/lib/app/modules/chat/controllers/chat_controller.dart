@@ -32,6 +32,7 @@ class ChatController extends GetxController {
         token = token ?? Get.arguments['token'],
         patientID = patientID ?? Get.arguments['patientID'];
 
+
   final isLoading = false.obs;
   bool checkMessage = true;
 
@@ -60,6 +61,7 @@ class ChatController extends GetxController {
             "isAll": "false",
           },
           options: Options(headers: {"Authorization": "Bearer $token"}));
+
       for (var element in response.data['data']['messages']) {
         if (doctorID == -999) {
           if (element['senderId'] != patientID) {

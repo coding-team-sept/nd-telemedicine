@@ -1,36 +1,89 @@
 services:
-  postgres:
+  db:
     image: postgres:14.5
     container_name: postgres
     restart: always
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      PG_DATA: /data/postgres
     volumes:
       - postgres:/data/postgres
       - ./db_init:/docker-entrypoint-initdb.d
     networks:
-      - postgres
+      - admin
+      - local-service
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      PG_DATA: /data/postgres
   pgadmin:
     image: dpage/pgadmin4:6.13
+    depends_on:
+      - db
     container_name: pgadmin
     restart: always
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    networks:
+      - admin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin:/var/lib/pgadmin
+  authentication:
+    build: 
+      context: ./authentication/
+      args:
+        JAR_FILE: "target/authentication-0.0.0-alpha.1.jar"
+    depends_on:
+      - db
+    container_name: nd-authentication
+    restart: always
     ports:
-      - "9090:80"
+      - "9000:9000"
     networks:
-      - postgres
+      - local-service
+  appointment:
+    build: 
+      context: ./appointment/
+      args:
+        JAR_FILE: "target/appointment-0.0.0-alpha.1.jar"
+    depends_on:
+      - db
+    container_name: nd-appointment
+    restart: always
+    ports:
+      - "9001:9001"
+    networks:
+      - local-service
+  chat:
+    build: 
+      context: ./chat/
+      args:
+        JAR_FILE: "target/chat-0.0.0-alpha.1.jar"
+    depends_on:
+      - db
+    container_name: nd-chat
+    restart: always
+    ports:
+      - "9002:9002"
+    networks:
+      - local-service
+  reverseproxy:
+    build: ./nginx/
+    depends_on:
+      - chat
+      - appointment
+      - authentication
+    ports:
+        - 80:80
+    networks:
+      - local-service
+    restart: always
 
 networks:
-  postgres:
+  admin:
+    driver: bridge
+  local-service:
     driver: bridge
 
 volumes:

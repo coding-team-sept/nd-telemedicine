@@ -33,40 +33,40 @@ import java.util.stream.Stream;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppointmentServiceTest {
-    static final DateTime appointmentDatetime = DateTime.now()
+    private static final DateTime appointmentDatetime = DateTime.now()
             .plusDays(1)
             .withTime(9, 0, 0, 0);
-    static final List<Long> sampleDoctorIds = List.of(100L, 101L, 102L);
+    private static final List<Long> sampleDoctorIds = List.of(100L, 101L, 102L);
 
-    HttpHeaders headers = new HttpHeaders();
+    private final HttpHeaders headers = new HttpHeaders();
     @Mock
-    AppointmentDateTimeUtils dateTimeUtils;
+    private AppointmentDateTimeUtils dateTimeUtils;
     @Mock
-    AuthenticationService authenticationService;
+    private AuthenticationService authenticationService;
     @Mock
-    ScheduleService scheduleService;
+    private ScheduleService scheduleService;
     @Mock
-    SessionRepository sessionRepository;
+    private SessionRepository sessionRepository;
     @Mock
-    AppointmentRepository appointmentRepo;
+    private AppointmentRepository appointmentRepo;
     @InjectMocks
-    AppointmentService appointmentService;
+    private AppointmentService appointmentService;
 
     // [AppointmentDateTimeUtils] mock
-    void mockParseDateTime(String datetime) {
+    private void mockParseDateTime(String datetime) {
         Mockito.when(dateTimeUtils.parseString(datetime)).thenCallRealMethod();
     }
 
-    void mockGetMin(DateTime appointmentDatetime) {
+    private void mockGetMin(DateTime appointmentDatetime) {
         Mockito.when(dateTimeUtils.getMin(appointmentDatetime)).thenCallRealMethod();
     }
 
-    void mockGetMax(DateTime appointmentDatetime) {
+    private void mockGetMax(DateTime appointmentDatetime) {
         Mockito.when(dateTimeUtils.getMax(appointmentDatetime)).thenCallRealMethod();
     }
 
     // [AuthenticationService] mock
-    void mockAuthorization(
+    private void mockAuthorization(
             HttpHeaders headers,
             ValidateResponse validate,
             boolean isSuccessful
@@ -84,7 +84,7 @@ public class AppointmentServiceTest {
         }
     }
 
-    void mockGetUsers(
+    private void mockGetUsers(
             HttpHeaders headers,
             String target,
             List<UserDataResponse> users,
@@ -110,7 +110,7 @@ public class AppointmentServiceTest {
     }
 
     // [ScheduleService] mock
-    void mockValidateAppointmentDateTime(
+    private void mockValidateAppointmentDateTime(
             DateTime appointmentDatetime
     ) {
         Mockito.doNothing()
@@ -120,7 +120,7 @@ public class AppointmentServiceTest {
                 ).validateAppointmentDateTime(appointmentDatetime);
     }
 
-    void mockCheckAvailability(
+    private void mockCheckAvailability(
             DateTime appointmentDatetime,
             String target,
             Long targetId,
@@ -153,14 +153,14 @@ public class AppointmentServiceTest {
     }
 
     // [SessionRepository] mock
-    AppointmentSession getSession(SessionType sessionType) {
+    private AppointmentSession getSession(SessionType sessionType) {
         return AppointmentSession.builder()
                 .id(Integer.valueOf(sessionType.ordinal()).longValue())
                 .name(sessionType)
                 .build();
     }
 
-    void mockSessionRepository(SessionType sessionType) {
+    private void mockSessionRepository(SessionType sessionType) {
         Mockito.when(
                 sessionRepository.findRoleByName(sessionType)
         ).thenReturn(
@@ -169,7 +169,7 @@ public class AppointmentServiceTest {
     }
 
     // [AppointmentRepository] mock
-    void mockGetAppointmentByDateTimeBetween(
+    private void mockGetAppointmentByDateTimeBetween(
             DateTime appointmentDatetime,
             List<Appointment> appointments
     ) {
@@ -181,7 +181,7 @@ public class AppointmentServiceTest {
         ).thenReturn(appointments);
     }
 
-    void mockGetAppointmentById(
+    private void mockGetAppointmentById(
             Long id,
             String requester,
             List<Appointment> appointments
@@ -193,7 +193,7 @@ public class AppointmentServiceTest {
         ).thenReturn(appointments);
     }
 
-    void mockSaveAndFlush(Appointment appointment) {
+    private void mockSaveAndFlush(Appointment appointment) {
         Mockito.when(
                 appointmentRepo.saveAndFlush(
                         Appointment.builder()
@@ -206,7 +206,7 @@ public class AppointmentServiceTest {
         ).thenReturn(appointment);
     }
 
-    void mockGetDateTime(DateTime appointmentDatetime) {
+    private void mockGetDateTime(DateTime appointmentDatetime) {
         mockParseDateTime(appointmentDatetime.toString(
                 AppointmentDateTimeUtils.pattern
         ));
@@ -223,7 +223,7 @@ public class AppointmentServiceTest {
      * The expected result is an array which contains only 2 doctors (ids: 101, 102).
      */
     @Test
-    void testGetAvailableDoctor() {
+    public void testGetAvailableDoctor() {
         // Setup data
         final var stringDatetime = appointmentDatetime.toString(AppointmentDateTimeUtils.pattern);
         final var patientValidation = new ValidateResponse(0L, "PATIENT_ROLE");
@@ -276,7 +276,7 @@ public class AppointmentServiceTest {
      * appointment is successfully made.
      */
     @Test
-    void testAddAppointment() {
+    public void testAddAppointment() {
         // Setup data
         final var patientValidation = new ValidateResponse(0L, "PATIENT_ROLE");
         final var doctor = UserDataResponse.build(
@@ -339,7 +339,7 @@ public class AppointmentServiceTest {
      * doctor id(0) will not appear in the appointments list.
      */
     @Test
-    void testGetPatientAppointment() {
+    public void testGetPatientAppointment() {
         // Setup data
         final var patientValidation = new ValidateResponse(0L, "PATIENT_ROLE");
         final var doctors = sampleDoctorIds.stream()
@@ -355,7 +355,7 @@ public class AppointmentServiceTest {
                         .doctorId(doctor.id)
                         .appointmentTime(
                                 (doctor.id.equals(doctors.get(0).id))
-                                        ? appointmentDatetime.minusDays(1).toDate()
+                                        ? appointmentDatetime.minusDays(2).toDate()
                                         : appointmentDatetime.plusDays(doctor.id.intValue() % 100).toDate()
                         ).session(getSession(SessionType.OFFLINE))
                         .build()
@@ -378,7 +378,7 @@ public class AppointmentServiceTest {
         appointments.forEach(appointment -> mockGetMax(new DateTime(appointment.getAppointmentTime())));
 
         // Test
-        final var response = appointmentService.getPatientAppointment(headers);
+        final var response = appointmentService.getPatientAppointment(headers, null);
         Assertions.assertEquals(2, response.appointments.size());
         Assertions.assertTrue(response.appointments.stream().noneMatch(appointment -> appointment.id.equals(doctors.get(0).id)));
     }
@@ -391,7 +391,7 @@ public class AppointmentServiceTest {
      * patient id(0) will not appear in the appointments list.
      */
     @Test
-    void testGetDoctorAppointment() {
+    public void testGetDoctorAppointment() {
         // Setup data
         final var doctorValidation = new ValidateResponse(100L, "DOCTOR_ROLE");
         final var patients = Stream.of(0, 1, 2)
@@ -407,7 +407,7 @@ public class AppointmentServiceTest {
                         .doctorId(doctorValidation.id)
                         .appointmentTime(
                                 (patient.id.equals(patients.get(0).id))
-                                        ? appointmentDatetime.minusDays(1).toDate()
+                                        ? appointmentDatetime.minusDays(2).toDate()
                                         : appointmentDatetime.plusDays(patient.id.intValue()).toDate()
                         ).session(getSession(SessionType.OFFLINE))
                         .build()
@@ -430,7 +430,7 @@ public class AppointmentServiceTest {
         appointments.forEach(appointment -> mockGetMax(new DateTime(appointment.getAppointmentTime())));
 
         // Test
-        final var response = appointmentService.getDoctorAppointment(headers);
+        final var response = appointmentService.getDoctorAppointment(headers, null);
         Assertions.assertEquals(2, response.appointments.size());
         Assertions.assertTrue(response.appointments.stream().noneMatch(appointment -> appointment.id.equals(patients.get(0).id)));
     }

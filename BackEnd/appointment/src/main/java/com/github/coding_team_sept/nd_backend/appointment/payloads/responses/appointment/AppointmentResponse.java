@@ -14,11 +14,11 @@ public class AppointmentResponse extends DataResponse {
         this(null, null, null, null);
     }
 
-    public AppointmentResponse(Long id, UserDataResponse appointedUser, String datetime, SessionType session) {
+    public AppointmentResponse(Long id, UserDataResponse appointedUser, String datetime, String session) {
         this.id = id;
         this.appointedUser = appointedUser;
         this.datetime = datetime;
-        this.session = session.name();
+        this.session = session;
     }
 
     public UserDataResponse getAppointedUser() {

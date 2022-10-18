@@ -10,11 +10,6 @@ import java.util.List;
 public class AppointmentsResponse<T extends AppointmentResponse> extends DataResponse {
     public final List<T> appointments;
 
-    @JsonValue
-    public List<T> getAppointments() {
-        return appointments;
-    }
-
     public AppointmentsResponse() {
         this(null);
     }
@@ -26,5 +21,10 @@ public class AppointmentsResponse<T extends AppointmentResponse> extends DataRes
 
     public static <T extends AppointmentResponse> AppointmentsResponse<T> build(List<T> appointments) {
         return new AppointmentsResponse<>(appointments);
+    }
+
+    @JsonValue
+    public List<T> getAppointments() {
+        return appointments;
     }
 }

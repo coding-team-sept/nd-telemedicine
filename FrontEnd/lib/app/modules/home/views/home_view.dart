@@ -98,6 +98,7 @@ class HomeView extends GetView<HomeController> {
             if(controller.role.value == null) ...emptyContent,
             const ProfileView(),
           ]),
+
         ),
       ),
     );

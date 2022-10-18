@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.coding-team-sept.nd-backend</groupId>
         <artifactId>microservices</artifactId>
-        <version>0.0.0-alpha.1</version>
+        <version>0.0.0-alpha.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -21,7 +21,25 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.11.2</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <configuration>
+                    <repository>nd-${project.artifactId}</repository>
+                    <buildArgs>
+                        <JAR_FILE>target/${project.artifactId}-${project.version}.jar</JAR_FILE>
+                    </buildArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
