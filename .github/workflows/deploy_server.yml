@@ -3,8 +3,6 @@ name: Docker Compose Deployment with Shell
 on:
   push:
     branches: [ "deploy"]
-  pull_request:
-    branches: [ "deploy"]
 
 jobs:
   build:
