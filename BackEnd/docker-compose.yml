@@ -33,7 +33,7 @@ services:
     build: 
       context: ./authentication/
       args:
-        JAR_FILE: "target/authentication-0.0.0-alpha.2.jar"
+        JAR_FILE: "target/authentication-0.0.0-alpha.3.jar"
     depends_on:
       - db
     container_name: nd-authentication
@@ -46,7 +46,7 @@ services:
     build: 
       context: ./appointment/
       args:
-        JAR_FILE: "target/appointment-0.0.0-alpha.2.jar"
+        JAR_FILE: "target/appointment-0.0.0-alpha.3.jar"
     depends_on:
       - db
     container_name: nd-appointment
@@ -59,7 +59,7 @@ services:
     build: 
       context: ./chat/
       args:
-        JAR_FILE: "target/chat-0.0.0-alpha.2.jar"
+        JAR_FILE: "target/chat-0.0.0-alpha.3.jar"
     depends_on:
       - db
     container_name: nd-chat
