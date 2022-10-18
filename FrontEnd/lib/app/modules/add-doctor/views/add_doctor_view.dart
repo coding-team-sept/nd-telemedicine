@@ -9,12 +9,15 @@ class AddDoctorView extends GetView<AddDoctorController> {
 
   @override
   Widget build(BuildContext context) {
+    //Scaffold is a class in flutter which provides many widgets
     return Scaffold(
         appBar: AppBar(
+          //Use the AppBar to reserve a place at the top of the page with the title "Add Admin"
           title: const Text('Add New Doctor'),
           centerTitle: true,
         ),
         body: Stack(
+          // Use stack to design because we have to make "isLoading" stack on the page when user click "Add doctor" button
           children: [
             ListView(
               padding: const EdgeInsets.all(16),

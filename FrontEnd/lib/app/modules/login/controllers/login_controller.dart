@@ -18,7 +18,7 @@ class LoginController extends GetxController {
   final Dio dio;
 
   final bool testMode;
-
+  //Allowing data injection for testing
   LoginController({Dio? dio, bool? testMode}) : dio = dio ?? Dio(), testMode = testMode ?? false;
 
   final isLoading = false.obs;

@@ -10,11 +10,14 @@ class AddAdminView extends GetView<AddAdminController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //Scaffold is a class in flutter which provides many widgets
         appBar: AppBar(
+          //Use the AppBar to reserve a place at the top of the page with the title "Add Admin"
           title: const Text('Add new Admin'),
           centerTitle: true,
         ),
         body: Stack(
+          // Use stack to design because we have to make "isLoading" stack on the page when user click "Add admin" button
           children: [
             ListView(
               padding: const EdgeInsets.all(16),

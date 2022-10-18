@@ -17,6 +17,7 @@ class AddAdminController extends GetxController {
 
   late String token;
   Dio dio;
+  //Allowing data injection for testing
   AddAdminController({Dio? dio, String? token}): dio = dio ?? Dio(),token = token ?? "";
 
   @override
@@ -34,7 +35,7 @@ class AddAdminController extends GetxController {
 
   bool validate() {
     bool valid = true;
-
+   //Verify that the form entered by the admin is correct
     if (name.value.length < 4) {
       nameError.value = "Name should be at least 4";
       valid = false;
@@ -62,9 +63,10 @@ class AddAdminController extends GetxController {
   void addAdmin() async {
     if (!validate()) return;
     isLoading.value = true;
+    //Set aside the right amount of time for the software
     await Future.delayed(const Duration(seconds: 1));
     isLoading.value = false;
-
+    //Connect with the server and verify if adding admin is successful, if not it will show an error message for database editing.
     try {
       var response = await Dio().post('${C.url}/app/admin/admin',
           data: {
