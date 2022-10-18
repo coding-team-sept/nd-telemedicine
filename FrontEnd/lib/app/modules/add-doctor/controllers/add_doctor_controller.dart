@@ -17,6 +17,7 @@ class AddDoctorController extends GetxController {
 
   late String token;
   Dio dio;
+  //Identify the admin
   AddDoctorController({Dio? dio,String? token}): dio = dio ?? Dio(), token = token ?? "";
 
   @override
@@ -35,7 +36,7 @@ class AddDoctorController extends GetxController {
 
   bool validate() {
     bool valid = true;
-
+   //Verify that the form entered by the admin is correct
     if (name.value.length < 4) {
       nameError.value = "Name should be at least 4";
       valid = false;
@@ -65,9 +66,10 @@ class AddDoctorController extends GetxController {
   Future addDoctor() async {
     if (!validate()) return;
     isLoading.value = true;
+    //Set aside the right amount of time for the software
     await Future.delayed(const Duration(seconds: 1));
     isLoading.value = false;
-
+    //Connect with the server and verify if adding admin is successful, if not it will show an error message for database editing.
     try {
       var response = await dio.post('${C.url}/app/admin/doctor',
           data: {

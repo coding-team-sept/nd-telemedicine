@@ -35,7 +35,7 @@ class AddAdminController extends GetxController {
 
   bool validate() {
     bool valid = true;
-   //Verify that the form entered by the user is correct
+   //Verify that the form entered by the admin is correct
     if (name.value.length < 4) {
       nameError.value = "Name should be at least 4";
       valid = false;
