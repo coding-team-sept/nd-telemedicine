@@ -17,7 +17,7 @@ class AddAdminController extends GetxController {
 
   late String token;
   Dio dio;
-  //Identify the admin
+  //Allowing data injection for testing
   AddAdminController({Dio? dio, String? token}): dio = dio ?? Dio(),token = token ?? "";
 
   @override

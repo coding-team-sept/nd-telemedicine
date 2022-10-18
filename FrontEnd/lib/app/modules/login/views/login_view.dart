@@ -9,6 +9,7 @@ class LoginView extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
+    //Scaffold is a class in flutter which provides many widgets
     return Scaffold(
         body: Stack(children:[ Container(
       width: double.infinity,
@@ -48,6 +49,7 @@ class LoginView extends GetView<LoginController> {
                       decoration: InputDecoration(
                         filled: true, //fill the background colour
                         hintText: "johndoe@example.com",
+                        //Check if emailError is "", if it is then it is null, if not then it shows emailError
                         errorText: controller.emailError.value == ""
                             ? null
                             : controller.emailError.value,
@@ -71,10 +73,11 @@ class LoginView extends GetView<LoginController> {
                       decoration: InputDecoration(
                           suffixIcon: IconButton(
                             onPressed: controller.toggleShowPassword,
-                            icon: Icon(Icons.remove_red_eye),
+                            icon: const Icon(Icons.remove_red_eye),
                           ),
                           filled: true, //fill the background colour
                           hintText: "********",
+                          //Check if passwordError is "", if it is then it is null, if not then it shows passwordError
                           errorText: controller.passwordError.value == ""
                               ? null
                               : controller.passwordError.value),
@@ -88,6 +91,7 @@ class LoginView extends GetView<LoginController> {
                     width: double.infinity,
                     child: Obx(
                       ()=> ElevatedButton(
+                        //isLoading runs and then runs controller.login
                         onPressed: controller.isLoading.value ? null : controller.login,
                         child: const Text("Login"),
                       ),
