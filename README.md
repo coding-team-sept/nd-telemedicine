@@ -28,4 +28,11 @@ flutter run --release
 cd BackEnd
 docker-compose up -d
 ```
+## Deployment
+### Frontend
+The frontend needs to be deployed manually as there is we have no developer account associated with either google play and app store,
+To automatically generate build artifact build can either be triggered by pushing to the main branch or by triggering the build manually on Codemagic.
+
+### Backend
+To deploy the backend, the code can be pushed to the deploy branch or we can just run the action for deploy.
 
