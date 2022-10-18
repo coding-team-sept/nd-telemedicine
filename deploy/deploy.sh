@@ -1,3 +1,5 @@
+ls -a
+pwd
 chmod 0600 ./deploy/sept
 
 # Reset the server
