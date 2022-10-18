@@ -1,5 +1,5 @@
 # RMIT SEPT 2022 Major Project
-
+[![Codemagic build status](https://api.codemagic.io/apps/634e11fc816f0cd621d4d7f5/634e11fc816f0cd621d4d7f4/status_badge.svg)](https://codemagic.io/apps/634e11fc816f0cd621d4d7f5/634e11fc816f0cd621d4d7f4/latest_build)
 # Group Coding Team (Monday - 19.30)
 
 ## Members
