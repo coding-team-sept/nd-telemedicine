@@ -22,61 +22,6 @@ class DashboardView extends GetView<DashboardController> {
                 )
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 12,
-              ),
-              const Text(
-                'DashboardView is working, and will be replaced with actual content later',
-                style: TextStyle(fontSize: 20),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-
-              ElevatedButton(
-                  onPressed: () => Get.toNamed(Routes.LOGIN),
-                  child: const Text("Login")),
-              const SizedBox(
-                height: 12,
-              ),
-
-              ElevatedButton(
-                  onPressed: () => Get.toNamed(Routes.REGISTER),
-                  child: const Text("Register")),
-
-              const SizedBox(
-                height: 12,
-              ),
-              ElevatedButton(
-                  onPressed: () => Get.toNamed(Routes.ADD_DOCTOR),
-                  child: const Text("Add Doctor")),
-
-            const SizedBox(
-              height: 12,
-            ),
-            ElevatedButton(
-                onPressed: () => Get.toNamed(Routes.ADD_ADMIN),
-                child: const Text("Add Admin")),
-
-              const SizedBox(
-                height: 12,
-              ),
-              ElevatedButton(
-                  onPressed: () => Get.toNamed(Routes.CHAT),
-                  child: const Text("Chat")),
-
-              const SizedBox(
-                height: 12,
-              ),
-              ElevatedButton(
-                  onPressed: () => Get.toNamed(Routes.ADMIN_LIST_VIEW),
-                  child: const Text("Admin Listview")),
-
-            ],
-          ),
         ],
       ),
     );

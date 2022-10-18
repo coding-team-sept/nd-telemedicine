@@ -1,11 +1,14 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:nd/app/modules/add-admin/controllers/add_admin_controller.dart';
+import 'package:nd/app/modules/add-admin/views/add_admin_view.dart';
+import 'package:nd/app/routes/app_pages.dart';
 import 'package:nock/nock.dart';
-import 'package:test/test.dart';
 import 'package:get/get.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
   group("Unit test for add admin", () {
     late AddAdminController controller;
     setUp(() {
@@ -58,13 +61,13 @@ void main() {
     });
 
     test('Testing email authentication if correct when I do not input .com',
-        () {
-      controller.emailChanged('aaaa@dwe');
-      try {
-        controller.validate();
-      } catch (_) {}
-      expect(controller.emailError.value, 'Please input a valid email');
-    });
+            () {
+          controller.emailChanged('aaaa@dwe');
+          try {
+            controller.validate();
+          } catch (_) {}
+          expect(controller.emailError.value, 'Please input a valid email');
+        });
 
     test('Testing input a empty email', () {
       controller.emailChanged('');
@@ -116,21 +119,32 @@ void main() {
       } catch (_) {}
       expect(controller.passwordError.value, null);
     });
+  });
+  group("UI test for add admin", () {
+    late AddAdminController controller;
+    late GetMaterialApp view;
+    final dio = Dio();
+    final dioAdapter = DioAdapter(dio: dio);
 
-    test('Test add correct admin', () async {
-      nock('http://10.0.2.2:9000/api/v1/admin/admin')
-          .post('/')
-          .reply(201, null);
-      controller.token = "fasfsafsa";
-      controller.emailChanged("fsafs@fadsfs.com");
-      controller.nameChanged("fadsfs");
-      controller.passwordChanged("fsafdsfasfs");
-      try {
-        controller.addAdmin();
-      } catch (_) {}
-      expect(controller.isLoading.value, true);
-      await Future.delayed(Duration(seconds: 2));
-      expect(controller.isLoading.value, false);
+    setUp(() {
+      dio.httpClientAdapter = dioAdapter;
+      controller = AddAdminController(dio: dio, token: "token");
+      view = GetMaterialApp(
+        home: const AddAdminView(),
+        getPages: AppPages.routes,
+      );
+      Get.reset();
+      Get.testMode = true;
+      Get.put(controller);
+    });
+    tearDown(() {
+      Get.reset();
+    });
+    testWidgets("Test widgets completeness", (t) async {
+      await t.pumpWidget(view);
+      expect(find.byType(Stack), findsNWidgets(2));
+      expect(find.byType(TextField), findsNWidgets(3));
+      expect(find.byType(ElevatedButton), findsNWidgets(1));
     });
   });
 }
