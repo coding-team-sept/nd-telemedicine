@@ -18,6 +18,7 @@ class ProfileView extends GetView<ProfileController> {
           child: SizedBox(
             width: double.infinity,
             child: ElevatedButton(
+              //when press the button, will run the logout function on controller
                 onPressed: controller.logout, child: const Text("Log Out")),
           ),
         )

@@ -8,7 +8,7 @@ class AdminManagerView extends GetView<AdminManagerController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+//add new admin when floating action button is pressed
       floatingActionButton: FloatingActionButton(onPressed: controller.newAddAdmin,
         child: const Icon(Icons.add),
       ),
@@ -20,6 +20,7 @@ class AdminManagerView extends GetView<AdminManagerController> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              //search UI for admin
                 decoration: InputDecoration(
                     suffixIcon: IconButton(
                         onPressed: () {},icon: Icon(Icons.search), ),
@@ -32,6 +33,7 @@ class AdminManagerView extends GetView<AdminManagerController> {
           const SizedBox(height: 4,),
         Expanded(child: ListView(
           children: const [
+            //show all the admin detail about their name and email on the page
             Divider(),
             ListTile(title: Text('Wenlao'),subtitle:Text('12345@gmail.com'),),
             Divider(),

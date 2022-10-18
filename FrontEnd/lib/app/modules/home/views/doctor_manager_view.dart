@@ -18,6 +18,7 @@ class DoctorManagerView extends GetView<DoctorManagerController> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              //write a UI for search
               decoration: InputDecoration(
                   hintText: "Search",
                   suffixIcon: IconButton(
@@ -30,6 +31,7 @@ class DoctorManagerView extends GetView<DoctorManagerController> {
           Expanded(
               child: ListView(
             children: const [
+              //UI for display all the doctor on the screen
               Divider(),
               ListTile(
                   title: Text("Charles Robert"),

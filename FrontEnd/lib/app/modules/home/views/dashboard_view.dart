@@ -17,6 +17,7 @@ class DashboardView extends GetView<DashboardController> {
             height: 600,
             decoration: BoxDecoration(
                 image: DecorationImage(
+                  //the icon for this project display on the screen and store in assets file
                     image: AssetImage('assets/icon.jpg'),
                     colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.3), BlendMode.modulate,)
                 )

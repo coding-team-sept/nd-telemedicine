@@ -12,7 +12,6 @@ class AppointmentView extends GetView<AppointmentController> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-          //onPressed: controller.newAppointment,
           onPressed: controller.newAppointment,
           child: const Icon(Icons.add),
         ),
@@ -22,6 +21,7 @@ class AppointmentView extends GetView<AppointmentController> {
                   child: CircularProgressIndicator(),
                 )
               : RefreshIndicator(
+            //when pull down to refresh the page, then new appointments will be fetched
                 onRefresh: () async => controller.getAppointment(),
                 child: Flex(
                   direction: Axis.vertical,
@@ -35,6 +35,7 @@ class AppointmentView extends GetView<AppointmentController> {
                       child: ListView.builder(
                           itemBuilder: (context, index) =>
                              AppointmentTile(
+                               //show the detail of all the appointment on the page
                                       controller.appointmentData[index],
                                       controller.showAppointmentDetail,
                                     ),

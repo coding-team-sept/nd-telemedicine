@@ -19,5 +19,6 @@ class ProfileController extends GetxController {
     super.onClose();
   }
 
+  //when the user click the logout will be running this function
   void logout() async => Get.find<HomeController>().logout();
 }

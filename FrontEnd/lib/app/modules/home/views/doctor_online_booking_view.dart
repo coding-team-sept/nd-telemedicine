@@ -10,46 +10,48 @@ class DoctorOnlineBookingView extends GetView<DoctorOnlineBookingController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(
-          () => controller.isLoading.value
-              ? Center(
-            child: CircularProgressIndicator(),
-          )
-              :RefreshIndicator(
-            onRefresh: () async => controller.getOnlinePatientAppointment(),
-            child: Flex(
-              direction: Axis.vertical,
+        body: Obx(
+      () => controller.isLoading.value
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : RefreshIndicator(
+        //when pull down refresh the page, new patient will be shown on the screen
+              onRefresh: () async => controller.getOnlinePatientAppointment(),
+              child: Flex(
+                direction: Axis.vertical,
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Text('Pull down to refresh'),
                   ),
                   Divider(),
-                Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                  hintText: "Search",
-                  suffixIcon: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.search),
-                  )),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      //UI for search function
+                      decoration: InputDecoration(
+                          hintText: "Search",
+                          suffixIcon: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.search),
+                          )),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        itemBuilder: (context, index) =>
+                            OnlinePatientAppointmentTile(
+                              //get the patient appointment detail on the screen
+                              controller.onlinepatientappointmentData[index],
+                              controller.showOnlinePatientAppointmentDetail,
+                            ),
+                        itemCount:
+                            controller.onlinepatientappointmentData.length),
+                  ),
+                ],
+              ),
             ),
-          ),
-                Expanded(
-            child: ListView.builder(
-            itemBuilder: (context, index) => OnlinePatientAppointmentTile(
-            controller.onlinepatientappointmentData[index],
-            controller.showOnlinePatientAppointmentDetail,
-          ),
-          itemCount: controller.onlinepatientappointmentData.length
-            ),
-                ),
-      ],
-
-
-          ),
-      ),
     ));
   }
 }
