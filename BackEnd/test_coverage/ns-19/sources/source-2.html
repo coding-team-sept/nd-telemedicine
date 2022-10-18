@@ -1,0 +1,151 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ValidationUtils</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.github.coding_team_sept.nd_backend.authentication.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: ValidationUtils (com.github.coding_team_sept.nd_backend.authentication.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ValidationUtils</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93.8%
+  </span>
+  <span class="absValue">
+    (15/16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.github.coding_team_sept.nd_backend.authentication.utils;
+&nbsp;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.EmailFormatException;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.PasswordFormatException;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.UserNameFormatException;
+&nbsp;
+&nbsp;import java.util.regex.Pattern;
+&nbsp;
+<b class="nc">&nbsp;public class ValidationUtils {</b>
+&nbsp;    static public boolean validateEmail(String email) {
+<b class="fc">&nbsp;        if (!Pattern.compile(&quot;^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$&quot;).matcher(email).matches()) {</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    static public void validateEmailElseThrow(String email) throws EmailFormatException {
+<b class="fc">&nbsp;        if (!validateEmail(email)) {</b>
+<b class="fc">&nbsp;            throw new EmailFormatException(&quot;pattern not match&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    static public boolean validateUserName(String name) {
+<b class="fc">&nbsp;        if (!Pattern.compile(&quot;^[A-Za-z ,.&#39;-]{2,}$&quot;).matcher(name).matches()) {</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;   static public void validateUserNameElseThrow(String name) throws UserNameFormatException {
+<b class="fc">&nbsp;        if (!validateUserName(name)) {</b>
+<b class="fc">&nbsp;            throw new UserNameFormatException(&quot;pattern not match&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    static public boolean validatePassword(String password) {
+<b class="fc">&nbsp;        if (password.length() &lt; 8) {</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    static public void validatePasswordElseThrow(String password) throws PasswordFormatException {
+<b class="fc">&nbsp;        if (!validatePassword(password)) {</b>
+<b class="fc">&nbsp;            throw new PasswordFormatException(&quot;minimum 8 characters&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-18 14:05</div>
+</div>
+</body>
+</html>

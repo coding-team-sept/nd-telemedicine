@@ -76,7 +76,7 @@ public class AppUserServiceTest {
                         .build()
                 ,
                 AppUser.builder()
-                        .id(0L)
+                        .id(1L)
                         .name("Patient Two")
                         .password("PatientTwo")
                         .email("patient.two@email.com")
@@ -84,7 +84,7 @@ public class AppUserServiceTest {
                         .build()
                 ,
                 AppUser.builder()
-                        .id(0L)
+                        .id(2L)
                         .name("Doctor One")
                         .password("DoctorOne")
                         .email("doctor.one@email.com")
@@ -107,7 +107,7 @@ public class AppUserServiceTest {
     }
 
     @Test
-    public void getUsersByIds() {
+    public void getUsersByIdsWithRole() {
         final var fakeAppUsers = generateAppUsers();
         mockFindRoleByName();
 
@@ -115,7 +115,6 @@ public class AppUserServiceTest {
                 fakeAppUsers.stream()
                         .filter(appUser -> appUser.getRole().getName().equals(RoleType.ROLE_PATIENT))
                         .map(appUser -> {
-                            mockFindAppUserById(appUser);
                             mockFindAppUserByIdAndRole(appUser);
                             return appUser.getId();
                         })
@@ -127,7 +126,6 @@ public class AppUserServiceTest {
                 fakeAppUsers.stream()
                         .filter(appUser -> appUser.getRole().getName().equals(RoleType.ROLE_DOCTOR))
                         .map(appUser -> {
-                            mockFindAppUserById(appUser);
                             mockFindAppUserByIdAndRole(appUser);
                             return appUser.getId();
                         })
@@ -137,5 +135,21 @@ public class AppUserServiceTest {
 
         Assertions.assertEquals(2, rolePatientResult.size());
         Assertions.assertEquals(1, roleDoctorResult.size());
+    }
+
+    @Test
+    public void getUsersByIdsAll() {
+        final var fakeAppUsers = generateAppUsers();
+
+        final var rolePatientResult = appUserService.getUsersByIds(
+                fakeAppUsers.stream()
+                        .map(appUser -> {
+                            mockFindAppUserById(appUser);
+                            return appUser.getId();
+                        }).toList(),
+                null
+        );
+
+        Assertions.assertEquals(3, rolePatientResult.size());
     }
 }

@@ -1,0 +1,102 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AppUserRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.github.coding_team_sept.nd_backend.authentication.repositories</a>
+</div>
+
+<h1>Coverage Summary for Class: AppUserRepository (com.github.coding_team_sept.nd_backend.authentication.repositories)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">AppUserRepository$MockitoMock$1028916230</td>
+  </tr>
+  <tr>
+    <td class="name">AppUserRepository$MockitoMock$1028916230$auxiliary$mKRSMJOW</td>
+  </tr>
+  <tr>
+    <td class="name">AppUserRepository$MockitoMock$1028916230$auxiliary$WucYRf39</td>
+  </tr>
+  <tr>
+    <td class="name">AppUserRepository$MockitoMock$1291548789</td>
+  </tr>
+  <tr>
+    <td class="name">AppUserRepository$MockitoMock$1291548789$auxiliary$9vAjFw4v</td>
+  </tr>
+  <tr>
+    <td class="name">AppUserRepository$MockitoMock$1291548789$auxiliary$RpvYty34</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.github.coding_team_sept.nd_backend.authentication.repositories;
+&nbsp;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.models.Role;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Repository
+&nbsp;public interface AppUserRepository extends JpaRepository&lt;AppUser, Long&gt; {
+&nbsp;    Optional&lt;AppUser&gt; findUserByEmail(String email);
+&nbsp;    Boolean existsAppUserByEmail(String email);
+&nbsp;    Optional&lt;AppUser&gt; findAppUserByIdAndRole(Long id, Role role);
+&nbsp;    Optional&lt;List&lt;AppUser&gt;&gt; findAppUserByRole(Role role);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-18 14:05</div>
+</div>
+</body>
+</html>

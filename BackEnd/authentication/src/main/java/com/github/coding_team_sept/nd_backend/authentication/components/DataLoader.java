@@ -42,7 +42,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     @Transactional
-    void createRole(RoleType roleType) {
+    public void createRole(RoleType roleType) {
         final var role = roleRepo.findRoleByName(roleType);
         if (role.isEmpty()) {
             final var newRole = Role.builder().name(roleType).build();
@@ -51,7 +51,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     @Transactional
-    void createAdmin() {
+    public void createAdmin() {
         final var email = "admin@admin.com";
         final var appUser = authenticationRepo.findUserByEmail(email);
         if (appUser.isEmpty()) {

@@ -1,4 +1,5 @@
 import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
+import com.github.coding_team_sept.nd_backend.authentication.exceptions.EmailTakenException;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
 import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetails;
 import com.github.coding_team_sept.nd_backend.authentication.models.Role;
@@ -129,7 +130,7 @@ public class AuthenticationServiceTest {
 
 
     @Test
-    public void testRegister() {
+    public void testRegisterSuccessful() {
         final var fakeRegisterRequest = getFakeRegisterRequest();
         final var roleType = RoleType.ROLE_ADMIN;
         final var fakeAppUser = AppUser.builder()
@@ -154,5 +155,19 @@ public class AuthenticationServiceTest {
                 roleType
         );
         Assertions.assertNotNull(result.token.access);
+    }
+
+    @Test
+    public void testRegisterThenUserExists() {
+        final var fakeRegisterRequest = getFakeRegisterRequest();
+        final var roleType = RoleType.ROLE_ADMIN;
+        mockExistsAppUserByEmail(fakeRegisterRequest.email(), true);
+        Assertions.assertThrows(
+                EmailTakenException.class,
+                () -> authenticationService.register(
+                        fakeRegisterRequest,
+                        roleType
+                )
+        );
     }
 }
