@@ -14,5 +14,5 @@ jobs:
         ls
         pwd
         chmod +x ./deploy/deploy.sh
-        ./deploy.sh
+        ./deploy/deploy.sh
       shell: bash
