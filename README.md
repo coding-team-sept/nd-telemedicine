@@ -14,7 +14,6 @@
 
 * Github repository : https://github.com/coding-team-sept/nd-telemedicine
 * jira Board : https://team-coding.atlassian.net/jira/software/projects/CT/boards/1/roadmap?shared=&atlOrigin=eyJpIjoiODk5YTkyZmRjNDRmNDVlMDg4YWE5M2U2MDY5MmI1Y2IiLCJwIjoiaiJ9
-* Google Docs :
 
 ## Running the application
 ### Frontend
