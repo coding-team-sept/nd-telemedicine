@@ -23,6 +23,7 @@ class AppointmentController extends GetxController {
     getAppointment();
   }
 
+  //function for get the appointments
   void getAppointment() async {
     isLoading.value = true;
     // Get doctors list from server
@@ -47,8 +48,10 @@ class AppointmentController extends GetxController {
     isLoading.value = false;
   }
 
+  //run this function will go to create appointment page
   void newAppointment() => Get.toNamed(Routes.CREATE_APPOINTMENT);
 
+  //if the patient click offline will shown message through AlertDialog
   void showAppointmentDetail(int id, bool isOnline, int doctorID) {
     if (!isOnline) {
       Get.dialog(const AlertDialog(
@@ -58,6 +61,7 @@ class AppointmentController extends GetxController {
 
       return;
     }
+    //this function will navigate the chat page when patient clicks online booking
     Get.toNamed(Routes.CHAT, arguments: {
       "isDoctor": false,
       "appointmentID": id,

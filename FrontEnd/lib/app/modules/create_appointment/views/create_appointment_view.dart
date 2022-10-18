@@ -24,12 +24,14 @@ class CreateAppointmentView extends GetView<CreateAppointmentController> {
                   children: [
                     Expanded(
                       child: TextButton(
+                        //run controller function to select a date and get doctor
                         onPressed: controller.selectDate,
                         child: Text(controller.formattedDate),
                       ),
                     ),
                     Expanded(
                       child: TextButton(
+                        //run controller function to select a time and get doctor
                         onPressed: controller.selectTime,
                         child: Text(controller.formattedTime),
                       ),
@@ -42,6 +44,7 @@ class CreateAppointmentView extends GetView<CreateAppointmentController> {
               () => controller.isLoading.value
                   ? const Expanded(
                       child: Center(
+                        //shape for loading is circular
                         child: CircularProgressIndicator(),
                       ),
                     )
@@ -49,6 +52,7 @@ class CreateAppointmentView extends GetView<CreateAppointmentController> {
                       child: ListView.builder(
                           itemCount: controller.doctorData.length,
                           itemBuilder: (context, index) => ListTile(
+                            // display the booking data
                                 onTap: () => controller
                                     .doBooking(controller.doctorData[index].id),
                                 leading: CircleAvatar(

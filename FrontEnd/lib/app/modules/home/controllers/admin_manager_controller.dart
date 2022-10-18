@@ -18,6 +18,7 @@ class AdminManagerController extends GetxController {
   void onClose() {
     super.onClose();
   }
+  // function for add new admin and will go to add-admin page
   void newAddAdmin() => Get.toNamed(Routes.ADD_ADMIN);
 
 }

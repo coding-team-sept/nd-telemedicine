@@ -15,6 +15,7 @@ class OfflineDoctorBookingView extends GetView<OfflineDoctorBookingController> {
         Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              //UI for search function
                 decoration: InputDecoration(
                     suffixIcon: IconButton(
                       onPressed: () {},
@@ -31,10 +32,12 @@ class OfflineDoctorBookingView extends GetView<OfflineDoctorBookingController> {
         ),
         Expanded(
           child: RefreshIndicator(
+            //when pull down to fresh the page, new offline booking will be shown on the screen
             onRefresh: () async => controller.getOfflineAppointment(),
             child: Obx(
               () => ListView.builder(
                   itemBuilder: (context, index) => OfflineAppointmentTile(
+                    //display the offline booking detail
                         controller.offlineData[index],
                         controller.showPatientDetail,
                       ),

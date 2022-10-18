@@ -29,6 +29,7 @@ class DoctorOnlineBookingController extends GetxController {
     super.onClose();
   }
 
+  // function to display patient's appointment
   void getOnlinePatientAppointment() async {
     isLoading.value = true;
     // Get doctors list from server
@@ -37,6 +38,7 @@ class DoctorOnlineBookingController extends GetxController {
           options: Options(headers: {"Authorization": "Bearer $token"}));
       onlinepatientappointmentData.clear();
       for (var element in (response.data["data"] as List)) {
+        //determine the patient is online booking
         if (element['session'] == "ONLINE") {
           onlinepatientappointmentData.add(OnlinePatientAppointmentModel(
             id: element['id'],
@@ -52,7 +54,9 @@ class DoctorOnlineBookingController extends GetxController {
     isLoading.value = false;
   }
 
+  //function for show detail of the online patient's appointment
   void showOnlinePatientAppointmentDetail(int id, int patientId) {
+    //go to Chat page
     Get.toNamed(Routes.CHAT, arguments: {
       "isDoctor": true,
       "appointmentID": id,

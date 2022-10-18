@@ -15,6 +15,7 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     if(!testMode){
+      // if not the test mode, will get user's token, email and role
       token.value = await storage.read(key: "token");
       email.value = await storage.read(key: "email");
       role.value = await storage.read(key: "role");
@@ -22,6 +23,7 @@ class HomeController extends GetxController {
         Get.offNamedUntil(Routes.LOGIN, (route) => false);
       }
     } else {
+      //if it is test mode, just emulate data for test
       token.value = "token";
       email.value = "email";
       role.value = "admin";
@@ -30,7 +32,9 @@ class HomeController extends GetxController {
   }
 
   void logout() async {
+    //when user click logout, the token will be deleted
     await storage.delete(key: "token");
+    //And they will back to Login page
     Get.offNamedUntil(Routes.LOGIN, (r) => false);
   }
 

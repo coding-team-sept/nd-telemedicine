@@ -19,6 +19,7 @@ class OfflineDoctorBookingController extends GetxController {
     super.onInit();
   }
 
+  //function to get the offline booking
   void getOfflineAppointment() async {
     isLoading.value = true;
     // Get doctors list from server
@@ -28,6 +29,7 @@ class OfflineDoctorBookingController extends GetxController {
       offlineData.clear();
       for (var element in (response.data["data"] as List)) {
         if (element['session'] == "OFFLINE") {
+          //determine the patient is offline booking
           offlineData.add(OfflinePatientAppointmentModel(
             id: element['id'],
             datetime: element['datetime'],
@@ -46,6 +48,7 @@ class OfflineDoctorBookingController extends GetxController {
     isLoading.value = false;
   }
 
+  //function to show the detail for offline patient
   void showPatientDetail(int id) {
     Get.dialog(const AlertDialog(
       title: Text("Booking is Offline"),

@@ -5,6 +5,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:nd/app/data/const.dart';
 
 class ChatController extends GetxController {
+  //create patient user and doctor user for determination
   final patientUser = const types.User(id: 'p');
   final doctorUser = const types.User(id: 'd');
   RxList<types.Message> messages = (List<types.Message>.of([])).obs;
@@ -17,6 +18,7 @@ class ChatController extends GetxController {
   final bool debug;
   final Dio dio;
 
+  //for testing purposes
   ChatController(
       {Dio? dio,
       String? token,
@@ -38,6 +40,7 @@ class ChatController extends GetxController {
 
   @override
   void onInit() async {
+    //if not testing will get the detail from the storage
     if (!debug) {
       isLoading.value = true;
       appointmentID = Get.arguments['appointmentID'];
@@ -65,14 +68,18 @@ class ChatController extends GetxController {
       for (var element in response.data['data']['messages']) {
         if (doctorID == -999) {
           if (element['senderId'] != patientID) {
+            //if the sender is doctor then create message for doctor from patient point of view
             addMessage(createMessage(element['message'], true));
           } else {
+            //else the sender is patient then create message for patient from patient point of view
             addMessage(createMessage(element['message'], false));
           }
         } else {
           if (element['senderId'] == doctorID) {
+            //if the sender is doctor then create message for doctor from doctor point of view
             addMessage(createMessage(element['message'], true));
           } else {
+            //if the sender is patient then create message for patient from doctor point of view
             addMessage(createMessage(element['message'], false));
           }
         }
@@ -92,7 +99,7 @@ class ChatController extends GetxController {
     try {
       await dio.get("${C.urlC}/app/chat/status/$appointmentID",
           options: Options(headers: {"Authorization": "Bearer $token"}));
-      // JUst ignore uread not important
+      // Just ignore unread not important
     } on DioError catch (_) {
       await Get.dialog(const AlertDialog(
           title: Text(
@@ -104,6 +111,7 @@ class ChatController extends GetxController {
 
   Future getMessages() async {
     try {
+      //from the URL app/chat/message to get appointment ID and authorise by token
       var response = await dio.get("${C.urlC}/app/chat/message/$appointmentID",
           options: Options(headers: {"Authorization": "Bearer $token"}));
 
@@ -111,14 +119,18 @@ class ChatController extends GetxController {
       for (var element in response.data['data']['messages']) {
         if (doctorID == -999) {
           if (element['senderId'] != patientID) {
+            //if the sender is doctor then create message for doctor from patient point of view
             addMessage(createMessage(element['message'], true));
           } else {
+            //else the sender is patient then create message for patient from patient point of view
             addMessage(createMessage(element['message'], false));
           }
         } else {
           if (element['senderId'] == doctorID) {
+            //if the sender is doctor then create message for doctor from doctor point of view
             addMessage(createMessage(element['message'], true));
           } else {
+            //if the sender is patient then create message for patient from doctor point of view
             addMessage(createMessage(element['message'], false));
           }
         }
@@ -136,24 +148,30 @@ class ChatController extends GetxController {
     messages.insert(0, message);
   }
 
+  //add send message to the screen
   Future handleSendPressed(types.PartialText message) async {
     try {
+      //url in: app/chat/message/
       await dio.post("${C.urlC}/app/chat/message/",
+          //appointment ID and message for data
           data: {"appointmentId": appointmentID, "message": message.text},
+          //authorization through token
           options: Options(headers: {"Authorization": "Bearer $token"}));
       addMessage(createMessage(message.text, isDoctor));
-    } on DioError catch (_) {
+    } on DioError catch (_) { //otherwise, error will shown through AlertDialog
       await Get.dialog(const AlertDialog(
           title: Text(
         "Unable to send message",
       )));
-      Get.back();
+      Get.back(); //go back to the previous user interface
     }
   }
 
   types.Message createMessage(String text, bool isDoctor) {
     final m = types.TextMessage(
+      //determined whether is doctor or not, if not, will be the patient user
       author: isDoctor ? doctorUser : patientUser,
+      // create message on current time
       createdAt: DateTime.now().millisecondsSinceEpoch,
       id: isDoctor ? "doctor" : "patient",
       text: text,

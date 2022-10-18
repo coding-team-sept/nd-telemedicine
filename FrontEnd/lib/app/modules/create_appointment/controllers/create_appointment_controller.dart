@@ -13,6 +13,7 @@ class CreateAppointmentController extends GetxController {
 
   @override
   void onInit() async {
+    //for testing purposes
     if (debug) {
       token = await const FlutterSecureStorage().read(key: "token") ?? 'token';
     } else {
@@ -23,6 +24,7 @@ class CreateAppointmentController extends GetxController {
 
   final Dio dio;
 
+  //for testing purposes
   CreateAppointmentController({Dio? dio})
       : dio = dio ?? Dio(),
         debug = dio == null ? true : false;
@@ -32,8 +34,9 @@ class CreateAppointmentController extends GetxController {
   final isLoading = false.obs;
   var todayDate = DateTime.now();
 
+  //Standard format of Date
   String get formattedDate => DateFormat.yMMMMd().format(date.value);
-
+  //Standard format of Time
   String get formattedTime => "${time.value.hour}:${time.value.minute}";
 
   void selectDate() async {
@@ -68,14 +71,17 @@ class CreateAppointmentController extends GetxController {
     } on DioError catch (e, _) {
       if ((e.response?.statusCode ?? 500) == 400) {
         var error = e.response?.data["message"] ?? "";
+        //show this error when the user select the doctor's time before 10am or after 8pm, which is not working time
         if (error == "Invalid datetime: Out of operation time") {
           Get.dialog(const AlertDialog(
               title: Text("Error"), content: Text("Out of operation time")));
-        } else if (error == "Invalid datetime: Datetime in the past") {
+        } //show this error when the user select the past date
+        else if (error == "Invalid datetime: Datetime in the past") {
           Get.dialog(const AlertDialog(
               title: Text("Error"),
               content: Text("Please select a time in the future")));
         }
+        //otherwise, if the status code is 404, unknown error will be shown
       } else if (e.response?.statusCode != 404) {
         Get.dialog(const AlertDialog(
             title: Text("Error"), content: Text("Unknown Error")));
@@ -84,6 +90,7 @@ class CreateAppointmentController extends GetxController {
     isLoading.value = false;
   }
 
+  //show choice dialog for booking function to choose offline and online
   void doBooking(int id) {
     Get.dialog(SimpleDialog(
       title: const Text("Choose Location"),
@@ -100,6 +107,7 @@ class CreateAppointmentController extends GetxController {
     ));
   }
 
+  //run when the patient select online booking
   void doOnlineBooking(int id) async {
     Get.back();
     isLoading.value = true;
@@ -126,6 +134,7 @@ class CreateAppointmentController extends GetxController {
     isLoading.value = false;
   }
 
+  //run when the patient select offline booking
   Future<void> doOfflineBooking(int id) async {
     Get.back();
     isLoading.value = true;
