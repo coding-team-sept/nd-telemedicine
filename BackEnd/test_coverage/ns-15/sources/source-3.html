@@ -1,0 +1,158 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Role</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.github.coding_team_sept.nd_backend.authentication.models</a>
+</div>
+
+<h1>Coverage Summary for Class: Role (com.github.coding_team_sept.nd_backend.authentication.models)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Role</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (5/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (5/6)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Role$RoleBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.github.coding_team_sept.nd_backend.authentication.models;
+&nbsp;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import lombok.Builder;
+&nbsp;import lombok.Data;
+&nbsp;import lombok.NoArgsConstructor;
+&nbsp;
+&nbsp;import javax.persistence.*;
+&nbsp;
+&nbsp;@Entity
+<b class="fc">&nbsp;@Data</b>
+<b class="fc">&nbsp;@Builder</b>
+<b class="fc">&nbsp;@AllArgsConstructor</b>
+<b class="nc">&nbsp;@NoArgsConstructor</b>
+&nbsp;public class Role {
+&nbsp;    @Id
+&nbsp;    @SequenceGenerator(
+&nbsp;            name = &quot;role_sequence_id&quot;,
+&nbsp;            sequenceName = &quot;role_sequence_id&quot;
+&nbsp;    )
+&nbsp;    @GeneratedValue(
+&nbsp;            strategy = GenerationType.SEQUENCE,
+&nbsp;            generator = &quot;role_sequence_id&quot;
+&nbsp;    )
+<b class="fc">&nbsp;    private Long id;</b>
+&nbsp;    @Enumerated(EnumType.STRING)
+<b class="fc">&nbsp;    private RoleType name;</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-18 14:05</div>
+</div>
+</body>
+</html>

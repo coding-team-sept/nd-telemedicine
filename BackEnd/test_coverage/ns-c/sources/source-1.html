@@ -1,0 +1,359 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AppointmentService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.github.coding_team_sept.nd_backend.appointment.services</a>
+</div>
+
+<h1>Coverage Summary for Class: AppointmentService (com.github.coding_team_sept.nd_backend.appointment.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AppointmentService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94.1%
+  </span>
+  <span class="absValue">
+    (16/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.3%
+  </span>
+  <span class="absValue">
+    (110/129)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.github.coding_team_sept.nd_backend.appointment.services;
+&nbsp;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.enums.SessionType;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.exceptions.*;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.exceptions.format_exceptions.InvalidSessionException;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.models.Appointment;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.models.AppointmentSession;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.payloads.requests.AppointmentRequest;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.ChatResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UserDataResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UsersDataResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.AppointmentsResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.DoctorAppointmentResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment.PatientAppointmentResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.repositories.AppointmentRepository;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.repositories.SessionRepository;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.utils.AppointmentDateTimeUtils;
+&nbsp;import org.joda.time.DateTime;
+&nbsp;import org.springframework.http.HttpHeaders;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.Comparator;
+&nbsp;import java.util.List;
+&nbsp;
+<b class="nc">&nbsp;@Service</b>
+<b class="fc">&nbsp;public record AppointmentService(</b>
+&nbsp;        AuthenticationService authService,
+&nbsp;        ScheduleService scheduleService,
+&nbsp;        ChatService chatService,
+&nbsp;        AppointmentRepository appointmentRepo,
+&nbsp;        SessionRepository sessionRepo,
+&nbsp;        AppointmentDateTimeUtils datetimeUtils
+&nbsp;) {
+&nbsp;    private DateTime getDateTime(
+&nbsp;            String datetime,
+&nbsp;            Long patientId,
+&nbsp;            Long doctorId
+&nbsp;    ) throws AppointmentDateTimeException, AppointmentConflictException {
+<b class="fc">&nbsp;        final var appointmentDatetime = datetimeUtils.parseString(datetime);</b>
+<b class="fc">&nbsp;        scheduleService.validateAppointmentDateTime(appointmentDatetime);</b>
+<b class="fc">&nbsp;        if (patientId != null) {</b>
+<b class="fc">&nbsp;            scheduleService.checkPatientAvailability(appointmentDatetime, patientId);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        if (doctorId != null) {</b>
+<b class="fc">&nbsp;            scheduleService.checkDoctorAvailability(appointmentDatetime, doctorId);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return appointmentDatetime;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private UserDataResponse getDoctor(
+&nbsp;            HttpHeaders headers,
+&nbsp;            Long doctorId
+&nbsp;    ) throws RestClientException, UserNotFoundException {
+<b class="fc">&nbsp;        final var doctors = authService.getUsers(headers, List.of(doctorId), &quot;doctor&quot;);</b>
+<b class="fc">&nbsp;        if (!doctors.users.isEmpty()) {</b>
+<b class="fc">&nbsp;            return doctors.users.get(0);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        throw new UserNotFoundException();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public UsersDataResponse getAvailableDoctor(
+&nbsp;            HttpHeaders headers,
+&nbsp;            String datetime
+&nbsp;    ) throws RestClientException,
+&nbsp;            AppointmentDateTimeException,
+&nbsp;            AppointmentConflictException {
+<b class="fc">&nbsp;        final var validation = authService.getAuthorization(headers);</b>
+<b class="fc">&nbsp;        final var appointmentDatetime = getDateTime(datetime, validation.id, null);</b>
+<b class="fc">&nbsp;        final var occupiedDoctor = appointmentRepo.getAppointmentByAppointmentTimeBetween(</b>
+<b class="fc">&nbsp;                        datetimeUtils.getMin(appointmentDatetime).toDate(),</b>
+<b class="fc">&nbsp;                        datetimeUtils.getMax(appointmentDatetime).toDate()</b>
+<b class="fc">&nbsp;                ).stream()</b>
+<b class="fc">&nbsp;                .map(Appointment::getDoctorId)</b>
+<b class="fc">&nbsp;                .toList();</b>
+&nbsp;
+<b class="fc">&nbsp;        final var doctors = authService.getUsers(headers, &quot;doctor&quot;);</b>
+<b class="fc">&nbsp;        if (!doctors.users.isEmpty()) {</b>
+<b class="fc">&nbsp;            return UsersDataResponse.build(doctors.users.stream().filter(</b>
+<b class="fc">&nbsp;                    doctorResponse -&gt; !occupiedDoctor.contains(doctorResponse.id)</b>
+<b class="fc">&nbsp;            ).toList());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return new UsersDataResponse(List.of());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public PatientAppointmentResponse addAppointment(
+&nbsp;            HttpHeaders headers,
+&nbsp;            AppointmentRequest body
+&nbsp;    ) throws AppointmentDateTimeException,
+&nbsp;            RestClientException,
+&nbsp;            UserNotFoundException,
+&nbsp;            AppointmentConflictException,
+&nbsp;            InvalidSessionException {
+&nbsp;        // Authorize requester and get its ID
+<b class="fc">&nbsp;        final var validation = authService.getAuthorization(headers);</b>
+&nbsp;
+&nbsp;        // Check session
+<b class="fc">&nbsp;        final var rawSession = body.session();</b>
+&nbsp;        AppointmentSession session;
+&nbsp;        try {
+<b class="fc">&nbsp;            if (rawSession == null) {</b>
+<b class="nc">&nbsp;                throw new IllegalArgumentException();</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                session = sessionRepo.findRoleByName(</b>
+<b class="fc">&nbsp;                        SessionType.valueOf(body.session().toUpperCase())</b>
+<b class="fc">&nbsp;                ).orElseThrow(IllegalArgumentException::new);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (IllegalArgumentException e) {</b>
+<b class="nc">&nbsp;            throw new InvalidSessionException((rawSession == null) ? &quot;NULL&quot; : rawSession);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        // Check doctor existence and get the doctor data
+<b class="fc">&nbsp;        final var doctorResponse = getDoctor(headers, body.doctorId());</b>
+&nbsp;
+&nbsp;        // Validate datetime and convert the type
+<b class="fc">&nbsp;        final var appointmentDatetime = getDateTime(body.datetime(), validation.id, doctorResponse.id);</b>
+&nbsp;
+&nbsp;        // Register appointment
+<b class="fc">&nbsp;        final var appointment = appointmentRepo.saveAndFlush(</b>
+<b class="fc">&nbsp;                Appointment.builder()</b>
+<b class="fc">&nbsp;                        .doctorId(doctorResponse.id)</b>
+<b class="fc">&nbsp;                        .patientId(validation.id)</b>
+<b class="fc">&nbsp;                        .appointmentTime(appointmentDatetime.toDate())</b>
+<b class="fc">&nbsp;                        .session(session)</b>
+<b class="fc">&nbsp;                        .build()</b>
+&nbsp;        );
+&nbsp;
+&nbsp;        // Create and get chat status
+&nbsp;        // Error can be ignored in case chat service is down
+&nbsp;        // TODO: Create queue for unregistered chat
+&nbsp;        ChatResponse chatStatus;
+&nbsp;        try {
+<b class="fc">&nbsp;            chatStatus = chatService.getChatStatus(headers, appointment.getId());</b>
+<b class="nc">&nbsp;        } catch (RestClientException e) {</b>
+<b class="nc">&nbsp;            System.out.println(e.message);</b>
+<b class="nc">&nbsp;            chatStatus = new ChatResponse(0, 0);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        return PatientAppointmentResponse.build(</b>
+<b class="fc">&nbsp;                appointment.getId(),</b>
+&nbsp;                doctorResponse,
+<b class="fc">&nbsp;                body.datetime(),</b>
+<b class="fc">&nbsp;                appointment.getSession().getName(),</b>
+&nbsp;                chatStatus
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    public AppointmentsResponse&lt;PatientAppointmentResponse&gt; getPatientAppointment(
+&nbsp;            HttpHeaders headers,
+&nbsp;            Long id
+&nbsp;    ) throws RestClientException, UnauthorizedException {
+<b class="fc">&nbsp;        final var validation = authService.getAuthorization(headers);</b>
+<b class="fc">&nbsp;        final var role = validation.role.toLowerCase();</b>
+<b class="fc">&nbsp;        if (role.contains(&quot;patient&quot;)) {</b>
+<b class="fc">&nbsp;            List&lt;Appointment&gt; appointments = List.of();</b>
+<b class="fc">&nbsp;            if (id != null) {</b>
+<b class="nc">&nbsp;                appointments = List.of(appointmentRepo.getById(id));</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                appointments = appointmentRepo.getAppointmentByPatientId(validation.id);</b>
+&nbsp;            }
+<b class="fc">&nbsp;            final var doctorsId = appointments.stream()</b>
+<b class="fc">&nbsp;                    .map(Appointment::getDoctorId)</b>
+<b class="fc">&nbsp;                    .distinct()</b>
+<b class="fc">&nbsp;                    .toList();</b>
+&nbsp;
+&nbsp;            // Retrieve doctors data
+<b class="fc">&nbsp;            final var doctors = authService.getUsers(headers, doctorsId, &quot;doctor&quot;);</b>
+<b class="fc">&nbsp;            return AppointmentsResponse.build(appointments.stream()</b>
+<b class="fc">&nbsp;                    .filter(appointment -&gt; datetimeUtils.getMax(</b>
+<b class="fc">&nbsp;                                    new DateTime(appointment.getAppointmentTime())</b>
+<b class="fc">&nbsp;                            ).isAfter(DateTime.now())</b>
+<b class="fc">&nbsp;                    ).sorted(</b>
+<b class="fc">&nbsp;                            Comparator.comparing(Appointment::getAppointmentTime)</b>
+<b class="fc">&nbsp;                    ).map(appointment -&gt; {</b>
+&nbsp;                        ChatResponse chatStatus;
+&nbsp;                        // Create and get chat status
+&nbsp;                        // Error can be ignored in case chat service is down
+&nbsp;                        // TODO: Create queue for unregistered chat
+&nbsp;                        try {
+<b class="fc">&nbsp;                            chatStatus = chatService.getChatStatus(headers, appointment.getId());</b>
+<b class="nc">&nbsp;                        } catch (RestClientException e) {</b>
+<b class="nc">&nbsp;                            System.out.println(e.message);</b>
+<b class="nc">&nbsp;                            chatStatus = new ChatResponse(0, 0);</b>
+<b class="fc">&nbsp;                        }</b>
+<b class="fc">&nbsp;                        return new PatientAppointmentResponse(</b>
+<b class="fc">&nbsp;                                appointment.getId(),</b>
+<b class="fc">&nbsp;                                doctors.users.stream()</b>
+<b class="fc">&nbsp;                                        .filter(</b>
+<b class="fc">&nbsp;                                                doctor -&gt; doctor.id.equals(appointment.getDoctorId())</b>
+<b class="fc">&nbsp;                                        ).findAny()</b>
+<b class="fc">&nbsp;                                        .orElse(null),</b>
+<b class="fc">&nbsp;                                appointment.getAppointmentTime().toString(),</b>
+<b class="fc">&nbsp;                                appointment.getSession().getName().name(),</b>
+&nbsp;                                chatStatus
+&nbsp;                        );
+<b class="fc">&nbsp;                    }).filter(</b>
+<b class="fc">&nbsp;                            appointment -&gt; appointment.appointedUser != null</b>
+<b class="fc">&nbsp;                    ).toList());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        throw new UnauthorizedException(&quot;Unauthorized role&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public AppointmentsResponse&lt;DoctorAppointmentResponse&gt; getDoctorAppointment(
+&nbsp;            HttpHeaders headers,
+&nbsp;            Long id
+&nbsp;    ) throws RestClientException, UnauthorizedException {
+<b class="fc">&nbsp;        final var validation = authService.getAuthorization(headers);</b>
+<b class="fc">&nbsp;        final var role = validation.role.toLowerCase();</b>
+<b class="fc">&nbsp;        if (role.contains(&quot;doctor&quot;)) {</b>
+<b class="fc">&nbsp;            List&lt;Appointment&gt; appointments = List.of();</b>
+<b class="fc">&nbsp;            if (id != null) {</b>
+<b class="nc">&nbsp;                appointments = List.of(appointmentRepo.getById(id));</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                appointments = appointmentRepo.getAppointmentByDoctorId(validation.id);</b>
+&nbsp;            }
+<b class="fc">&nbsp;            final var patientsId = appointments.stream()</b>
+<b class="fc">&nbsp;                    .map(Appointment::getPatientId)</b>
+<b class="fc">&nbsp;                    .distinct()</b>
+<b class="fc">&nbsp;                    .toList();</b>
+&nbsp;
+&nbsp;            // Retrieve doctors data
+<b class="fc">&nbsp;            final var patients = authService.getUsers(headers, patientsId, &quot;patient&quot;);</b>
+<b class="fc">&nbsp;            return AppointmentsResponse.build(appointments.stream()</b>
+<b class="fc">&nbsp;                    .filter(appointment -&gt; datetimeUtils.getMax(</b>
+<b class="fc">&nbsp;                                    new DateTime(appointment.getAppointmentTime())</b>
+<b class="fc">&nbsp;                            ).isAfter(DateTime.now())</b>
+<b class="fc">&nbsp;                    ).sorted(</b>
+<b class="fc">&nbsp;                            Comparator.comparing(Appointment::getAppointmentTime)</b>
+<b class="fc">&nbsp;                    ).map(appointment -&gt; {</b>
+&nbsp;                        ChatResponse chatStatus;
+&nbsp;                        // Create and get chat status
+&nbsp;                        // Error can be ignored in case chat service is down
+&nbsp;                        // TODO: Create queue for unregistered chat
+&nbsp;                        try {
+<b class="fc">&nbsp;                            chatStatus = chatService.getChatStatus(headers, appointment.getId());</b>
+<b class="nc">&nbsp;                        } catch (RestClientException e) {</b>
+<b class="nc">&nbsp;                            System.out.println(e.message);</b>
+<b class="nc">&nbsp;                            chatStatus = new ChatResponse(0, 0);</b>
+<b class="fc">&nbsp;                        }</b>
+<b class="fc">&nbsp;                        return new DoctorAppointmentResponse(</b>
+<b class="fc">&nbsp;                                appointment.getId(),</b>
+<b class="fc">&nbsp;                                patients.users.stream()</b>
+<b class="fc">&nbsp;                                        .filter(</b>
+<b class="fc">&nbsp;                                                patient -&gt; patient.id.equals(appointment.getPatientId())</b>
+<b class="fc">&nbsp;                                        ).findAny()</b>
+<b class="fc">&nbsp;                                        .orElse(null),</b>
+<b class="fc">&nbsp;                                appointment.getAppointmentTime().toString(),</b>
+<b class="fc">&nbsp;                                appointment.getSession().getName().name(),</b>
+&nbsp;                                chatStatus
+&nbsp;                        );
+<b class="fc">&nbsp;                    }).filter(</b>
+<b class="fc">&nbsp;                            appointment -&gt; appointment.appointedUser != null</b>
+<b class="fc">&nbsp;                    ).toList());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        throw new UnauthorizedException(&quot;Unauthorized role&quot;);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-18 14:05</div>
+</div>
+</body>
+</html>

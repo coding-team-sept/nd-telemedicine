@@ -1,0 +1,189 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > SecurityConfig</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.github.coding_team_sept.nd_backend.authentication.configurations</a>
+</div>
+
+<h1>Coverage Summary for Class: SecurityConfig (com.github.coding_team_sept.nd_backend.authentication.configurations)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SecurityConfig</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/27)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.github.coding_team_sept.nd_backend.authentication.configurations;
+&nbsp;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.components.AuthenticationEntryPointJwt;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.services.AppUserDetailsService;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.components.JwtRequestFilter;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.context.annotation.Bean;
+&nbsp;import org.springframework.context.annotation.Configuration;
+&nbsp;import org.springframework.security.authentication.AuthenticationManager;
+&nbsp;import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+&nbsp;import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+&nbsp;import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+&nbsp;import org.springframework.security.config.http.SessionCreationPolicy;
+&nbsp;import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+&nbsp;import org.springframework.web.cors.CorsConfiguration;
+&nbsp;import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+&nbsp;import org.springframework.web.filter.CorsFilter;
+&nbsp;
+&nbsp;@Configuration
+&nbsp;@EnableWebSecurity
+&nbsp;@EnableGlobalMethodSecurity(prePostEnabled = true)
+<b class="nc">&nbsp;public class SecurityConfig extends WebSecurityConfigurerAdapter {</b>
+&nbsp;    @Autowired
+&nbsp;    private AppUserDetailsService userDetailsService;
+&nbsp;    @Autowired
+&nbsp;    private AuthenticationEntryPointJwt unauthorizedHandler;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private JwtRequestFilter requestFilter;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    protected void configure(AuthenticationManagerBuilder managerBuilder) throws Exception {
+<b class="nc">&nbsp;        managerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    @Override
+&nbsp;    public AuthenticationManager authenticationManagerBean() throws Exception {
+<b class="nc">&nbsp;        return super.authenticationManagerBean();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public PasswordEncoder passwordEncoder() {
+<b class="nc">&nbsp;        return new BCryptPasswordEncoder();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void configure(HttpSecurity security) throws Exception {
+<b class="nc">&nbsp;        security.cors().and().csrf().disable();</b>
+&nbsp;
+<b class="nc">&nbsp;        security.sessionManagement()</b>
+<b class="nc">&nbsp;                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)</b>
+<b class="nc">&nbsp;                .and();</b>
+&nbsp;
+<b class="nc">&nbsp;        security.exceptionHandling()</b>
+<b class="nc">&nbsp;                .authenticationEntryPoint(unauthorizedHandler)</b>
+<b class="nc">&nbsp;                .and();</b>
+&nbsp;
+<b class="nc">&nbsp;        security.authorizeRequests()</b>
+<b class="nc">&nbsp;                .antMatchers(&quot;/api/v1/auth/validate&quot;).authenticated()</b>
+<b class="nc">&nbsp;                .antMatchers(&quot;/api/v1/auth/**&quot;).permitAll()</b>
+<b class="nc">&nbsp;                .antMatchers(&quot;/api/v1/app/admin/patient&quot;).hasAnyAuthority(RoleType.ROLE_DOCTOR.name())</b>
+<b class="nc">&nbsp;                .antMatchers(&quot;/api/v1/app/admin/doctor&quot;).hasAnyAuthority(RoleType.ROLE_ADMIN.name(), RoleType.ROLE_PATIENT.name())</b>
+<b class="nc">&nbsp;                .antMatchers(&quot;/api/v1/app/admin/**&quot;).hasAuthority(RoleType.ROLE_ADMIN.name())</b>
+<b class="nc">&nbsp;                .anyRequest().authenticated();</b>
+&nbsp;
+<b class="nc">&nbsp;        security.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public CorsFilter corsFilter() {
+<b class="nc">&nbsp;        final var source = new UrlBasedCorsConfigurationSource();</b>
+<b class="nc">&nbsp;        final var config = new CorsConfiguration();</b>
+<b class="nc">&nbsp;        config.setAllowCredentials(true);</b>
+<b class="nc">&nbsp;        config.addAllowedOrigin(&quot;*&quot;);</b>
+<b class="nc">&nbsp;        config.addAllowedHeader(&quot;*&quot;);</b>
+<b class="nc">&nbsp;        config.addAllowedMethod(&quot;*&quot;);</b>
+<b class="nc">&nbsp;        source.registerCorsConfiguration(&quot;/**&quot;, config);</b>
+<b class="nc">&nbsp;        return new CorsFilter(source);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-18 14:05</div>
+</div>
+</body>
+</html>

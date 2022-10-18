@@ -1,0 +1,187 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AuthenticationService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.github.coding_team_sept.nd_backend.authentication.services</a>
+</div>
+
+<h1>Coverage Summary for Class: AuthenticationService (com.github.coding_team_sept.nd_backend.authentication.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AuthenticationService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96.2%
+  </span>
+  <span class="absValue">
+    (25/26)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.github.coding_team_sept.nd_backend.authentication.services;
+&nbsp;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.exceptions.AppException;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.exceptions.EmailTakenException;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.EmailFormatException;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.PasswordFormatException;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.exceptions.format_exceptions.UserNameFormatException;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.models.AppUserDetails;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.LoginRequest;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AuthDataResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.AuthResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.TokenResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUserRepository;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.utils.JwtUtils;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.utils.ValidationUtils;
+&nbsp;import org.springframework.security.authentication.AuthenticationManager;
+&nbsp;import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+&nbsp;import org.springframework.security.core.context.SecurityContextHolder;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+<b class="nc">&nbsp;@Service</b>
+<b class="fc">&nbsp;public record AuthenticationService(</b>
+&nbsp;        AppUserRepository authenticationRepo,
+&nbsp;        RoleRepository roleRepo,
+&nbsp;        PasswordEncoder encoder,
+&nbsp;        JwtUtils jwtUtils,
+&nbsp;        AuthenticationManager authenticationManager,
+&nbsp;        AppUserDetailsService userDetailsService
+&nbsp;) {
+&nbsp;    public AuthResponse login(LoginRequest request) throws AppException {
+&nbsp;        // Validations
+<b class="fc">&nbsp;        ValidationUtils.validateEmailElseThrow(request.email());</b>
+<b class="fc">&nbsp;        ValidationUtils.validatePasswordElseThrow(request.password());</b>
+&nbsp;
+&nbsp;        // Authenticate
+<b class="fc">&nbsp;        final var authentication = authenticationManager.authenticate(</b>
+&nbsp;                new UsernamePasswordAuthenticationToken(
+<b class="fc">&nbsp;                        request.email(),</b>
+<b class="fc">&nbsp;                        request.password()</b>
+&nbsp;                )
+&nbsp;        );
+<b class="fc">&nbsp;        SecurityContextHolder.getContext().setAuthentication(authentication);</b>
+<b class="fc">&nbsp;        final var userDetails = (AppUserDetails) authentication.getPrincipal();</b>
+<b class="fc">&nbsp;        final var jwt = jwtUtils.generateToken(userDetails);</b>
+<b class="fc">&nbsp;        return new AuthResponse(TokenResponse.build(jwt), AuthDataResponse.fromUserDetails(userDetails));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public AuthResponse register(
+&nbsp;            RegisterRequest request,
+&nbsp;            RoleType roleType
+&nbsp;    ) throws EmailTakenException, EmailFormatException, UserNameFormatException, PasswordFormatException {
+&nbsp;        // Check if email is used
+&nbsp;        // Source: https://stackoverflow.com/a/27583544
+<b class="fc">&nbsp;        if (authenticationRepo.existsAppUserByEmail(request.email())) {</b>
+<b class="fc">&nbsp;            throw new EmailTakenException();</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Validations
+<b class="fc">&nbsp;        ValidationUtils.validateEmailElseThrow(request.email());</b>
+<b class="fc">&nbsp;        ValidationUtils.validateUserNameElseThrow(request.name());</b>
+<b class="fc">&nbsp;        ValidationUtils.validatePasswordElseThrow(request.password());</b>
+&nbsp;
+&nbsp;        // Create model from request
+<b class="fc">&nbsp;        final var appUser = AppUser.builder()</b>
+<b class="fc">&nbsp;                .email(request.email())</b>
+<b class="fc">&nbsp;                .name(request.name())</b>
+<b class="fc">&nbsp;                .password(encoder.encode(request.password()))</b>
+<b class="fc">&nbsp;                .role(roleRepo.findRoleByName(roleType).orElse(null))</b>
+<b class="fc">&nbsp;                .build();</b>
+&nbsp;
+&nbsp;        // Save data to DB
+<b class="fc">&nbsp;        authenticationRepo.save(appUser);</b>
+&nbsp;
+&nbsp;        // Generate jwt
+<b class="fc">&nbsp;        final var userDetails = AppUserDetails.fromAppUser(appUser);</b>
+<b class="fc">&nbsp;        final var jwt = jwtUtils.generateToken(userDetails);</b>
+<b class="fc">&nbsp;        return AuthResponse.fromToken(TokenResponse.build(jwt));</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-18 14:05</div>
+</div>
+</body>
+</html>

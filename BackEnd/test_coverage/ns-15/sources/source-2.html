@@ -1,0 +1,230 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AppUserDetails</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.github.coding_team_sept.nd_backend.authentication.models</a>
+</div>
+
+<h1>Coverage Summary for Class: AppUserDetails (com.github.coding_team_sept.nd_backend.authentication.models)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AppUserDetails</td>
+<td class="coverageStat">
+  <span class="percent">
+    58.8%
+  </span>
+  <span class="absValue">
+    (10/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    67.9%
+  </span>
+  <span class="absValue">
+    (19/28)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AppUserDetails$AppUserDetailsBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    61.1%
+  </span>
+  <span class="absValue">
+    (11/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    69%
+  </span>
+  <span class="absValue">
+    (20/29)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.github.coding_team_sept.nd_backend.authentication.models;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.annotation.JsonIgnore;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import lombok.Builder;
+&nbsp;import lombok.Data;
+&nbsp;import lombok.NoArgsConstructor;
+&nbsp;import org.springframework.security.core.GrantedAuthority;
+&nbsp;import org.springframework.security.core.authority.SimpleGrantedAuthority;
+&nbsp;import org.springframework.security.core.userdetails.UserDetails;
+&nbsp;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Objects;
+&nbsp;
+&nbsp;/**
+&nbsp; * AppUserDetails contain the user detail used for authentication.
+&nbsp; *
+&nbsp; * @author nivratig
+&nbsp; */
+<b class="nc">&nbsp;@Data</b>
+<b class="fc">&nbsp;@Builder</b>
+<b class="fc">&nbsp;@AllArgsConstructor</b>
+<b class="nc">&nbsp;@NoArgsConstructor</b>
+&nbsp;public class AppUserDetails implements UserDetails {
+<b class="fc">&nbsp;    private Long id;</b>
+<b class="fc">&nbsp;    private String email;</b>
+<b class="fc">&nbsp;    private String name;</b>
+&nbsp;    @JsonIgnore
+&nbsp;    private String password;
+<b class="fc">&nbsp;    private Role role;</b>
+&nbsp;
+&nbsp;    public static AppUserDetails fromAppUser(AppUser appUser) {
+<b class="fc">&nbsp;        return AppUserDetails.builder()</b>
+<b class="fc">&nbsp;                .id(appUser.getId())</b>
+<b class="fc">&nbsp;                .email(appUser.getEmail())</b>
+<b class="fc">&nbsp;                .name(appUser.getName())</b>
+<b class="fc">&nbsp;                .password(appUser.getPassword())</b>
+<b class="fc">&nbsp;                .role(appUser.getRole())</b>
+<b class="fc">&nbsp;                .build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Getter for Authorities. The authorities here only consist of a role.
+&nbsp;     *
+&nbsp;     * @return returns authorities
+&nbsp;     * @since 0.0.0-alpha.0
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+<b class="nc">&nbsp;        return List.of(new SimpleGrantedAuthority(role.getName().name()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String getPassword() {
+<b class="fc">&nbsp;        return password;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Getter for username (email). The username in this scenario is an email.
+&nbsp;     * Thus, there is no username field here. Instead, this method returns the
+&nbsp;     * value of email field.
+&nbsp;     *
+&nbsp;     * @return returns an email.
+&nbsp;     * @since 0.0.0-alpha.0
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public String getUsername() {
+<b class="fc">&nbsp;        return email;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean isAccountNonExpired() {
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean isAccountNonLocked() {
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean isCredentialsNonExpired() {
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean isEnabled() {
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean equals(Object o) {
+<b class="fc">&nbsp;        if (this == o)</b>
+<b class="nc">&nbsp;            return true;</b>
+<b class="fc">&nbsp;        if (o == null || getClass() != o.getClass())</b>
+<b class="nc">&nbsp;            return false;</b>
+<b class="fc">&nbsp;        final var appUserDetails = (AppUserDetails) o;</b>
+<b class="fc">&nbsp;        return Objects.equals(id, appUserDetails.id);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-18 14:05</div>
+</div>
+</body>
+</html>

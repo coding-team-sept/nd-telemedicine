@@ -1,0 +1,237 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AuthenticationService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.github.coding_team_sept.nd_backend.appointment.services</a>
+</div>
+
+<h1>Coverage Summary for Class: AuthenticationService (com.github.coding_team_sept.nd_backend.appointment.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AuthenticationService</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (4/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    53.8%
+  </span>
+  <span class="absValue">
+    (14/26)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AuthenticationService$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">AuthenticationService$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    57.1%
+  </span>
+  <span class="absValue">
+    (16/28)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.github.coding_team_sept.nd_backend.appointment.services;
+&nbsp;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.exceptions.RestClientException;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.ResponseWrapper;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UsersDataResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.ValidateResponse;
+&nbsp;import org.springframework.core.ParameterizedTypeReference;
+&nbsp;import org.springframework.http.HttpEntity;
+&nbsp;import org.springframework.http.HttpHeaders;
+&nbsp;import org.springframework.http.HttpMethod;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.web.client.HttpClientErrorException;
+&nbsp;import org.springframework.web.client.RestClientResponseException;
+&nbsp;import org.springframework.web.client.RestTemplate;
+&nbsp;import org.springframework.web.util.UriComponentsBuilder;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+<b class="nc">&nbsp;@Service</b>
+<b class="fc">&nbsp;public record AuthenticationService(</b>
+&nbsp;    RestTemplate restTemplate) {
+&nbsp;  public static final String url = &quot;http://authentication:9000/api/v1&quot;;
+&nbsp;
+&nbsp;  public ValidateResponse getAuthorization(
+&nbsp;      HttpHeaders headers) throws RestClientException {
+&nbsp;    try {
+&nbsp;      // Check &quot;Authorization&quot;
+<b class="fc">&nbsp;      final var response = restTemplate.exchange(</b>
+&nbsp;          url + &quot;/auth/validate&quot;,
+&nbsp;          HttpMethod.GET,
+&nbsp;          new HttpEntity&lt;&gt;(headers),
+&nbsp;          ValidateResponse.class);
+&nbsp;
+<b class="fc">&nbsp;      if (response.getBody() != null) {</b>
+<b class="fc">&nbsp;        return response.getBody();</b>
+&nbsp;      }
+<b class="nc">&nbsp;      throw RestClientException.build(HttpStatus.INTERNAL_SERVER_ERROR, &quot;Empty response body&quot;);</b>
+<b class="nc">&nbsp;    } catch (RestClientResponseException e) {</b>
+<b class="nc">&nbsp;      throw RestClientException.fromRestClientResponseException(e);</b>
+&nbsp;    }
+&nbsp;  }
+&nbsp;
+&nbsp;  public UsersDataResponse getUsers(
+&nbsp;      HttpHeaders headers,
+&nbsp;      List&lt;Long&gt; ids,
+&nbsp;      String target) throws RestClientException {
+&nbsp;    try {
+<b class="fc">&nbsp;      String uri = UriComponentsBuilder.fromHttpUrl(url + &quot;/app/admin/&quot; + target)</b>
+<b class="fc">&nbsp;          .queryParam(&quot;ids&quot;, ids)</b>
+<b class="fc">&nbsp;          .encode()</b>
+<b class="fc">&nbsp;          .toUriString();</b>
+&nbsp;
+<b class="fc">&nbsp;      final var response = restTemplate.exchange(</b>
+&nbsp;          uri,
+&nbsp;          HttpMethod.GET,
+&nbsp;          new HttpEntity&lt;&gt;(headers),
+<b class="fc">&nbsp;          new ParameterizedTypeReference&lt;ResponseWrapper&lt;UsersDataResponse&gt;&gt;() {</b>
+&nbsp;          });
+&nbsp;
+<b class="fc">&nbsp;      if (response.getBody() != null &amp;&amp; response.getBody().data.users != null) {</b>
+<b class="fc">&nbsp;        return response.getBody().data;</b>
+&nbsp;      }
+<b class="nc">&nbsp;    } catch (HttpClientErrorException e) {</b>
+<b class="nc">&nbsp;      throw RestClientException.fromRestClientResponseException(e);</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;    return UsersDataResponse.build(List.of());</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public UsersDataResponse getUsers(
+&nbsp;      HttpHeaders headers,
+&nbsp;      String target) throws RestClientException {
+&nbsp;    try {
+<b class="fc">&nbsp;      final var response = restTemplate.exchange(</b>
+&nbsp;          AuthenticationService.url + &quot;/app/admin/&quot; + target,
+&nbsp;          HttpMethod.GET,
+&nbsp;          new HttpEntity&lt;&gt;(headers),
+<b class="fc">&nbsp;          new ParameterizedTypeReference&lt;ResponseWrapper&lt;UsersDataResponse&gt;&gt;() {</b>
+&nbsp;          });
+&nbsp;
+<b class="fc">&nbsp;      if (response.getBody() != null &amp;&amp; response.getBody().data.users != null) {</b>
+<b class="fc">&nbsp;        return response.getBody().data;</b>
+&nbsp;      }
+<b class="nc">&nbsp;    } catch (RestClientResponseException e) {</b>
+<b class="nc">&nbsp;      throw RestClientException.fromRestClientResponseException(e);</b>
+<b class="nc">&nbsp;    }</b>
+<b class="nc">&nbsp;    return UsersDataResponse.build(List.of());</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-18 14:05</div>
+</div>
+</body>
+</html>
