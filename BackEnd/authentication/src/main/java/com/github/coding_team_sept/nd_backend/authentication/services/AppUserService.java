@@ -36,7 +36,7 @@ public record AppUserService(
         if (role == null) {
             appUsers = ids.stream()
                     .map(id -> appUserRepo.findById(id).orElse(null))
-                    .filter(Objects::isNull)
+                    .filter(Objects::nonNull)
                     .toList();
         } else {
             appUsers = ids.stream()
