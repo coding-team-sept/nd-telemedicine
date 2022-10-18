@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class JwtUtilsTest {
-    JwtUtils jwtUtils = new JwtUtils();
+    private JwtUtils jwtUtils = new JwtUtils();
 
-    AppUserDetails generateFakeAppUserDetails() {
+    private AppUserDetails generateFakeAppUserDetails() {
         return AppUserDetails.builder()
                 .id(0L)
                 .name("Admin One")

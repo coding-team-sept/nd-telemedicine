@@ -29,12 +29,12 @@ import java.util.stream.Stream;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppointmentServiceTest {
     @Mock
-    public RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     @InjectMocks
-    public AppointmentService appointmentService;
+    private AppointmentService appointmentService;
 
-    public void mockGetDoctorAppointmentRestTemplate(
+    private void mockGetDoctorAppointmentRestTemplate(
             Long id,
             List<DoctorAppointmentResponse> doctorAppointmentResponses
     ) {
@@ -54,7 +54,7 @@ public class AppointmentServiceTest {
         ));
     }
 
-    public void mockGetPatientAppointmentRestTemplate(
+    private void mockGetPatientAppointmentRestTemplate(
             Long id,
             List<PatientAppointmentResponse> patientAppointmentResponses
     ) {

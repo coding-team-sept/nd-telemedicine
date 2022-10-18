@@ -59,15 +59,16 @@ public record ChatService(
 
     public ChatResponse sendMessage(
             HttpHeaders headers,
+            Long appointmentId,
             MessageRequest messageRequest
     ) throws Exception {
         final var auth = authService.getAuthorization(headers);
-        final var chat = chatRepo.findById(messageRequest.appointmentId())
+        final var chat = chatRepo.findById(appointmentId)
                 .orElseThrow(() -> new Exception("Chat does not exists"));
         final var newSid = chat.getLastMessageSid() + 1;
         final var message = Message.builder()
                 .sid(newSid)
-                .appointmentId(messageRequest.appointmentId())
+                .appointmentId(appointmentId)
                 .senderId(auth.id)
                 .message(messageRequest.message())
                 .build();

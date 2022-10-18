@@ -11,6 +11,7 @@ import com.github.coding_team_sept.nd_backend.appointment.repositories.Appointme
 import com.github.coding_team_sept.nd_backend.appointment.repositories.SessionRepository;
 import com.github.coding_team_sept.nd_backend.appointment.services.AppointmentService;
 import com.github.coding_team_sept.nd_backend.appointment.services.AuthenticationService;
+import com.github.coding_team_sept.nd_backend.appointment.services.ChatService;
 import com.github.coding_team_sept.nd_backend.appointment.services.ScheduleService;
 import com.github.coding_team_sept.nd_backend.appointment.utils.AppointmentDateTimeUtils;
 import org.joda.time.DateTime;
@@ -45,6 +46,8 @@ public class AppointmentServiceTest {
     private AuthenticationService authenticationService;
     @Mock
     private ScheduleService scheduleService;
+    @Mock
+    private ChatService chatService;
     @Mock
     private SessionRepository sessionRepository;
     @Mock

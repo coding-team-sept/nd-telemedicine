@@ -28,7 +28,7 @@ public class AppUserServiceTest {
     @InjectMocks
     private AppUserService appUserService;
 
-    public static Role getUserRoleFromRoleType(RoleType roleType) {
+    private static Role getUserRoleFromRoleType(RoleType roleType) {
         return Role.builder()
                 .id(Integer.valueOf(roleType.ordinal()).longValue())
                 .name(roleType)
@@ -55,17 +55,17 @@ public class AppUserServiceTest {
                 .thenReturn(Optional.of(filteredAppUsers));
     }
 
-    public void mockFindAppUserById(AppUser appUser) {
+    private void mockFindAppUserById(AppUser appUser) {
         Mockito.when(appUserRepo.findById(appUser.getId()))
                 .thenReturn(Optional.of(appUser));
     }
 
-    public void mockFindAppUserByIdAndRole(AppUser appUser) {
+    private void mockFindAppUserByIdAndRole(AppUser appUser) {
         Mockito.when(appUserRepo.findAppUserByIdAndRole(appUser.getId(), appUser.getRole()))
                 .thenReturn(Optional.of(appUser));
     }
 
-    public List<AppUser> generateAppUsers() {
+    private List<AppUser> generateAppUsers() {
         return List.of(
                 AppUser.builder()
                         .id(0L)

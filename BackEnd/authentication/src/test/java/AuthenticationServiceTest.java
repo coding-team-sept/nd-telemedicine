@@ -28,33 +28,33 @@ import java.util.Optional;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AuthenticationServiceTest {
     @Mock
-    AppUserRepository appUserRepository;
+    private AppUserRepository appUserRepository;
     @Mock
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
     @Mock
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
     @Mock
-    PasswordEncoder encoder;
+    private PasswordEncoder encoder;
     @Mock
-    JwtUtils jwtUtils;
+    private JwtUtils jwtUtils;
     @InjectMocks
-    AuthenticationService authenticationService;
+    private AuthenticationService authenticationService;
 
-    public static Role getUserRoleFromRoleType(RoleType roleType) {
+    private Role getUserRoleFromRoleType(RoleType roleType) {
         return Role.builder()
                 .id(Integer.valueOf(roleType.ordinal()).longValue())
                 .name(roleType)
                 .build();
     }
 
-    public LoginRequest getFakeLoginRequest() {
+    private LoginRequest getFakeLoginRequest() {
         return new LoginRequest(
                 "admin.1@example.com",
                 "AdminOne"
         );
     }
 
-    public RegisterRequest getFakeRegisterRequest() {
+    private RegisterRequest getFakeRegisterRequest() {
         return new RegisterRequest(
                 "admin.1@example.com",
                 "Admin One",
@@ -62,7 +62,7 @@ public class AuthenticationServiceTest {
         );
     }
 
-    AppUserDetails generateFakeAppUserDetails() {
+    private AppUserDetails generateFakeAppUserDetails() {
         return AppUserDetails.builder()
                 .id(0L)
                 .name("Admin One")
@@ -76,7 +76,7 @@ public class AuthenticationServiceTest {
     }
 
     // Mock authentication manager
-    public void mockAuthenticationManager(UsernamePasswordAuthenticationToken authentication) {
+    private void mockAuthenticationManager(UsernamePasswordAuthenticationToken authentication) {
         Mockito.when(authenticationManager.authenticate(authentication))
                 .thenReturn(new UsernamePasswordAuthenticationToken(
                         generateFakeAppUserDetails(),
@@ -85,7 +85,7 @@ public class AuthenticationServiceTest {
     }
 
     // Mock app user repo
-    public void mockExistsAppUserByEmail(
+    private void mockExistsAppUserByEmail(
             String email,
             boolean isExists
     ) {
@@ -93,19 +93,19 @@ public class AuthenticationServiceTest {
                 .thenReturn(isExists);
     }
 
-    public void mockSaveUser(AppUser appUser) {
+    private void mockSaveUser(AppUser appUser) {
         Mockito.when(appUserRepository.save(appUser))
                 .thenReturn(appUser);
     }
 
     // Mock encoder
-    public void mockEncoder(String password) {
+    private void mockEncoder(String password) {
         Mockito.when(encoder.encode(password))
                 .thenReturn(new BCryptPasswordEncoder().encode(password));
     }
 
     // Mock jwt utils
-    public void mockGenerateToken(AppUserDetails appUserDetails) {
+    private void mockGenerateToken(AppUserDetails appUserDetails) {
         Mockito.when(jwtUtils.generateToken(appUserDetails))
                 .thenCallRealMethod();
     }
