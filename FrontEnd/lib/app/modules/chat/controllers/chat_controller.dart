@@ -11,17 +11,25 @@ class ChatController extends GetxController {
 
   late final int appointmentID;
   late final String token;
-  late final int doctorID;
-  late final int patientID;
+  late int doctorID;
+  late int patientID;
   late final bool isDoctor;
   final bool debug;
   final Dio dio;
 
-  ChatController({Dio? dio, bool? isDoctor, int? doctorID, int? patientID})
+  ChatController(
+      {Dio? dio,
+      String? token,
+      int? appointmentID,
+      bool? isDoctor,
+      int? doctorID,
+      int? patientID})
       : dio = dio ?? Dio(),
         debug = dio != null,
         isDoctor = isDoctor ?? Get.arguments['doctorID'],
         doctorID = doctorID ?? Get.arguments['doctorID'],
+        appointmentID = appointmentID ?? Get.arguments['appointmentID'],
+        token = token ?? Get.arguments['token'],
         patientID = patientID ?? Get.arguments['patientID'];
 
   final isLoading = false.obs;
@@ -40,22 +48,18 @@ class ChatController extends GetxController {
       await getMessages();
       isLoading.value = false;
       getNewMessages();
-    } else {
-      appointmentID = 123;
-      token = "token";
     }
     super.onInit();
   }
 
-  void getNewMessages() async {
+  Future getNewMessages() async {
     if (!checkMessage) return;
     try {
-      var response =
-          await Dio().get("${C.urlC}/app/chat/message/$appointmentID",
-              queryParameters: {
-                "isAll": "false",
-              },
-              options: Options(headers: {"Authorization": "Bearer $token"}));
+      var response = await dio.get("${C.urlC}/app/chat/message/$appointmentID",
+          queryParameters: {
+            "isAll": "false",
+          },
+          options: Options(headers: {"Authorization": "Bearer $token"}));
       for (var element in response.data['data']['messages']) {
         if (doctorID == -999) {
           if (element['senderId'] != patientID) {
@@ -84,7 +88,7 @@ class ChatController extends GetxController {
 
   Future getStatus() async {
     try {
-      await Dio().get("${C.urlC}/app/chat/status/$appointmentID",
+      await dio.get("${C.urlC}/app/chat/status/$appointmentID",
           options: Options(headers: {"Authorization": "Bearer $token"}));
       // JUst ignore uread not important
     } on DioError catch (_) {
@@ -98,8 +102,7 @@ class ChatController extends GetxController {
 
   Future getMessages() async {
     try {
-      var response = await Dio().get(
-          "${C.urlC}/app/chat/message/$appointmentID",
+      var response = await dio.get("${C.urlC}/app/chat/message/$appointmentID",
           options: Options(headers: {"Authorization": "Bearer $token"}));
 
       messages.clear();
@@ -131,9 +134,9 @@ class ChatController extends GetxController {
     messages.insert(0, message);
   }
 
-  void handleSendPressed(types.PartialText message) async {
+  Future handleSendPressed(types.PartialText message) async {
     try {
-      await Dio().post("${C.urlC}/app/chat/message/",
+      await dio.post("${C.urlC}/app/chat/message/",
           data: {"appointmentId": appointmentID, "message": message.text},
           options: Options(headers: {"Authorization": "Bearer $token"}));
       addMessage(createMessage(message.text, isDoctor));

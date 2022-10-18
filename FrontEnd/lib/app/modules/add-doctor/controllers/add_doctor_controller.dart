@@ -15,22 +15,16 @@ class AddDoctorController extends GetxController {
 
   final isLoading = false.obs;
 
-  late final token;
+  late String token;
+  Dio dio;
+  AddDoctorController({Dio? dio,String? token}): dio = dio ?? Dio(), token = token ?? "";
 
   @override
   void onInit() async {
-    token = await FlutterSecureStorage().read(key: "token");
+    if(token == ""){
+      token = (await const FlutterSecureStorage().read(key: "token"))!;
+    }
     super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 
   void nameChanged(String n) => name.value = n;
@@ -68,14 +62,14 @@ class AddDoctorController extends GetxController {
     return valid;
   }
 
-  void addDoctor() async {
+  Future addDoctor() async {
     if (!validate()) return;
     isLoading.value = true;
     await Future.delayed(const Duration(seconds: 1));
     isLoading.value = false;
 
     try {
-      var response = await Dio().post('${C.url}/app/admin/doctor',
+      var response = await dio.post('${C.url}/app/admin/doctor',
           data: {
             'name': name.value,
             'email': email.value,

@@ -15,24 +15,17 @@ class AddAdminController extends GetxController {
 
   final isLoading = false.obs;
 
-  late final token;
+  late String token;
+  Dio dio;
+  AddAdminController({Dio? dio, String? token}): dio = dio ?? Dio(),token = token ?? "";
 
   @override
   void onInit() async {
-    token = await const FlutterSecureStorage().read(key: "token");
+    if(token ==""){
+      token = (await const FlutterSecureStorage().read(key: "token"))!;
+    }
     super.onInit();
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
   void nameChanged(String n) => name.value = n;
 
   void emailChanged(String n) => email.value = n;
