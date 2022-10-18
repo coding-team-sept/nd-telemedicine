@@ -1,0 +1,161 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AppUserService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.github.coding_team_sept.nd_backend.authentication.services</a>
+</div>
+
+<h1>Coverage Summary for Class: AppUserService (com.github.coding_team_sept.nd_backend.authentication.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AppUserService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96.4%
+  </span>
+  <span class="absValue">
+    (27/28)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.github.coding_team_sept.nd_backend.authentication.services;
+&nbsp;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.exceptions.RoleNotFoundException;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.models.AppUser;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.UserDataResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.repositories.AppUserRepository;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.repositories.RoleRepository;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Objects;
+&nbsp;
+<b class="nc">&nbsp;@Service</b>
+<b class="fc">&nbsp;public record AppUserService(</b>
+&nbsp;        AppUserRepository appUserRepo,
+&nbsp;        RoleRepository roleRepo
+&nbsp;) {
+&nbsp;    public List&lt;UserDataResponse&gt; getUserByRole(RoleType role) throws RoleNotFoundException {
+<b class="fc">&nbsp;        final var appUsers = appUserRepo.findAppUserByRole(</b>
+<b class="fc">&nbsp;                roleRepo.findRoleByName(role)</b>
+<b class="fc">&nbsp;                        .orElseThrow(RoleNotFoundException::new)</b>
+&nbsp;        );
+<b class="fc">&nbsp;        return appUsers.map(users -&gt; users</b>
+<b class="fc">&nbsp;                .stream()</b>
+<b class="fc">&nbsp;                .map(appUser -&gt; new UserDataResponse(appUser.getId(), appUser.getEmail(), appUser.getName()))</b>
+<b class="fc">&nbsp;                .toList()</b>
+<b class="fc">&nbsp;        ).orElseGet(List::of);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;UserDataResponse&gt; getUsersByIds(
+&nbsp;            List&lt;Long&gt; ids,
+&nbsp;            RoleType role
+&nbsp;    ) throws RoleNotFoundException {
+&nbsp;        final List&lt;AppUser&gt; appUsers;
+<b class="fc">&nbsp;        if (role == null) {</b>
+<b class="fc">&nbsp;            appUsers = ids.stream()</b>
+<b class="fc">&nbsp;                    .map(id -&gt; appUserRepo.findById(id).orElse(null))</b>
+<b class="fc">&nbsp;                    .filter(Objects::nonNull)</b>
+<b class="fc">&nbsp;                    .toList();</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            appUsers = ids.stream()</b>
+<b class="fc">&nbsp;                    .map(id -&gt; appUserRepo.findAppUserByIdAndRole(</b>
+&nbsp;                                    id,
+<b class="fc">&nbsp;                                    roleRepo.findRoleByName(role)</b>
+<b class="fc">&nbsp;                                            .orElseThrow(RoleNotFoundException::new)</b>
+<b class="fc">&nbsp;                            ).orElse(null)</b>
+<b class="fc">&nbsp;                    ).filter(Objects::nonNull)</b>
+<b class="fc">&nbsp;                    .toList();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return appUsers.stream()</b>
+<b class="fc">&nbsp;                .map(appUser -&gt; new UserDataResponse(</b>
+<b class="fc">&nbsp;                        appUser.getId(),</b>
+<b class="fc">&nbsp;                        appUser.getEmail(),</b>
+<b class="fc">&nbsp;                        appUser.getName()</b>
+<b class="fc">&nbsp;                )).toList();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-18 14:05</div>
+</div>
+</body>
+</html>

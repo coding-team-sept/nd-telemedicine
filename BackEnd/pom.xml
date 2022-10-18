@@ -7,7 +7,7 @@
     <groupId>com.github.coding-team-sept.nd-backend</groupId>
     <artifactId>microservices</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.0-alpha.2</version>
+    <version>0.0.0-alpha.3</version>
     <modules>
         <module>appointment</module>
         <module>authentication</module>

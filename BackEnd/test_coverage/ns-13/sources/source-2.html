@@ -1,0 +1,139 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AppExceptionHandler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.github.coding_team_sept.nd_backend.authentication.exceptions</a>
+</div>
+
+<h1>Coverage Summary for Class: AppExceptionHandler (com.github.coding_team_sept.nd_backend.authentication.exceptions)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AppExceptionHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.github.coding_team_sept.nd_backend.authentication.exceptions;
+&nbsp;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ErrorResponse;
+&nbsp;import org.springframework.core.Ordered;
+&nbsp;import org.springframework.core.annotation.Order;
+&nbsp;import org.springframework.dao.DataIntegrityViolationException;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.core.AuthenticationException;
+&nbsp;import org.springframework.web.bind.annotation.ControllerAdvice;
+&nbsp;import org.springframework.web.bind.annotation.ExceptionHandler;
+&nbsp;import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+&nbsp;
+&nbsp;@Order(Ordered.HIGHEST_PRECEDENCE)
+&nbsp;@ControllerAdvice
+<b class="nc">&nbsp;public class AppExceptionHandler extends ResponseEntityExceptionHandler {</b>
+&nbsp;    @ExceptionHandler(AppException.class)
+&nbsp;    protected ResponseEntity&lt;ErrorResponse&gt; handleAppException(AppException e) {
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(ErrorResponse.fromException(e), e.status);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(Exception.class)
+&nbsp;    protected ResponseEntity&lt;ErrorResponse&gt; handleUnknownException(Exception e) {
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(ErrorResponse.fromUnknownException(e), HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(DataIntegrityViolationException.class)
+&nbsp;    protected ResponseEntity&lt;ErrorResponse&gt; handleDataIntegrityException(DataIntegrityViolationException e) {
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(ErrorResponse.build(&quot;Email has been taken&quot;), HttpStatus.BAD_REQUEST);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(AuthenticationException.class)
+&nbsp;    protected ResponseEntity&lt;ErrorResponse&gt; handAuthenticationException(AuthenticationException e) {
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(ErrorResponse.fromException(e), HttpStatus.BAD_REQUEST);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-18 14:05</div>
+</div>
+</body>
+</html>

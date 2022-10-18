@@ -26,13 +26,13 @@ import java.util.List;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AuthenticationServiceTest {
     @Mock
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     @InjectMocks
-    AuthenticationService authenticationService;
+    private AuthenticationService authenticationService;
 
     @Test
-    void testGetAuthorizationService() {
+    public void testGetAuthorizationService() {
         final var expectedResponse = new ValidateResponse(1L, "ROLE_PATIENT");
         final var header = new HttpHeaders();
         Mockito.when(restTemplate.exchange(
@@ -48,7 +48,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    void testGetAllDoctorUsers() {
+    public void testGetAllDoctorUsers() {
         final var header = new HttpHeaders();
         final var expectedResponse = UsersDataResponse.build(
                 List.of(
@@ -77,7 +77,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    void testGetAllPatientUsers() {
+    public void testGetAllPatientUsers() {
         final var header = new HttpHeaders();
         final var expectedResponse = UsersDataResponse.build(
                 List.of(
@@ -106,7 +106,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    void testGetDoctorUsersBasedOnId() {
+    public void testGetDoctorUsersBasedOnId() {
         final var header = new HttpHeaders();
         final var expectedResponse = UsersDataResponse.build(
                 List.of(
@@ -151,7 +151,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    void testGetPatientUsersBasedOnId() {
+    public void testGetPatientUsersBasedOnId() {
         final var header = new HttpHeaders();
         final var expectedResponse = UsersDataResponse.build(
                 List.of(

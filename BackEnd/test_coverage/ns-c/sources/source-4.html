@@ -1,0 +1,165 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ScheduleService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.github.coding_team_sept.nd_backend.appointment.services</a>
+</div>
+
+<h1>Coverage Summary for Class: ScheduleService (com.github.coding_team_sept.nd_backend.appointment.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ScheduleService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (5/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94.7%
+  </span>
+  <span class="absValue">
+    (18/19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.github.coding_team_sept.nd_backend.appointment.services;
+&nbsp;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.exceptions.AppointmentConflictException;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.exceptions.AppointmentDateTimeException;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.repositories.AppointmentRepository;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.utils.AppointmentDateTimeUtils;
+&nbsp;import org.joda.time.DateTime;
+&nbsp;import org.joda.time.LocalTime;
+&nbsp;import org.joda.time.format.DateTimeFormat;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+<b class="nc">&nbsp;@Service</b>
+<b class="fc">&nbsp;public record ScheduleService(</b>
+&nbsp;        AppointmentRepository appointmentRepo,
+&nbsp;        AppointmentDateTimeUtils datetimeUtils
+&nbsp;) {
+<b class="fc">&nbsp;    public static final LocalTime closeTime = LocalTime.parse(&quot;20:00&quot;, DateTimeFormat.forPattern(&quot;HH:mm&quot;));</b>
+<b class="fc">&nbsp;    public static final LocalTime openTime = LocalTime.parse(&quot;08:00&quot;, DateTimeFormat.forPattern(&quot;HH:mm&quot;));</b>
+&nbsp;
+&nbsp;    public void validateAppointmentDateTime(
+&nbsp;            DateTime datetime
+&nbsp;    ) throws AppointmentDateTimeException {
+<b class="fc">&nbsp;        if (datetime.isBeforeNow()) {</b>
+<b class="fc">&nbsp;            throw new AppointmentDateTimeException(&quot;Datetime in the past&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        if (datetime.isAfter(DateTime.now().plusYears(1))) {</b>
+<b class="fc">&nbsp;            throw new AppointmentDateTimeException(&quot;Passed the limit of appointment (1 year)&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        if (!(datetime.isAfter(datetime.withTime(openTime))</b>
+<b class="fc">&nbsp;                &amp;&amp; datetime.isBefore(datetime.withTime(closeTime.minusMinutes(AppointmentDateTimeUtils.intervalInMinutes))))) {</b>
+<b class="fc">&nbsp;            throw new AppointmentDateTimeException(&quot;Out of operation time&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void checkPatientAvailability(
+&nbsp;            DateTime appointmentDatetime,
+&nbsp;            Long patientId
+&nbsp;    ) throws AppointmentConflictException {
+<b class="fc">&nbsp;        if (appointmentRepo.existsAppointmentByPatientIdAndAppointmentTimeBetween(</b>
+&nbsp;                patientId,
+<b class="fc">&nbsp;                datetimeUtils.getMin(appointmentDatetime).toDate(),</b>
+<b class="fc">&nbsp;                datetimeUtils.getMax(appointmentDatetime).toDate()</b>
+&nbsp;        )) {
+<b class="fc">&nbsp;            throw new AppointmentConflictException(&quot;Patient is occupied&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void checkDoctorAvailability(
+&nbsp;            DateTime appointmentDatetime,
+&nbsp;            Long doctorId
+&nbsp;    ) throws AppointmentConflictException {
+<b class="fc">&nbsp;        if (appointmentRepo.existsAppointmentByDoctorIdAndAppointmentTimeBetween(</b>
+&nbsp;                doctorId,
+<b class="fc">&nbsp;                datetimeUtils.getMin(appointmentDatetime).toDate(),</b>
+<b class="fc">&nbsp;                datetimeUtils.getMax(appointmentDatetime).toDate()</b>
+&nbsp;        )) {
+<b class="fc">&nbsp;            throw new AppointmentConflictException(&quot;Doctor is occupied&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-18 14:05</div>
+</div>
+</body>
+</html>

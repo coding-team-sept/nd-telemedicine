@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1966001d-b569-4960-af52-b1acc2e9e032",
+		"_postman_id": "a8180ebf-192f-49e9-9561-22f1ae8c9485",
 		"name": "Telemedic App",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "13106056"
@@ -2516,7 +2516,7 @@
 								"bearer": [
 									{
 										"key": "token",
-										"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjo1MiwiZXhwIjoxNjk2MTcxMjE5LCJpYXQiOjE2NjQ3MjE2MTl9.oPZoTS7iwg-P1wDZGfXi3L29QY2VbiCWhcY7DTPTIvA",
+										"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlkIjoxLCJleHAiOjE2OTcxNjYyNDMsImlhdCI6MTY2NTcxNjY0M30.zmNfzETHPq1Rtr8rXxiXNWU7OHrY4znvGAibHwCjmAY",
 										"type": "string"
 									}
 								]
@@ -2685,6 +2685,13 @@
 														"app",
 														"patient",
 														"appointment"
+													],
+													"query": [
+														{
+															"key": "id",
+															"value": "0",
+															"disabled": true
+														}
 													]
 												}
 											},
@@ -2702,7 +2709,7 @@
 												},
 												{
 													"key": "Date",
-													"value": "Sun, 02 Oct 2022 15:05:27 GMT"
+													"value": "Fri, 14 Oct 2022 03:11:29 GMT"
 												},
 												{
 													"key": "Keep-Alive",
@@ -2714,7 +2721,7 @@
 												}
 											],
 											"cookie": [],
-											"body": "{\n    \"data\": [\n        {\n            \"id\": 302,\n            \"datetime\": \"2022-12-01 12:00:00.0\",\n            \"session\": \"OFFLINE\",\n            \"doctor\": {\n                \"id\": 55,\n                \"email\": \"doctor@doctor.com\",\n                \"name\": \"Doctor\"\n            }\n        },\n        {\n            \"id\": 303,\n            \"datetime\": \"2022-12-02 12:00:00.0\",\n            \"session\": \"ONLINE\",\n            \"doctor\": {\n                \"id\": 55,\n                \"email\": \"doctor@doctor.com\",\n                \"name\": \"Doctor\"\n            }\n        }\n    ]\n}"
+											"body": "{\n    \"data\": [\n        {\n            \"id\": 2,\n            \"datetime\": \"2022-12-01 09:00:00.0\",\n            \"session\": \"ONLINE\",\n            \"chatStatus\": {\n                \"patientUR\": 0,\n                \"doctorUR\": 0\n            },\n            \"doctor\": {\n                \"id\": 3,\n                \"email\": \"doctor@doctor.com\",\n                \"name\": \"Doctor\"\n            }\n        },\n        {\n            \"id\": 1,\n            \"datetime\": \"2022-12-01 12:00:00.0\",\n            \"session\": \"OFFLINE\",\n            \"chatStatus\": {\n                \"patientUR\": 0,\n                \"doctorUR\": 0\n            },\n            \"doctor\": {\n                \"id\": 3,\n                \"email\": \"doctor@doctor.com\",\n                \"name\": \"Doctor\"\n            }\n        }\n    ]\n}"
 										}
 									]
 								},
@@ -2725,7 +2732,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"doctorId\": 3,\n    \"datetime\": \"2022-12-01_12:00\",\n    \"session\": \"OFFLINE\"\n}",
+											"raw": "{\n    \"doctorId\": 3,\n    \"datetime\": \"2022-12-01_09:00\",\n    \"session\": \"ONLINE\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2968,7 +2975,7 @@
 												"header": [],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"doctorId\": 55,\n    \"datetime\": \"2022-12-02_12:00\",\n    \"session\": \"ONLINE\"\n}",
+													"raw": "{\n    \"doctorId\": 3,\n    \"datetime\": \"2022-12-01_09:00\",\n    \"session\": \"ONLINE\"\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -3001,7 +3008,7 @@
 												},
 												{
 													"key": "Date",
-													"value": "Sun, 02 Oct 2022 15:04:52 GMT"
+													"value": "Fri, 14 Oct 2022 03:08:31 GMT"
 												},
 												{
 													"key": "Keep-Alive",
@@ -3013,7 +3020,7 @@
 												}
 											],
 											"cookie": [],
-											"body": "{\n    \"data\": {\n        \"id\": 303,\n        \"datetime\": \"2022-12-02_12:00\",\n        \"session\": \"ONLINE\",\n        \"doctor\": {\n            \"id\": 55,\n            \"email\": \"doctor@doctor.com\",\n            \"name\": \"Doctor\"\n        }\n    }\n}"
+											"body": "{\n    \"data\": {\n        \"id\": 2,\n        \"datetime\": \"2022-12-01_09:00\",\n        \"session\": \"ONLINE\",\n        \"chatStatus\": {\n            \"patientUR\": 0,\n            \"doctorUR\": 0\n        },\n        \"doctor\": {\n            \"id\": 3,\n            \"email\": \"doctor@doctor.com\",\n            \"name\": \"Doctor\"\n        }\n    }\n}"
 										}
 									]
 								}
@@ -3109,7 +3116,7 @@
 						"bearer": [
 							{
 								"key": "token",
-								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjo1MywiZXhwIjoxNjk2MTcyMTI4LCJpYXQiOjE2NjQ3MjI1Mjh9.RLotDcVJavwMc1gqp7vlcqryd9abV9D04J1Fws-lOVc",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjoyLCJleHAiOjE2OTcxNjY0NjQsImlhdCI6MTY2NTcxNjg2NH0.jC3LUHT2T8faGtX3uxoR7Ilid8MINOhG5GlwisQ4TcM",
 								"type": "string"
 							}
 						]
@@ -3222,6 +3229,13 @@
 												"app",
 												"doctor",
 												"appointment"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "0",
+													"disabled": true
+												}
 											]
 										}
 									},
@@ -3239,7 +3253,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Sun, 02 Oct 2022 15:05:49 GMT"
+											"value": "Fri, 14 Oct 2022 03:10:43 GMT"
 										},
 										{
 											"key": "Keep-Alive",
@@ -3251,7 +3265,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"data\": [\n        {\n            \"id\": 302,\n            \"datetime\": \"2022-12-01 12:00:00.0\",\n            \"session\": \"OFFLINE\",\n            \"patient\": {\n                \"id\": 53,\n                \"email\": \"patient@patient.com\",\n                \"name\": \"Patient\"\n            }\n        },\n        {\n            \"id\": 303,\n            \"datetime\": \"2022-12-02 12:00:00.0\",\n            \"session\": \"ONLINE\",\n            \"patient\": {\n                \"id\": 53,\n                \"email\": \"patient@patient.com\",\n                \"name\": \"Patient\"\n            }\n        }\n    ]\n}"
+									"body": "{\n    \"data\": [\n        {\n            \"id\": 2,\n            \"datetime\": \"2022-12-01 09:00:00.0\",\n            \"session\": \"ONLINE\",\n            \"chatStatus\": {\n                \"patientUR\": 0,\n                \"doctorUR\": 0\n            },\n            \"patient\": {\n                \"id\": 2,\n                \"email\": \"patient@patient.com\",\n                \"name\": \"Patient\"\n            }\n        },\n        {\n            \"id\": 1,\n            \"datetime\": \"2022-12-01 12:00:00.0\",\n            \"session\": \"OFFLINE\",\n            \"chatStatus\": {\n                \"patientUR\": 0,\n                \"doctorUR\": 0\n            },\n            \"patient\": {\n                \"id\": 2,\n                \"email\": \"patient@patient.com\",\n                \"name\": \"Patient\"\n            }\n        }\n    ]\n}"
 								}
 							]
 						}
@@ -3261,7 +3275,7 @@
 						"bearer": [
 							{
 								"key": "token",
-								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb2N0b3JAZG9jdG9yLmNvbSIsInJvbGUiOiJST0xFX0RPQ1RPUiIsImlkIjo1NSwiZXhwIjoxNjk2MTcxODI3LCJpYXQiOjE2NjQ3MjIyMjd9.9e7ThmRFePrETwaGeowN8SeoS4Bb0mcFRBXl0pPH8f8",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb2N0b3JAZG9jdG9yLmNvbSIsInJvbGUiOiJST0xFX0RPQ1RPUiIsImlkIjozLCJleHAiOjE2OTcxNjYzNjQsImlhdCI6MTY2NTcxNjc2NH0.pWYKafbC4CLFXd5-ybQW2EwXZVi6J7eWUg6VfdX6zZo",
 								"type": "string"
 							}
 						]
@@ -3324,6 +3338,16 @@
 								{
 									"name": "Status",
 									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjoyLCJleHAiOjE2OTcxNjYyNjcsImlhdCI6MTY2NTcxNjY2N30.AT0ZYEheL66IWn1TZBDMgCBlh5i3yt9rmeOGpr-RdAk",
+													"type": "string"
+												}
+											]
+										},
 										"method": "GET",
 										"header": [],
 										"url": {
@@ -3345,16 +3369,127 @@
 											]
 										}
 									},
-									"response": []
+									"response": [
+										{
+											"name": "Status Successful",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{url_chat}}/app/chat/status/:appointmentId",
+													"host": [
+														"{{url_chat}}"
+													],
+													"path": [
+														"app",
+														"chat",
+														"status",
+														":appointmentId"
+													],
+													"variable": [
+														{
+															"key": "appointmentId",
+															"value": "2"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Date",
+													"value": "Fri, 14 Oct 2022 03:12:05 GMT"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=60"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"data\": {\n        \"patientUR\": 0,\n        \"doctorUR\": 0\n    }\n}"
+										},
+										{
+											"name": "Not Online Session",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{url_chat}}/app/chat/status/:appointmentId",
+													"host": [
+														"{{url_chat}}"
+													],
+													"path": [
+														"app",
+														"chat",
+														"status",
+														":appointmentId"
+													],
+													"variable": [
+														{
+															"key": "appointmentId",
+															"value": "2"
+														}
+													]
+												}
+											},
+											"status": "Internal Server Error",
+											"code": 500,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Date",
+													"value": "Fri, 14 Oct 2022 03:54:22 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "close"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"message\": \"Unknown Error: Not an online session\"\n}"
+										}
+									]
 								},
 								{
 									"name": "Message",
 									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjoyLCJleHAiOjE2OTcxNjYyNjcsImlhdCI6MTY2NTcxNjY2N30.AT0ZYEheL66IWn1TZBDMgCBlh5i3yt9rmeOGpr-RdAk",
+													"type": "string"
+												}
+											]
+										},
 										"method": "POST",
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"appointmentId\": 1,\n    \"message\": \"Hello Doctor\"\n}",
+											"raw": "{\n    \"message\": \"Hello Doctor\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3362,22 +3497,101 @@
 											}
 										},
 										"url": {
-											"raw": "{{url_chat}}/app/chat/message",
+											"raw": "{{url_chat}}/app/chat/message/:appointmentId",
 											"host": [
 												"{{url_chat}}"
 											],
 											"path": [
 												"app",
 												"chat",
-												"message"
+												"message",
+												":appointmentId"
+											],
+											"variable": [
+												{
+													"key": "appointmentId",
+													"value": "2"
+												}
 											]
 										}
 									},
-									"response": []
+									"response": [
+										{
+											"name": "Message Succssful",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"message\": \"Hello Doctor\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{url_chat}}/app/chat/message/:appointmentId",
+													"host": [
+														"{{url_chat}}"
+													],
+													"path": [
+														"app",
+														"chat",
+														"message",
+														":appointmentId"
+													],
+													"variable": [
+														{
+															"key": "appointmentId",
+															"value": null
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Date",
+													"value": "Fri, 14 Oct 2022 03:12:35 GMT"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=60"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"data\": {\n        \"patientUR\": 0,\n        \"doctorUR\": 1\n    }\n}"
+										}
+									]
 								},
 								{
 									"name": "Message",
 									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb2N0b3JAZG9jdG9yLmNvbSIsInJvbGUiOiJST0xFX0RPQ1RPUiIsImlkIjozLCJleHAiOjE2OTcxNjYzNjQsImlhdCI6MTY2NTcxNjc2NH0.pWYKafbC4CLFXd5-ybQW2EwXZVi6J7eWUg6VfdX6zZo",
+													"type": "string"
+												}
+											]
+										},
 										"method": "GET",
 										"header": [],
 										"url": {
@@ -3401,23 +3615,76 @@
 											"variable": [
 												{
 													"key": "appointmentId",
-													"value": "1"
+													"value": "2"
 												}
 											]
 										}
 									},
-									"response": []
+									"response": [
+										{
+											"name": "Message Successful",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{url_chat}}/app/chat/message/:appointmentId",
+													"host": [
+														"{{url_chat}}"
+													],
+													"path": [
+														"app",
+														"chat",
+														"message",
+														":appointmentId"
+													],
+													"query": [
+														{
+															"key": "isAll",
+															"value": "true",
+															"disabled": true
+														}
+													],
+													"variable": [
+														{
+															"key": "appointmentId",
+															"value": "2"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Date",
+													"value": "Fri, 14 Oct 2022 03:13:00 GMT"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=60"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"data\": {\n        \"messages\": [\n            {\n                \"id\": 1,\n                \"senderId\": 2,\n                \"message\": \"Hello Doctor\"\n            }\n        ]\n    }\n}"
+										}
+									]
 								}
 							],
 							"auth": {
-								"type": "bearer",
-								"bearer": [
-									{
-										"key": "token",
-										"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50QHBhdGllbnQuY29tIiwicm9sZSI6IlJPTEVfUEFUSUVOVCIsImlkIjoyLCJleHAiOjE2OTY2NTk3MzUsImlhdCI6MTY2NTIxMDEzNX0.az_IharAVbRh9HZ-wLyAQpBh2DdTNUQWpBXnKBjpa7k",
-										"type": "string"
-									}
-								]
+								"type": "noauth"
 							},
 							"event": [
 								{

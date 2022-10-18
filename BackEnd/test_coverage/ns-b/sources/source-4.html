@@ -1,0 +1,149 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PatientAppointmentResponse</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment</a>
+</div>
+
+<h1>Coverage Summary for Class: PatientAppointmentResponse (com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PatientAppointmentResponse</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (4/6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.github.coding_team_sept.nd_backend.appointment.payloads.responses.appointment;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.annotation.JsonInclude;
+&nbsp;import com.fasterxml.jackson.annotation.JsonProperty;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.enums.SessionType;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.ChatResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.appointment.payloads.responses.UserDataResponse;
+&nbsp;
+&nbsp;@JsonInclude(JsonInclude.Include.NON_NULL)
+&nbsp;public class PatientAppointmentResponse extends AppointmentResponse {
+&nbsp;    public PatientAppointmentResponse() {
+<b class="nc">&nbsp;        this(null, null, null, null, null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public PatientAppointmentResponse(
+&nbsp;            Long id,
+&nbsp;            UserDataResponse doctor,
+&nbsp;            String datetime,
+&nbsp;            String session,
+&nbsp;            ChatResponse chatStatus
+&nbsp;    ) {
+<b class="fc">&nbsp;        super(id, doctor, datetime, session, chatStatus);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static PatientAppointmentResponse build(
+&nbsp;            Long id,
+&nbsp;            UserDataResponse doctor,
+&nbsp;            String datetime,
+&nbsp;            SessionType session,
+&nbsp;            ChatResponse chatStatus
+&nbsp;    ) {
+<b class="fc">&nbsp;        return new PatientAppointmentResponse(</b>
+&nbsp;                id,
+&nbsp;                doctor,
+&nbsp;                datetime,
+<b class="fc">&nbsp;                session.name(),</b>
+<b class="fc">&nbsp;                !session.equals(SessionType.ONLINE) ? null : chatStatus</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    @JsonProperty(&quot;doctor&quot;)
+&nbsp;    @Override
+&nbsp;    public UserDataResponse getAppointedUser() {
+<b class="nc">&nbsp;        return super.getAppointedUser();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-18 14:05</div>
+</div>
+</body>
+</html>

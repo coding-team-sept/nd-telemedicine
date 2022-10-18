@@ -1,0 +1,164 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AppUserController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.github.coding_team_sept.nd_backend.authentication.controllers</a>
+</div>
+
+<h1>Coverage Summary for Class: AppUserController (com.github.coding_team_sept.nd_backend.authentication.controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AppUserController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/13)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.github.coding_team_sept.nd_backend.authentication.controllers;
+&nbsp;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.enums.RoleType;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.payloads.requests.RegisterRequest;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.DataResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.ResponseWrapper;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.payloads.responses.UsersDataResponse;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.services.AppUserService;
+&nbsp;import com.github.coding_team_sept.nd_backend.authentication.services.AuthenticationService;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+<b class="nc">&nbsp;@RestController</b>
+&nbsp;@RequestMapping(&quot;api/v1/app&quot;)
+<b class="nc">&nbsp;public record AppUserController(</b>
+&nbsp;        AuthenticationService service,
+&nbsp;        AppUserService appUserService
+&nbsp;) {
+&nbsp;    private ResponseEntity&lt;ResponseWrapper&lt;DataResponse&gt;&gt; addUser(RegisterRequest request, RoleType roleType) {
+<b class="nc">&nbsp;        service.register(request, roleType);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(null, HttpStatus.CREATED);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/admin/admin&quot;)
+&nbsp;    public ResponseEntity&lt;ResponseWrapper&lt;DataResponse&gt;&gt; addAdmin(@RequestBody RegisterRequest request) {
+<b class="nc">&nbsp;        return addUser(request, RoleType.ROLE_ADMIN);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;/admin/doctor&quot;)
+&nbsp;    public ResponseEntity&lt;ResponseWrapper&lt;DataResponse&gt;&gt; addDoctor(@RequestBody RegisterRequest request) {
+<b class="nc">&nbsp;        return addUser(request, RoleType.ROLE_DOCTOR);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/admin/admin&quot;)
+&nbsp;    public ResponseEntity&lt;ResponseWrapper&lt;UsersDataResponse&gt;&gt; getAdmin() {
+<b class="nc">&nbsp;        return ResponseEntity.ok(ResponseWrapper.fromData(UsersDataResponse.build(appUserService.getUserByRole(RoleType.ROLE_ADMIN))));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/admin/doctor&quot;)
+&nbsp;    public ResponseEntity&lt;ResponseWrapper&lt;DataResponse&gt;&gt; getDoctor(
+&nbsp;            @RequestParam(required = false) List&lt;Long&gt; ids
+&nbsp;    ) {
+<b class="nc">&nbsp;        if (ids != null) {</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(ResponseWrapper.fromData(UsersDataResponse.build(appUserService.getUsersByIds(ids, RoleType.ROLE_DOCTOR))));</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return ResponseEntity.ok(ResponseWrapper.fromData(UsersDataResponse.build(appUserService.getUserByRole(RoleType.ROLE_DOCTOR))));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/admin/patient&quot;)
+&nbsp;    public ResponseEntity&lt;ResponseWrapper&lt;DataResponse&gt;&gt; getPatient(
+&nbsp;            @RequestParam(required = false) List&lt;Long&gt; ids
+&nbsp;    ) {
+<b class="nc">&nbsp;        if (ids != null) {</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(ResponseWrapper.fromData(UsersDataResponse.build(appUserService.getUsersByIds(ids, RoleType.ROLE_PATIENT))));</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return ResponseEntity.badRequest().build();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-10-18 14:05</div>
+</div>
+</body>
+</html>
